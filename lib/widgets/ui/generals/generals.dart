@@ -1,5 +1,6 @@
 export 'confidence_score_bar.dart';
 export 'custom_tab.dart';
+export 'explanation_modal.dart';
 export 'global_snackbar.dart';
 export 'issues_list.dart';
 export 'main_appbar.dart';

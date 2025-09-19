@@ -6,6 +6,7 @@ class IUrlResponse {
   final String riskLevel;
   final String classification;
   final double confidenceScore;
+  final double urlAnalysisScore;
   final List<String> flaggedIssues;
   final String timestamp;
   final int processingTime;
@@ -20,6 +21,7 @@ class IUrlResponse {
     required this.riskLevel,
     required this.classification,
     required this.confidenceScore,
+    required this.urlAnalysisScore,
     required this.flaggedIssues,
     required this.timestamp,
     required this.processingTime,
@@ -36,6 +38,7 @@ class IUrlResponse {
       riskLevel: json['risk_level'] as String,
       classification: json['classification'] as String,
       confidenceScore: (json['confidence_score'] as num).toDouble(),
+      urlAnalysisScore: (json['url_analysis_score'] as num).toDouble(),
       flaggedIssues: List<String>.from(json['flagged_issues'] as List),
       timestamp: json['timestamp'] as String,
       processingTime: json['processing_time'] as int,
@@ -53,6 +56,7 @@ class IUrlResponse {
       'risk_level': riskLevel,
       'classification': classification,
       'confidence_score': confidenceScore,
+      'url_analysis_score': urlAnalysisScore,
       'flagged_issues': flaggedIssues,
       'timestamp': timestamp,
       'processing_time': processingTime,

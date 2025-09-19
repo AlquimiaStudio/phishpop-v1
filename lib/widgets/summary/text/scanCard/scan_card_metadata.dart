@@ -10,6 +10,7 @@ class ScanCardMetadata extends StatelessWidget {
   final String scanType;
   final int processingTime;
   final double? normalizedScore;
+  final String classification;
 
   const ScanCardMetadata({
     super.key,
@@ -17,6 +18,7 @@ class ScanCardMetadata extends StatelessWidget {
     required this.processingTime,
     required this.scanType,
     required this.normalizedScore,
+    required this.classification,
   });
 
   @override
@@ -60,6 +62,14 @@ class ScanCardMetadata extends StatelessWidget {
                 label: 'Scan Type',
                 value: scanType,
                 icon: Icons.category,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ScanCardMetadataItem(
+                label: 'Classification',
+                value: classification.capitalize(),
+                icon: Icons.label,
               ),
             ),
           ],

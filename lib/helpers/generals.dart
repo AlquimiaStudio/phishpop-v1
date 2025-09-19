@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
+import '../widgets/widgets.dart';
 
 IconData getIcon(String scanType) {
   switch (scanType) {
@@ -265,4 +266,66 @@ String getTextResultSubtitle(String classification) {
     default:
       return 'Potentially malicious content found';
   }
+}
+
+List<Map<String, dynamic>> getTextAnalysisExplanations() {
+  return [
+    {
+      'title': 'Confidence',
+      'icon': Icons.verified,
+      'explanation':
+          'How sure we are about our analysis (0-100%):\n• 90-100%: Very confident in the result\n• 70-89%: Fairly confident\n• Below 70%: Less certain, be extra careful',
+    },
+    {
+      'title': 'Text Analysis',
+      'icon': Icons.analytics,
+      'explanation':
+          'Technical score from analyzing the message content:\n• Higher scores indicate more suspicious patterns\n• Combines multiple detection methods\n• Helps determine overall safety',
+    },
+    {
+      'title': 'Risk Level',
+      'icon': Icons.warning_amber,
+      'explanation':
+          'How dangerous this message might be:\n• Low: Very safe to interact with\n• Medium: Be cautious, some suspicious signs\n• High: Avoid clicking links or sharing info',
+    },
+    {
+      'title': 'Scan Time',
+      'icon': Icons.schedule,
+      'explanation':
+          'When we analyzed this message:\n• Shows the date and time of analysis\n• Recent scans are more reliable\n• Helps track when threats were detected',
+    },
+    {
+      'title': 'Processing',
+      'icon': Icons.timer,
+      'explanation':
+          'How long the analysis took:\n• Measured in milliseconds (ms)\n• Complex messages take longer\n• Typical range: 100-2000ms',
+    },
+    {
+      'title': 'Scan Type',
+      'icon': Icons.category,
+      'explanation':
+          'What kind of content was analyzed:\n• Text: Message content analysis\n• URL: Web link safety check\n• Email: Full email analysis',
+    },
+    {
+      'title': 'Classification',
+      'icon': Icons.label,
+      'explanation':
+          'What type of message this is:\n• Legitimate: Safe, normal message\n• Spam: Unwanted promotional content\n• Phishing: Trying to steal passwords/info\n• Scam: Fraudulent, trying to trick you',
+    },
+    {
+      'title': 'Flagged Issues',
+      'icon': Icons.flag,
+      'explanation':
+          'Specific problems found in the message:\n• Suspicious links or attachments\n• Urgent language trying to pressure you\n• Requests for personal information\n• Other warning signs',
+    },
+  ];
+}
+
+void showExplanationModal(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => const ExplanationModal(),
+  );
 }

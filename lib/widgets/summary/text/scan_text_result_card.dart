@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../helpers/helpers.dart';
 import '../../../models/models.dart';
+import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
 class ScanTextResultCard extends StatelessWidget {
@@ -42,11 +44,28 @@ class ScanTextResultCard extends StatelessWidget {
             processingTime: result.processingTime,
             scanType: result.scanType,
             normalizedScore: result.normalizedScore,
+            classification: result.classification,
           ),
           if (result.flaggedIssues.isNotEmpty) ...[
             const SizedBox(height: 16),
             IssuesList(issues: result.flaggedIssues, result: result.result),
           ],
+          const SizedBox(height: 16),
+          Center(
+            child: OutlinedButton.icon(
+              onPressed: () => showExplanationModal(context),
+              icon: Icon(Icons.help_outline, size: 18),
+              label: Text('What does this mean?'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primaryColor,
+                side: BorderSide(
+                  color: AppColors.primaryColor.withValues(alpha: 0.3),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
         ],
       ),
     );

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../../../helpers/helpers.dart';
 import '../../../theme/theme.dart';
 
 class ExplanationModal extends StatelessWidget {
-  const ExplanationModal({super.key});
+  final List<Map<String, dynamic>> Function() getExplanations;
+
+  const ExplanationModal({super.key, required this.getExplanations});
 
   @override
   Widget build(BuildContext context) {
-    final explanations = getTextAnalysisExplanations();
+    final explanations = getExplanations();
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,

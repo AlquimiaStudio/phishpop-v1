@@ -321,11 +321,64 @@ List<Map<String, dynamic>> getTextAnalysisExplanations() {
   ];
 }
 
-void showExplanationModal(BuildContext context) {
+List<Map<String, dynamic>> getUrlAnalysisExplanations() {
+  return [
+    {
+      'title': 'Confidence',
+      'icon': Icons.verified,
+      'explanation':
+          'How sure we are about our analysis (0-100%):\n• 90-100%: Very confident in the result\n• 70-89%: Fairly confident\n• Below 70%: Less certain, be extra careful',
+    },
+    {
+      'title': 'URL Analysis',
+      'icon': Icons.link,
+      'explanation':
+          'Technical score from analyzing the website URL:\n• Checks domain reputation and history\n• Analyzes URL structure for suspicious patterns\n• Combines multiple security databases',
+    },
+    {
+      'title': 'Risk Level',
+      'icon': Icons.warning_amber,
+      'explanation':
+          'How dangerous this website might be:\n• Low: Very safe to visit\n• Medium: Be cautious, some suspicious signs\n• High: Avoid visiting, likely malicious',
+    },
+    {
+      'title': 'Scan Time',
+      'icon': Icons.schedule,
+      'explanation':
+          'When we analyzed this URL:\n• Shows the date and time of analysis\n• Recent scans are more reliable\n• Helps track when threats were detected',
+    },
+    {
+      'title': 'Processing',
+      'icon': Icons.timer,
+      'explanation':
+          'How long the analysis took:\n• Measured in milliseconds (ms)\n• Complex URLs take longer to verify\n• Typical range: 200-3000ms',
+    },
+    {
+      'title': 'Scan Type',
+      'icon': Icons.category,
+      'explanation':
+          'What kind of content was analyzed:\n• URL: Web link safety check\n• Domain: Website reputation analysis\n• Real-time: Live threat detection',
+    },
+    {
+      'title': 'Classification',
+      'icon': Icons.label,
+      'explanation':
+          'What type of website this is:\n• Legitimate: Safe, trusted website\n• Suspicious: Potentially harmful content\n• Phishing: Trying to steal passwords/info\n• Malware: Contains malicious software',
+    },
+    {
+      'title': 'Flagged Issues',
+      'icon': Icons.flag,
+      'explanation':
+          'Specific problems found with the URL:\n• Suspicious domain or subdomain\n• Known malicious hosting provider\n• Recently registered domain\n• SSL certificate issues',
+    },
+  ];
+}
+
+void showExplanationModal(BuildContext context, List<Map<String, dynamic>> Function() getExplanations) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => const ExplanationModal(),
+    builder: (context) => ExplanationModal(getExplanations: getExplanations),
   );
 }

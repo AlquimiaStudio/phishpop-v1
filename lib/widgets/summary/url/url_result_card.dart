@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../helpers/helpers.dart';
 import '../../../models/models.dart';
+import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
 class UrlResultCard extends StatelessWidget {
@@ -38,7 +39,11 @@ class UrlResultCard extends StatelessWidget {
             getDescription: getUrlConfidenceDescription,
           ),
           const SizedBox(height: 16),
+          ScanCardUrlMetrics(result: result),
+          const SizedBox(height: 16),
           ScanCardUrlMetadata(
+            scanType: result.scanType,
+            classification: result.classification,
             time: result.timestamp,
             processingTime: result.processingTime,
           ),
@@ -46,6 +51,22 @@ class UrlResultCard extends StatelessWidget {
             const SizedBox(height: 16),
             IssuesList(issues: result.flaggedIssues, result: result.result),
           ],
+          const SizedBox(height: 16),
+          Center(
+            child: OutlinedButton.icon(
+              onPressed: () => showExplanationModal(context, getUrlAnalysisExplanations),
+              icon: Icon(Icons.help_outline, size: 18),
+              label: Text('What does this mean?'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primaryColor,
+                side: BorderSide(
+                  color: AppColors.primaryColor.withValues(alpha: 0.3),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
         ],
       ),
     );

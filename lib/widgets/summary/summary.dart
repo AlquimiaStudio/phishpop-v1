@@ -21,4 +21,5 @@ export 'text/scanCard/scan_card_metadata.dart';
 export 'url/scandCardUrl/scan_card_url_header.dart';
 export 'url/scandCardUrl/scan_card_url_metadata_item.dart';
 export 'url/scandCardUrl/scan_card_url_metadata.dart';
+export 'url/scandCardUrl/scan_card_url_metrics.dart';
 export 'url/scandCardUrl/scan_card_url.dart';

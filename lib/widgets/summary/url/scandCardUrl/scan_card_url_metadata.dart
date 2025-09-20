@@ -6,6 +6,8 @@ import '../../../../theme/theme.dart';
 import '../../../widgets.dart';
 
 class ScanCardUrlMetadata extends StatelessWidget {
+  final String scanType;
+  final String classification;
   final String time;
   final int processingTime;
 
@@ -13,6 +15,8 @@ class ScanCardUrlMetadata extends StatelessWidget {
     super.key,
     required this.time,
     required this.processingTime,
+    required this.scanType,
+    required this.classification,
   });
 
   @override
@@ -43,6 +47,26 @@ class ScanCardUrlMetadata extends StatelessWidget {
                 label: 'Processing',
                 value: '$processingTime ms',
                 icon: Icons.timer,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: ScanCardMetadataItem(
+                label: 'Scan Type',
+                value: scanType,
+                icon: Icons.category,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ScanCardMetadataItem(
+                label: 'Classification',
+                value: classification.capitalize(),
+                icon: Icons.label,
               ),
             ),
           ],

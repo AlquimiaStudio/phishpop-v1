@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../widgets/widgets.dart';
@@ -23,7 +25,7 @@ class ScanScreen extends StatelessWidget {
           ScanUrlSection(),
           const SizedBox(height: 26),
           ScanQrSection(),
-          const SizedBox(height: 140),
+          SizedBox(height: Platform.isIOS ? 140 : 100),
         ],
       ),
     );

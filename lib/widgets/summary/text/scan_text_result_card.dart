@@ -53,7 +53,7 @@ class ScanTextResultCard extends StatelessWidget {
           const SizedBox(height: 16),
           Center(
             child: OutlinedButton.icon(
-              onPressed: () => showExplanationModal(context),
+              onPressed: () => showExplanationModal(context, getTextAnalysisExplanations),
               icon: Icon(Icons.help_outline, size: 18),
               label: Text('What does this mean?'),
               style: OutlinedButton.styleFrom(

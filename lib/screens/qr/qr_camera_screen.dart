@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/providers.dart';
 import '../../widgets/qr/qr.dart';
-import '../summary/qr_url_summary_screen.dart';
-import '../summary/qr_wifi_summary_screen.dart';
 
 class QrCameraScreen extends StatefulWidget {
   const QrCameraScreen({super.key});
@@ -44,48 +44,14 @@ class _QrCameraScreenState extends State<QrCameraScreen> {
 
     for (final barcode in barcodes) {
       if (barcode.rawValue != null) {
-        // Stop the scanner to prevent multiple detections
         controller.stop();
-
-        // Navigate directly to result screen
-        _navigateToResult(barcode.rawValue!);
+        context.read<QrProvider>().processQrFromCamera(
+          barcode.rawValue!,
+          context,
+        );
         break;
       }
     }
-  }
-
-  void _navigateToResult(String qrResult) {
-    if (_isUrl(qrResult)) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => QrUrlSummaryScreen(qrContent: qrResult),
-        ),
-      );
-    } else if (_isWifi(qrResult)) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => QrWifiSummaryScreen(qrContent: qrResult),
-        ),
-      );
-    } else {
-      // Go back and show error
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('QR code type not supported'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
-  bool _isUrl(String text) {
-    final Uri? uri = Uri.tryParse(text);
-    return uri != null && (uri.scheme == 'http' || uri.scheme == 'https');
-  }
-
-  bool _isWifi(String text) {
-    return text.toUpperCase().startsWith('WIFI:');
   }
 
   void toggleFlash() async {

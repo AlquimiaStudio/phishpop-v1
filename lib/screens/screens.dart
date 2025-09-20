@@ -11,3 +11,5 @@ export 'summary/qr_url_summary_screen.dart';
 export 'summary/qr_wifi_summary_screen.dart';
 export 'summary/text_summary_screen.dart';
 export 'summary/url_summary_screen.dart';
+
+export 'qr/qr_camera_screen.dart';

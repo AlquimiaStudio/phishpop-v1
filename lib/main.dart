@@ -28,6 +28,7 @@ class PhishingApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UrlProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => EmailInputProvider()),
+        ChangeNotifierProvider(create: (context) => QrProvider()),
       ],
       child: MaterialApp(
         title: 'Phishing App',

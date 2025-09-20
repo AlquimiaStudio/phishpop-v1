@@ -4,7 +4,9 @@ import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class QrUrlSummaryScreen extends StatelessWidget {
-  const QrUrlSummaryScreen({super.key});
+  final String qrContent;
+  
+  const QrUrlSummaryScreen({super.key, required this.qrContent});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../helpers/helpers.dart';
-import '../../../screens/screens.dart';
-import '../../../theme/theme.dart';
+import '../../helpers/helpers.dart';
+import '../../theme/theme.dart';
 
 class ScanQrButton extends StatelessWidget {
   const ScanQrButton({super.key});
@@ -14,8 +13,7 @@ class ScanQrButton extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: OutlinedButton.icon(
-        onPressed: () =>
-            navigationWithoutAnimation(context, QrUrlSummaryScreen()),
+        onPressed: () => showQrScanModal(context),
         icon: Icon(
           Icons.qr_code_scanner,
           size: 20,

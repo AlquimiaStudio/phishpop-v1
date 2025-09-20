@@ -50,8 +50,10 @@ class PhishingApp extends StatelessWidget {
           '/text-summary': (context) =>
               const TextSummaryScreen(textToAnalyze: ''),
           '/url-summary': (context) => const UrlSummaryScreen(urlToAnalyze: ''),
-          '/qr-url-summary': (context) => const QrUrlSummaryScreen(),
-          '/qr-wifi-summary': (context) => const QrWifiSummaryScreen(),
+          '/qr-url-summary': (context) =>
+              const QrUrlSummaryScreen(qrContent: ''),
+          '/qr-wifi-summary': (context) =>
+              const QrWifiSummaryScreen(qrContent: ''),
         },
       ),
     );

@@ -4,7 +4,9 @@ import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class QrWifiSummaryScreen extends StatelessWidget {
-  const QrWifiSummaryScreen({super.key});
+  final String qrContent;
+  
+  const QrWifiSummaryScreen({super.key, required this.qrContent});
 
   @override
   Widget build(BuildContext context) {

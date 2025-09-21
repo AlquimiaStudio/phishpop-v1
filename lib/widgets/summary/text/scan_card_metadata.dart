@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../helpers/helpers.dart';
-import '../../../../theme/theme.dart';
-import '../../../widgets.dart';
+import '../../../helpers/helpers.dart';
+import '../../../theme/theme.dart';
+import '../../widgets.dart';
 
 class ScanCardMetadata extends StatelessWidget {
   final String timestamp;
@@ -37,7 +37,7 @@ class ScanCardMetadata extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ScanCardMetadataItem(
+              child: MetadataItem(
                 label: 'Scan Time',
                 value: formatTimestamp(timestamp),
                 icon: Icons.schedule,
@@ -46,7 +46,7 @@ class ScanCardMetadata extends StatelessWidget {
 
             const SizedBox(width: 16),
             Expanded(
-              child: ScanCardMetadataItem(
+              child: MetadataItem(
                 label: 'Processing',
                 value: '$processingTime ms',
                 icon: Icons.timer,
@@ -58,7 +58,7 @@ class ScanCardMetadata extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ScanCardMetadataItem(
+              child: MetadataItem(
                 label: 'Scan Type',
                 value: scanType,
                 icon: Icons.category,
@@ -66,7 +66,7 @@ class ScanCardMetadata extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: ScanCardMetadataItem(
+              child: MetadataItem(
                 label: 'Classification',
                 value: classification.capitalize(),
                 icon: Icons.label,

@@ -24,12 +24,13 @@ class PhishingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => TextProvider()),
-        ChangeNotifierProvider(create: (context) => UrlProvider()),
-        ChangeNotifierProvider(create: (context) => QrUrlProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => EmailInputProvider()),
         ChangeNotifierProvider(create: (context) => QrProvider()),
+        ChangeNotifierProvider(create: (context) => QrUrlProvider()),
+        ChangeNotifierProvider(create: (context) => QrWifiProvider()),
+        ChangeNotifierProvider(create: (context) => TextProvider()),
+        ChangeNotifierProvider(create: (context) => UrlProvider()),
       ],
       child: MaterialApp(
         title: 'Phishing App',
@@ -55,7 +56,7 @@ class PhishingApp extends StatelessWidget {
           '/qr-url-summary': (context) =>
               const QrUrlSummaryScreen(urlToAnalyze: ''),
           '/qr-wifi-summary': (context) =>
-              const QrWifiSummaryScreen(qrContent: ''),
+              const QrWifiSummaryScreen(wifiContent: ''),
         },
       ),
     );

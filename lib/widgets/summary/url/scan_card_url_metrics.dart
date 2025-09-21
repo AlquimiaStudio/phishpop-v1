@@ -6,10 +6,10 @@ import '../../../models/models.dart';
 import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
-class QrScanCardUrlMetrics extends StatelessWidget {
-  final QRUrlResponseModel result;
+class ScanCardUrlMetrics extends StatelessWidget {
+  final IUrlResponse result;
 
-  const QrScanCardUrlMetrics({super.key, required this.result});
+  const ScanCardUrlMetrics({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +29,18 @@ class QrScanCardUrlMetrics extends StatelessWidget {
             Expanded(
               child: MetricCard(
                 title: 'Url Analysis',
-                value: '${(result.urlAnalysisScore * 100).toInt()}%',
+                value: '${(result.urlAnalysisScore * 100).round()}%',
                 icon: Icons.link,
-                color: getCardColor(result.result.name),
+                color: getCardColor(result.result),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: MetricCard(
                 title: 'Risk Level',
-                value: result.riskLevel.name.capitalize(),
-                icon: Icons.security,
-                color: getCardColor(result.result.name),
+                value: result.riskLevel.capitalize(),
+                icon: Icons.warning_outlined,
+                color: getCardColor(result.result),
               ),
             ),
           ],
@@ -48,5 +48,4 @@ class QrScanCardUrlMetrics extends StatelessWidget {
       ],
     ).animate().fadeIn(delay: 400.ms);
   }
-
 }

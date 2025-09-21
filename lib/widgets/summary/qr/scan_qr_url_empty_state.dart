@@ -48,17 +48,17 @@ class ScanQrUrlEmptyState extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   'The QR code analysis did not return any results.\nPlease try scanning again.',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.mediumText,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: AppColors.mediumText),
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(delay: 300.ms),
                 const SizedBox(height: 32),
                 Text(
                   'Pull down to refresh',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.mediumText,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: AppColors.mediumText),
                 ).animate().fadeIn(delay: 400.ms),
               ],
             ),

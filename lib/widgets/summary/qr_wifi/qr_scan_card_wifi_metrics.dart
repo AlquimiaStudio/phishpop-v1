@@ -6,10 +6,10 @@ import '../../../models/models.dart';
 import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
-class QrScanCardUrlMetrics extends StatelessWidget {
-  final QRUrlResponseModel result;
+class QrScanCardWifiMetrics extends StatelessWidget {
+  final QrWifiResponse result;
 
-  const QrScanCardUrlMetrics({super.key, required this.result});
+  const QrScanCardWifiMetrics({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class QrScanCardUrlMetrics extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Analysis Metrics',
+          'Security Metrics',
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
             color: AppColors.mediumText,
@@ -28,9 +28,9 @@ class QrScanCardUrlMetrics extends StatelessWidget {
           children: [
             Expanded(
               child: MetricCard(
-                title: 'Url Analysis',
-                value: '${(result.urlAnalysisScore * 100).toInt()}%',
-                icon: Icons.link,
+                title: 'Security Score',
+                value: '${(result.securityScore * 100).toInt()}%',
+                icon: Icons.shield,
                 color: getCardColor(result.result.name),
               ),
             ),
@@ -39,8 +39,8 @@ class QrScanCardUrlMetrics extends StatelessWidget {
               child: MetricCard(
                 title: 'Risk Level',
                 value: result.riskLevel.name.capitalize(),
-                icon: Icons.security,
-                color: getCardColor(result.result.name),
+                icon: Icons.warning,
+                color: _getRiskColor(result.riskLevel),
               ),
             ),
           ],
@@ -49,4 +49,16 @@ class QrScanCardUrlMetrics extends StatelessWidget {
     ).animate().fadeIn(delay: 400.ms);
   }
 
+  Color _getRiskColor(WifiRiskLevel riskLevel) {
+    switch (riskLevel) {
+      case WifiRiskLevel.low:
+        return AppColors.successColor;
+      case WifiRiskLevel.medium:
+        return AppColors.warningColor;
+      case WifiRiskLevel.high:
+        return AppColors.dangerColor;
+      case WifiRiskLevel.critical:
+        return AppColors.dangerColor;
+    }
+  }
 }

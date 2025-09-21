@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../helpers/helpers.dart';
-import '../../../../theme/theme.dart';
+import '../../../helpers/helpers.dart';
+import '../../../theme/theme.dart';
 
-class ScanCardUrlHeader extends StatelessWidget {
+class ScanCardWifiHeader extends StatelessWidget {
   final String result;
   final bool cached;
-  const ScanCardUrlHeader({
+  
+  const ScanCardWifiHeader({
     super.key,
     required this.result,
     required this.cached,
@@ -24,7 +25,7 @@ class ScanCardUrlHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            getCardIcon(result),
+            getWifiIcon(result),
             color: getCardColor(result),
             size: 24,
           ),
@@ -35,14 +36,14 @@ class ScanCardUrlHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                getUrlTitle(result),
+                getWifiTitle(result),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: getCardColor(result),
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                getUrlDescription(result),
+                getWifiDescription(result),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).textTheme.bodySmall?.color,
                 ),

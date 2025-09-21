@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../theme/theme.dart';
+import '../../../theme/theme.dart';
 
 class ScanCardUrl extends StatelessWidget {
   final String url;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../helpers/helpers.dart';
-import '../../../../theme/theme.dart';
+import '../../../helpers/helpers.dart';
+import '../../../theme/theme.dart';
 
 class ScanCardHeader extends StatelessWidget {
   final String result;

@@ -81,9 +81,19 @@ class QrProvider extends ChangeNotifier {
         );
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
+
         navigator.pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => QrWifiSummaryScreen(qrContent: qrResult),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                LoadingScreen(
+                  icon: Icons.qr_code_scanner,
+                  title: 'Analyzing QR Code...',
+                  subtitle: 'Please wait while we analyze the QR code WIFI',
+                  screen: QrWifiSummaryScreen(wifiContent: qrResult),
+                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                ),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
       } else {
@@ -138,9 +148,19 @@ class QrProvider extends ChangeNotifier {
         context.read<QrUrlProvider>().analyzeQrUrl(qrResult);
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => QrWifiSummaryScreen(qrContent: qrResult),
+
+        navigator.pushReplacement(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                LoadingScreen(
+                  icon: Icons.qr_code_scanner,
+                  title: 'Analyzing QR Code...',
+                  subtitle: 'Please wait while we analyze the QR code WIFI',
+                  screen: QrWifiSummaryScreen(wifiContent: qrResult),
+                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                ),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
       } else {

@@ -4,5 +4,7 @@ export 'explanation_modal.dart';
 export 'global_snackbar.dart';
 export 'issues_list.dart';
 export 'main_appbar.dart';
+export 'metadata_item.dart';
+export 'metric_card.dart';
 export 'no_results_message.dart';
 export 'secondary_appbar.dart';

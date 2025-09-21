@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../helpers/helpers.dart';
-import '../../../../theme/theme.dart';
-import '../../../widgets.dart';
+import '../../../helpers/helpers.dart';
+import '../../../theme/theme.dart';
+import '../../widgets.dart';
 
-class ScanCardUrlMetadata extends StatelessWidget {
+class ScanCardWifiMetadata extends StatelessWidget {
   final String scanType;
   final String classification;
   final String time;
   final int processingTime;
 
-  const ScanCardUrlMetadata({
+  const ScanCardWifiMetadata({
     super.key,
-    required this.time,
-    required this.processingTime,
     required this.scanType,
     required this.classification,
+    required this.time,
+    required this.processingTime,
   });
 
   @override
@@ -25,7 +25,7 @@ class ScanCardUrlMetadata extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Scan Details',
+          'Analysis Details',
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
             color: AppColors.mediumText,
@@ -35,18 +35,18 @@ class ScanCardUrlMetadata extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ScanCardUrlMetadataItem(
-                label: 'Scan Time',
-                value: formatTimestamp(time),
-                icon: Icons.schedule,
+              child: MetadataItem(
+                label: 'Scan Type',
+                value: scanType,
+                icon: Icons.qr_code_scanner,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
-              child: ScanCardUrlMetadataItem(
-                label: 'Processing',
-                value: '$processingTime ms',
-                icon: Icons.timer,
+              child: MetadataItem(
+                label: 'Classification',
+                value: classification.capitalize(),
+                icon: Icons.category,
               ),
             ),
           ],
@@ -55,18 +55,18 @@ class ScanCardUrlMetadata extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: ScanCardMetadataItem(
-                label: 'Scan Type',
-                value: scanType,
-                icon: Icons.category,
+              child: MetadataItem(
+                label: 'Scan Time',
+                value: formatTimestamp(time),
+                icon: Icons.access_time,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
             Expanded(
-              child: ScanCardMetadataItem(
-                label: 'Classification',
-                value: classification.capitalize(),
-                icon: Icons.label,
+              child: MetadataItem(
+                label: 'Processing',
+                value: '${processingTime}ms',
+                icon: Icons.speed,
               ),
             ),
           ],

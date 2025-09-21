@@ -42,23 +42,21 @@ class ScanTextMetrics extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildMetricCard(
-                context,
-                'Text Analysis',
-                '${(result.normalizedScore! * 100).round()}%',
-                Icons.text_fields,
-                getCardColor(result.result),
+              child: MetricCard(
+                title: 'Text Analysis',
+                value: '${(result.normalizedScore! * 100).round()}%',
+                icon: Icons.text_fields,
+                color: getCardColor(result.result),
               ),
             ),
             if (result.normalizedScore != null) ...[
               const SizedBox(width: 12),
               Expanded(
-                child: _buildMetricCard(
-                  context,
-                  'Risk Level',
-                  result.riskLevel.capitalize(),
-                  Icons.warning_outlined,
-                  getCardColor(result.result),
+                child: MetricCard(
+                  title: 'Risk Level',
+                  value: result.riskLevel.capitalize(),
+                  icon: Icons.warning_outlined,
+                  color: getCardColor(result.result),
                 ),
               ),
             ],
@@ -66,44 +64,5 @@ class ScanTextMetrics extends StatelessWidget {
         ),
       ],
     ).animate().fadeIn(delay: 400.ms);
-  }
-
-  Widget _buildMetricCard(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 20, color: color),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppColors.lightText),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
   }
 }

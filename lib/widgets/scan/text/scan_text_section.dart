@@ -50,7 +50,6 @@ class _ScanTextSectionState extends State<ScanTextSection> {
                     title: 'Analyzing...',
                     subtitle: 'Please wait while we scan for threats',
                     screen: TextSummaryScreen(textToAnalyze: validText),
-                    time: 4,
                   ),
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,

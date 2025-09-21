@@ -26,6 +26,7 @@ class PhishingApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => TextProvider()),
         ChangeNotifierProvider(create: (context) => UrlProvider()),
+        ChangeNotifierProvider(create: (context) => QrUrlProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => EmailInputProvider()),
         ChangeNotifierProvider(create: (context) => QrProvider()),
@@ -52,7 +53,7 @@ class PhishingApp extends StatelessWidget {
               const TextSummaryScreen(textToAnalyze: ''),
           '/url-summary': (context) => const UrlSummaryScreen(urlToAnalyze: ''),
           '/qr-url-summary': (context) =>
-              const QrUrlSummaryScreen(qrContent: ''),
+              const QrUrlSummaryScreen(urlToAnalyze: ''),
           '/qr-wifi-summary': (context) =>
               const QrWifiSummaryScreen(qrContent: ''),
         },

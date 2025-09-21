@@ -48,6 +48,7 @@ class _QrCameraScreenState extends State<QrCameraScreen> {
         context.read<QrProvider>().processQrFromCamera(
           barcode.rawValue!,
           context,
+          Navigator.of(context),
         );
         break;
       }

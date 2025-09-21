@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../helpers/helpers.dart';
+import '../../providers/providers.dart';
 import '../../theme/theme.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -9,6 +11,7 @@ class LoadingScreen extends StatefulWidget {
   final String subtitle;
   final Widget screen;
   final int? time;
+  final String? urlToAnalyze; // Nueva propiedad para análisis de URL
 
   const LoadingScreen({
     super.key,
@@ -17,6 +20,7 @@ class LoadingScreen extends StatefulWidget {
     required this.subtitle,
     required this.screen,
     this.time,
+    this.urlToAnalyze,
   });
 
   @override
@@ -24,6 +28,8 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class LoadingScreenState extends State<LoadingScreen> {
+  String? errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -31,8 +37,30 @@ class LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> initializeApp() async {
-    await Future.delayed(Duration(seconds: widget.time ?? 2));
-    if (mounted) navigationWithoutAnimation(context, widget.screen);
+    try {
+      if (widget.urlToAnalyze != null) {
+        await Provider.of<QrUrlProvider>(
+          context,
+          listen: false,
+        ).analyzeQrUrl(widget.urlToAnalyze!);
+      } else {
+        await Future.delayed(Duration(seconds: widget.time ?? 2));
+      }
+
+      if (mounted) {
+        navigationWithoutAnimation(context, widget.screen);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          errorMessage = 'Analysis failed: ${e.toString()}';
+        });
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) {
+          navigationWithoutAnimation(context, widget.screen);
+        }
+      }
+    }
   }
 
   @override
@@ -88,6 +116,25 @@ class LoadingScreenState extends State<LoadingScreen> {
                 style: const TextStyle(fontSize: 16, color: Colors.white70),
                 textAlign: TextAlign.center,
               ),
+              if (errorMessage != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.red.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Text(
+                    errorMessage!,
+                    style: const TextStyle(fontSize: 14, color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
               const SizedBox(height: 48),
               const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),

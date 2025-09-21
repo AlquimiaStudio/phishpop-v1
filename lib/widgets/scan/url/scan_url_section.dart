@@ -50,7 +50,6 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
                     title: 'Analyzing...',
                     subtitle: 'Please wait while we scan for threats',
                     screen: UrlSummaryScreen(urlToAnalyze: validUrl),
-                    time: 2,
                   ),
               transitionDuration: Duration.zero,
               reverseTransitionDuration: Duration.zero,

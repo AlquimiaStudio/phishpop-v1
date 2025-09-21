@@ -41,9 +41,11 @@ class QrGalleryService {
 
   static Future<String?> scanQrFromImage(String imagePath) async {
     try {
-      final MobileScannerController controller = MobileScannerController();
+      final MobileScannerController controller = MobileScannerController(
+        autoStart: false, // Evitar inicio automático
+      );
 
-      // Analyze the image for QR codes
+      // Analyze the image for QR codes sin inicializar
       final BarcodeCapture? capture = await controller.analyzeImage(imagePath);
 
       await controller.dispose();

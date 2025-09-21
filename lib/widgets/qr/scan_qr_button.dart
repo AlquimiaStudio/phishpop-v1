@@ -4,9 +4,24 @@ import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
 import '../../theme/theme.dart';
+import '../widgets.dart';
 
 class ScanQrButton extends StatelessWidget {
   const ScanQrButton({super.key});
+
+  void showQrScanModal(BuildContext context) {
+    final qrProvider = context.read<QrProvider>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (modalContext) => QrScanModal(
+        onCameraPressed: () => qrProvider.handleCameraQrScan(modalContext),
+        onGalleryPressed: () => qrProvider.handleGalleryQrScan(modalContext),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +29,7 @@ class ScanQrButton extends StatelessWidget {
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: OutlinedButton.icon(
-        onPressed: () => context.read<QrProvider>().showQrScanModal(context),
+        onPressed: () => showQrScanModal(context),
         icon: Icon(
           Icons.qr_code_scanner,
           size: 20,

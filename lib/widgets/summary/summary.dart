@@ -5,6 +5,14 @@ export 'url/scan_url_error_state.dart';
 export 'url/scan_url_loading_state.dart';
 export 'url/scan_url_result_state.dart';
 
+export 'qr/qr_url_result_state.dart';
+export 'qr/qr_url_result_card.dart';
+export 'qr/qr_scan_card_urls.dart';
+export 'qr/qr_scan_card_url_metrics.dart';
+export 'qr/scan_qr_url_loading_state.dart';
+export 'qr/scan_qr_url_error_state.dart';
+export 'qr/scan_qr_url_empty_state.dart';
+
 export 'text/scan_text_result_card.dart';
 export 'text/scan_text_content.dart';
 export 'text/scan_text_metrics.dart';

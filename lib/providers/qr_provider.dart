@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import '../helpers/helpers.dart';
 import '../screens/screens.dart';
 import '../services/services.dart';
-import '../widgets/widgets.dart';
+import 'providers.dart';
 
 enum QrScanState { idle, scanning, success, error, unsupported }
 
@@ -22,30 +24,12 @@ class QrProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearResult() {
-    lastResult = null;
-    errorMessage = null;
-    setState(QrScanState.idle);
-  }
-
   void reset() {
     state = QrScanState.idle;
     lastResult = null;
     errorMessage = null;
     isScanning = false;
     notifyListeners();
-  }
-
-  void showQrScanModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => QrScanModal(
-        onCameraPressed: () => handleCameraQrScan(context),
-        onGalleryPressed: () => handleGalleryQrScan(context),
-      ),
-    );
   }
 
   void handleCameraQrScan(BuildContext context) async {
@@ -59,9 +43,6 @@ class QrProvider extends ChangeNotifier {
 
   void handleGalleryQrScan(BuildContext context) async {
     final NavigatorState navigator = Navigator.of(context);
-    final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(
-      context,
-    );
 
     setState(QrScanState.scanning);
     navigator.pop();
@@ -72,28 +53,35 @@ class QrProvider extends ChangeNotifier {
 
     if (qrResult != null) {
       lastResult = qrResult;
-      processQrFromGallery(qrResult, navigator, scaffoldMessenger);
+
+      processQrFromGallery(qrResult, navigator);
     } else {
       setState(QrScanState.idle);
     }
   }
 
-  void processQrFromGallery(
-    String qrResult,
-    NavigatorState navigator,
-    ScaffoldMessengerState scaffoldMessenger,
-  ) {
+  void processQrFromGallery(String qrResult, NavigatorState navigator) async {
     try {
       if (isUrl(qrResult)) {
         setState(QrScanState.success);
-        navigator.push(
-          MaterialPageRoute(
-            builder: (context) => QrUrlSummaryScreen(qrContent: qrResult),
+
+        navigator.pushReplacement(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                LoadingScreen(
+                  icon: Icons.qr_code_scanner,
+                  title: 'Analyzing QR Code...',
+                  subtitle: 'Please wait while we analyze the QR code URL',
+                  screen: QrUrlSummaryScreen(urlToAnalyze: qrResult),
+                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                ),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
-        navigator.push(
+        navigator.pushReplacement(
           MaterialPageRoute(
             builder: (context) => QrWifiSummaryScreen(qrContent: qrResult),
           ),
@@ -101,7 +89,8 @@ class QrProvider extends ChangeNotifier {
       } else {
         setState(QrScanState.unsupported);
         errorMessage = 'QR code type not supported';
-        scaffoldMessenger.showSnackBar(
+
+        ScaffoldMessenger.of(navigator.context).showSnackBar(
           SnackBar(
             content: const Text('QR code type not supported'),
             duration: const Duration(seconds: 3),
@@ -120,16 +109,33 @@ class QrProvider extends ChangeNotifier {
     }
   }
 
-  void processQrFromCamera(String qrResult, BuildContext context) {
+  void processQrFromCamera(
+    String qrResult,
+    BuildContext context,
+    NavigatorState navigator,
+  ) async {
     lastResult = qrResult;
+
     try {
       if (isUrl(qrResult)) {
         setState(QrScanState.success);
+
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => QrUrlSummaryScreen(qrContent: qrResult),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                LoadingScreen(
+                  icon: Icons.qr_code_scanner,
+                  title: 'Analyzing QR Code...',
+                  subtitle: 'Please wait while we analyze the QR code URL',
+                  screen: QrUrlSummaryScreen(urlToAnalyze: qrResult),
+                  time: 4,
+                ),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
           ),
         );
+
+        context.read<QrUrlProvider>().analyzeQrUrl(qrResult);
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
         Navigator.of(context).pushReplacement(
@@ -141,6 +147,7 @@ class QrProvider extends ChangeNotifier {
         setState(QrScanState.unsupported);
         errorMessage = 'QR code type not supported';
         Navigator.of(context).pop();
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text('QR code type not supported'),

@@ -321,6 +321,71 @@ List<Map<String, dynamic>> getTextAnalysisExplanations() {
   ];
 }
 
+List<Map<String, dynamic>> getQrUrlAnalysisExplanations() {
+  return [
+    {
+      'title': 'Confidence',
+      'icon': Icons.verified,
+      'explanation':
+          'How sure we are about our analysis (0-100%):\n• 90-100%: Very confident in the result\n• 70-89%: Fairly confident\n• Below 70%: Less certain, be extra careful',
+    },
+    {
+      'title': 'QR URL',
+      'icon': Icons.qr_code,
+      'explanation':
+          'The original URL found in the QR code:\n• This is what the QR code contains\n• May be a shortened URL (bit.ly, tinyurl, etc.)\n• Could redirect to a different destination',
+    },
+    {
+      'title': 'Destination URL',
+      'icon': Icons.open_in_new,
+      'explanation':
+          'Where the QR URL actually leads:\n• The final destination after all redirects\n• This is what you\'ll see if you click the link\n• May be different from the QR URL if redirected',
+    },
+    {
+      'title': 'URL Analysis',
+      'icon': Icons.link,
+      'explanation':
+          'Technical score from analyzing the website URL:\n• Checks domain reputation and history\n• Analyzes URL structure for suspicious patterns\n• Combines multiple security databases',
+    },
+    {
+      'title': 'Risk Level',
+      'icon': Icons.warning_amber,
+      'explanation':
+          'How dangerous this website might be:\n• Low: Very safe to visit\n• Medium: Be cautious, some suspicious signs\n• High: Avoid visiting, likely malicious',
+    },
+    {
+      'title': 'Scan Time',
+      'icon': Icons.schedule,
+      'explanation':
+          'When we analyzed this QR URL:\n• Shows the date and time of analysis\n• Recent scans are more reliable\n• Helps track when threats were detected',
+    },
+    {
+      'title': 'Processing',
+      'icon': Icons.timer,
+      'explanation':
+          'How long the analysis took:\n• Measured in milliseconds (ms)\n• Complex URLs take longer to verify\n• Typical range: 200-3000ms',
+    },
+    {
+      'title': 'Scan Type',
+      'icon': Icons.category,
+      'explanation':
+          'What kind of content was analyzed:\n• QR: QR code URL analysis\n• Real-time: Live threat detection\n• Redirect analysis included',
+    },
+    {
+      'title': 'Classification',
+      'icon': Icons.label,
+      'explanation':
+          'What type of website this is:\n• Legitimate: Safe, trusted website\n• Suspicious: Potentially harmful content\n• Phishing: Trying to steal passwords/info\n• Malware: Contains malicious software',
+    },
+    {
+      'title': 'Flagged Issues',
+      'icon': Icons.flag,
+      'explanation':
+          'Specific problems found with the QR URL:\n• Suspicious domain or subdomain\n• URL shortener detected\n• Redirects to suspicious domains\n• SSL certificate issues',
+    },
+  ];
+}
+
 List<Map<String, dynamic>> getUrlAnalysisExplanations() {
   return [
     {

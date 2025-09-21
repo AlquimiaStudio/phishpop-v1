@@ -70,9 +70,9 @@ class QrScanCardUrls extends StatelessWidget {
           ),
           child: Text(
             url,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontFamily: 'monospace',
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontFamily: 'monospace'),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),

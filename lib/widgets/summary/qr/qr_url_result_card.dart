@@ -61,7 +61,7 @@ class QrUrlResultCard extends StatelessWidget {
           Center(
             child: OutlinedButton.icon(
               onPressed: () =>
-                  showExplanationModal(context, getUrlAnalysisExplanations),
+                  showExplanationModal(context, getQrUrlAnalysisExplanations),
               icon: Icon(Icons.help_outline, size: 18),
               label: Text('What does this mean?'),
               style: OutlinedButton.styleFrom(

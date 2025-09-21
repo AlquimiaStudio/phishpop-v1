@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../helpers/helpers.dart';
 import '../../../models/models.dart';
 import '../../../theme/theme.dart';
 
@@ -22,95 +23,69 @@ class QrScanCardUrlMetrics extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            border: Border.all(
-              color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+        Row(
+          children: [
+            Expanded(
+              child: _buildMetricCard(
+                context,
+                'Url Analysis',
+                '${(result.urlAnalysisScore * 100).toInt()}%',
+                Icons.link,
+                getCardColor(result.result.name),
+              ),
             ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildMetric(
-                  context,
-                  'Risk Level',
-                  result.riskLevel.name.toUpperCase(),
-                  _getRiskLevelColor(result.riskLevel),
-                  Icons.security,
-                ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildMetricCard(
+                context,
+                'Risk Level',
+                result.riskLevel.name.capitalize(),
+                Icons.security,
+                getCardColor(result.result.name),
               ),
-              Container(
-                width: 1,
-                height: 40,
-                color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
-              ),
-              Expanded(
-                child: _buildMetric(
-                  context,
-                  'Analysis Score',
-                  '${(result.urlAnalysisScore * 100).toInt()}%',
-                  _getScoreColor(result.urlAnalysisScore),
-                  Icons.analytics,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     ).animate().fadeIn(delay: 400.ms);
   }
 
-  Widget _buildMetric(
+  Widget _buildMetricCard(
     BuildContext context,
-    String label,
+    String title,
     String value,
-    Color color,
     IconData icon,
+    Color color,
   ) {
-    return Column(
-      children: [
-        Icon(icon, size: 20, color: color),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: AppColors.mediumText),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: color,
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.lightText),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
-  }
-
-  Color _getRiskLevelColor(RiskLevel riskLevel) {
-    switch (riskLevel) {
-      case RiskLevel.low:
-        return AppColors.successColor;
-      case RiskLevel.medium:
-        return AppColors.warningColor;
-      case RiskLevel.high:
-        return AppColors.dangerColor;
-      case RiskLevel.critical:
-        return AppColors.dangerColor;
-    }
-  }
-
-  Color _getScoreColor(double score) {
-    if (score >= 0.8) return AppColors.successColor;
-    if (score >= 0.6) return AppColors.warningColor;
-    return AppColors.dangerColor;
   }
 }

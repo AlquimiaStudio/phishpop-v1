@@ -30,7 +30,7 @@ class ScanCardUrlMetrics extends StatelessWidget {
                 context,
                 'Url Analysis',
                 '${(result.urlAnalysisScore * 100).round()}%',
-                Icons.text_fields,
+                Icons.link,
                 getCardColor(result.result),
               ),
             ),

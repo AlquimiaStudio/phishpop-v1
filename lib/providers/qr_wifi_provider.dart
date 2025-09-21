@@ -23,17 +23,16 @@ class QrWifiProvider extends ChangeNotifier {
   Future<void> analyzeQrWifi(String wifiContent) async {
     if (wifiContent.trim().isEmpty) return;
 
-    setLoading(true);
-
     try {
-      qrWifiAnalysisResult = await QrWifiAnalysisService().getQrWifiAnalysis(
+      qrWifiAnalysisResult = QrWifiAnalysisService().getQrWifiAnalysis(
         wifiContent,
       );
+      error = null;
+      notifyListeners();
     } catch (e) {
       error = 'Error analyzing WiFi QR: ${e.toString()}';
       qrWifiAnalysisResult = null;
-    } finally {
-      setLoading(false);
+      notifyListeners();
     }
   }
 

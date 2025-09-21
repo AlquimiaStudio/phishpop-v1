@@ -91,7 +91,7 @@ IconData getWifiIcon(String result) {
     case 'unsafe':
       return Icons.wifi_off;
     default:
-      return Icons.wifi_1_bar;
+      return Icons.wifi_2_bar;
   }
 }
 
@@ -101,7 +101,7 @@ String getWifiTitle(String result) {
       return 'WiFi is Safe';
     case 'unsafe':
       return 'WiFi is Unsafe';
-    case 'warning':
+    case 'suspicious':
       return 'WiFi Warning';
     default:
       return 'Unknown Status';
@@ -114,7 +114,7 @@ String getWifiDescription(String result) {
       return 'Network is secure and safe to connect';
     case 'unsafe':
       return 'Network has security vulnerabilities';
-    case 'warning':
+    case 'suspicious':
       return 'Network may have security concerns';
     default:
       return 'Security status unknown';
@@ -134,7 +134,6 @@ String getWifiConfidenceDescription(double confidence) {
     return 'Very Low Confidence';
   }
 }
-
 
 List<Map<String, dynamic>> getQrWifiAnalysisExplanations() {
   return [
@@ -164,7 +163,6 @@ List<Map<String, dynamic>> getQrWifiAnalysisExplanations() {
     },
   ];
 }
-
 
 extension StringCapitalization on String {
   String capitalize() {

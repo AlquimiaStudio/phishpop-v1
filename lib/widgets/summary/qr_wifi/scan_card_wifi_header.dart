@@ -7,7 +7,7 @@ import '../../../theme/theme.dart';
 class ScanCardWifiHeader extends StatelessWidget {
   final String result;
   final bool cached;
-  
+
   const ScanCardWifiHeader({
     super.key,
     required this.result,
@@ -27,7 +27,7 @@ class ScanCardWifiHeader extends StatelessWidget {
           child: Icon(
             getWifiIcon(result),
             color: getCardColor(result),
-            size: 24,
+            size: 20,
           ),
         ).animate().scale(duration: 400.ms),
         const SizedBox(width: 12),

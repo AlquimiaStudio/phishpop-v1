@@ -31,7 +31,7 @@ class QrScanCardWifiMetrics extends StatelessWidget {
                 title: 'Security Score',
                 value: '${(result.securityScore * 100).toInt()}%',
                 icon: Icons.shield,
-                color: getCardColor(result.result.name),
+                color: getCardColor(result.classification.name),
               ),
             ),
             const SizedBox(width: 12),
@@ -40,25 +40,12 @@ class QrScanCardWifiMetrics extends StatelessWidget {
                 title: 'Risk Level',
                 value: result.riskLevel.name.capitalize(),
                 icon: Icons.warning,
-                color: _getRiskColor(result.riskLevel),
+                color: getCardColor(result.classification.name),
               ),
             ),
           ],
         ),
       ],
     ).animate().fadeIn(delay: 400.ms);
-  }
-
-  Color _getRiskColor(WifiRiskLevel riskLevel) {
-    switch (riskLevel) {
-      case WifiRiskLevel.low:
-        return AppColors.successColor;
-      case WifiRiskLevel.medium:
-        return AppColors.warningColor;
-      case WifiRiskLevel.high:
-        return AppColors.dangerColor;
-      case WifiRiskLevel.critical:
-        return AppColors.dangerColor;
-    }
   }
 }

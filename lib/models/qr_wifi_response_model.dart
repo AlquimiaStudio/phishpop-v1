@@ -4,7 +4,7 @@ enum WifiSecurityType { open, wep, wpa, wpa2, wpa3, unknown }
 
 enum WifiRiskLevel { low, medium, high, critical }
 
-enum WifiClassification { safe, suspicious, insecure, dangerous }
+enum WifiClassification { safe, unsafe, suspicious }
 
 class QrWifiResponse {
   final String id;
@@ -134,12 +134,10 @@ class QrWifiResponse {
     switch (value.toLowerCase()) {
       case 'safe':
         return WifiClassification.safe;
+      case 'unsafe':
+        return WifiClassification.unsafe;
       case 'suspicious':
         return WifiClassification.suspicious;
-      case 'insecure':
-        return WifiClassification.insecure;
-      case 'dangerous':
-        return WifiClassification.dangerous;
       default:
         return WifiClassification.safe;
     }

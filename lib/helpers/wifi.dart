@@ -76,8 +76,8 @@ WifiRiskLevel determineRiskLevel(String ssid, String password, WifiSecurityType 
 }
 
 WifiClassification classifyNetwork(String ssid, String password, WifiSecurityType securityType) {
-  if (securityType == WifiSecurityType.open) return WifiClassification.dangerous;
-  if (securityType == WifiSecurityType.wep) return WifiClassification.insecure;
+  if (securityType == WifiSecurityType.open) return WifiClassification.unsafe;
+  if (securityType == WifiSecurityType.wep) return WifiClassification.unsafe;
   if (isWeakPassword(password)) return WifiClassification.suspicious;
   return WifiClassification.safe;
 }

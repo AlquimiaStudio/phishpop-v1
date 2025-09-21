@@ -2,18 +2,65 @@ import 'dart:io';
 import 'dart:math' as math;
 import '../models/models.dart';
 import '../helpers/helpers.dart';
+import 'wifi_risk_analyzer.dart';
 
 class QrWifiAnalysisService {
-  Future<QrWifiResponse?> getQrWifiAnalysis(String wifiContent) async {
+  final IRiskAnalyzer _riskAnalyzer;
+
+  QrWifiAnalysisService({IRiskAnalyzer? riskAnalyzer})
+    : _riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
+
+  QrWifiResponse? getQrWifiAnalysis(String wifiContent) {
     if (!isValidWifiQR(wifiContent)) {
       return null;
     }
 
-    return generateMockResponse(wifiContent);
+    return analyzeWifiNetwork(wifiContent);
+  }
+
+  QrWifiResponse analyzeWifiNetwork(String wifiContent) {
+    final wifiData = parseWifiQR(wifiContent);
+    final ssid = wifiData['S'] ?? 'Unknown_Network';
+    final password = wifiData['P'] ?? '';
+    final securityTypeStr = wifiData['T'] ?? 'WPA2';
+
+    final securityType = mapSecurityType(securityTypeStr);
+    final classification = classifyNetwork(ssid, password, securityType);
+    final riskLevel = determineRiskLevel(ssid, password, securityType);
+    final isSecure = analyzeNetworkSecurity(ssid, password, securityType);
+
+    final riskPercentage = _riskAnalyzer.calculateRiskPercentage(
+      classification,
+    );
+    final confidenceScore = _riskAnalyzer.generateConfidenceScore();
+    final flaggedIssues = _riskAnalyzer.generateFlaggedIssues(
+      ssid,
+      password,
+      securityType,
+      classification,
+    );
+
+    return QrWifiResponse(
+      id: 'wifi_${DateTime.now().millisecondsSinceEpoch}',
+      ssid: ssid,
+      password: password,
+      securityType: securityType,
+      scanType: 'QR WiFi Analysis',
+      result: isSecure ? Results.safe : Results.unsafe,
+      riskLevel: riskLevel,
+      classification: classification,
+      confidenceScore: confidenceScore,
+      securityScore: riskPercentage / 100,
+      signalStrength: -30 - (math.Random().nextInt(40)),
+      flaggedIssues: flaggedIssues,
+      timestamp: DateTime.now().toIso8601String(),
+      processingTime: 10 + math.Random().nextInt(20),
+      cached: false,
+    );
   }
 
   Future<bool> connectToWifi(QrWifiResponse wifiData) async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 200));
 
     if (Platform.isAndroid) {
       return wifiData.result == Results.safe;
@@ -23,33 +70,5 @@ class QrWifiAnalysisService {
       );
     }
     return false;
-  }
-
-  QrWifiResponse generateMockResponse(String wifiContent) {
-    final wifiData = parseWifiQR(wifiContent);
-    final ssid = wifiData['S'] ?? 'Unknown_Network';
-    final password = wifiData['P'] ?? '';
-    final securityTypeStr = wifiData['T'] ?? 'WPA2';
-
-    final securityType = mapSecurityType(securityTypeStr);
-    final isSecure = analyzeNetworkSecurity(ssid, password, securityType);
-
-    return QrWifiResponse(
-      id: 'wifi_${DateTime.now().millisecondsSinceEpoch}',
-      ssid: ssid,
-      password: password,
-      securityType: securityType,
-      scanType: 'QR WiFi Analysis',
-      result: isSecure ? Results.safe : Results.unsafe,
-      riskLevel: determineRiskLevel(ssid, password, securityType),
-      classification: classifyNetwork(ssid, password, securityType),
-      confidenceScore: 0.85 + (math.Random().nextDouble() * 0.15),
-      securityScore: calculateSecurityScore(password, securityType),
-      signalStrength: -30 - (math.Random().nextInt(40)),
-      flaggedIssues: identifyIssues(ssid, password, securityType),
-      timestamp: DateTime.now().toIso8601String(),
-      processingTime: 1200 + math.Random().nextInt(800),
-      cached: false,
-    );
   }
 }

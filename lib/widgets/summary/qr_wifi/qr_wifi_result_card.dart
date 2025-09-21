@@ -29,7 +29,10 @@ class QrWifiResultCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ScanCardWifiHeader(result: result.result.name, cached: result.cached),
+          ScanCardWifiHeader(
+            result: result.classification.name,
+            cached: result.cached,
+          ),
           const SizedBox(height: 16),
           QrScanCardWifiInfo(
             ssid: result.ssid,
@@ -39,8 +42,9 @@ class QrWifiResultCard extends StatelessWidget {
           const SizedBox(height: 16),
           ConfidenceScoreBar(
             confidenceScore: result.confidenceScore,
-            result: result.result.name,
-            getDescription: (score) => getWifiConfidenceDescription(result.confidenceScore),
+            result: result.classification.name,
+            getDescription: (score) =>
+                getWifiConfidenceDescription(result.confidenceScore),
           ),
           const SizedBox(height: 16),
           QrScanCardWifiMetrics(result: result),
@@ -55,7 +59,7 @@ class QrWifiResultCard extends StatelessWidget {
             const SizedBox(height: 16),
             IssuesList(
               issues: result.flaggedIssues,
-              result: result.result.name,
+              result: result.classification.name,
             ),
           ],
           const SizedBox(height: 16),

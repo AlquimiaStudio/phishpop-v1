@@ -16,7 +16,6 @@ class QrWifiSummaryScreen extends StatefulWidget {
 
 class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   late QrWifiProvider qrWifiProvider;
-  bool isLoading = false;
 
   @override
   void initState() {
@@ -30,8 +29,9 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   }
 
   Future<void> refreshData() async {
-    isLoading = true;
-    await analyzeQrWifi();
+    qrWifiProvider.setLoading(true);
+    await qrWifiProvider.analyzeQrWifi(widget.wifiContent);
+    qrWifiProvider.setLoading(false);
   }
 
   @override
@@ -57,7 +57,7 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   }
 
   Widget _buildBody(QrWifiProvider qrWifiProvider) {
-    if (isLoading) {
+    if (qrWifiProvider.isLoading) {
       return ScanQrWifiLoadingState();
     }
 

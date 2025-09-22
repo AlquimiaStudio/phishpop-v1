@@ -10,11 +10,11 @@ class HistoryScanTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.security_rounded, size: 20, color: const Color(0xFF3B82F6)),
+        Icon(Icons.security_rounded, size: 18, color: const Color(0xFF3B82F6)),
         const SizedBox(width: 8),
         Text(
           'Totals recent scans:',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
         const SizedBox(width: 8),
         Container(

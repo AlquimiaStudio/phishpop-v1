@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
+import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class UrlSummaryScreen extends StatefulWidget {
   final String urlToAnalyze;
+  final IUrlResponse? analysisResult;
+  final bool? isCached;
 
-  const UrlSummaryScreen({super.key, required this.urlToAnalyze});
+  const UrlSummaryScreen({
+    super.key,
+    required this.urlToAnalyze,
+    this.analysisResult,
+    this.isCached,
+  });
 
   @override
   State<UrlSummaryScreen> createState() => _UrlSummaryScreenState();
@@ -23,12 +32,16 @@ class _UrlSummaryScreenState extends State<UrlSummaryScreen> {
     urlProvider = Provider.of<UrlProvider>(context, listen: false);
   }
 
-  Future<void> analyzeUrl() async {
-    await urlProvider.analyzeUrl(widget.urlToAnalyze);
-  }
-
   Future<void> refreshData() async {
-    await analyzeUrl();
+    if (widget.isCached != null) {
+      if (widget.isCached == true) return;
+    }
+
+    final historyProvider = Provider.of<HistoryProvider>(
+      context,
+      listen: false,
+    );
+    await urlProvider.analyzeUrl(widget.urlToAnalyze, historyProvider);
   }
 
   @override
@@ -44,7 +57,9 @@ class _UrlSummaryScreenState extends State<UrlSummaryScreen> {
               decoration: getBordersScreen(context),
               child: RefreshIndicator(
                 onRefresh: refreshData,
-                child: _buildBody(urlProvider),
+                child: widget.analysisResult != null
+                    ? ScanUrlResultState(analysisResult: widget.analysisResult!)
+                    : _buildBody(urlProvider),
               ),
             ),
           ),

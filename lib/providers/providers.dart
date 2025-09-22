@@ -1,4 +1,5 @@
 export 'auth_provider.dart';
+export 'history_provider.dart';
 export 'qr_provider.dart';
 export 'qr_url_provider.dart';
 export 'qr_wifi_provider.dart';

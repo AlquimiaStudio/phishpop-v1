@@ -2,20 +2,27 @@ import 'dart:io';
 import 'dart:math' as math;
 import '../models/models.dart';
 import '../helpers/helpers.dart';
+import '../providers/providers.dart';
 import 'wifi_risk_analyzer.dart';
 
 class QrWifiAnalysisService {
   final IRiskAnalyzer _riskAnalyzer;
 
-  QrWifiAnalysisService({IRiskAnalyzer? riskAnalyzer})
-    : _riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
+  QrWifiAnalysisService({
+    IRiskAnalyzer? riskAnalyzer,
+  }) : _riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
 
-  QrWifiResponse? getQrWifiAnalysis(String wifiContent) {
+  QrWifiResponse? getQrWifiAnalysis(String wifiContent, HistoryProvider historyProvider) {
     if (!isValidWifiQR(wifiContent)) {
       return null;
     }
 
-    return analyzeWifiNetwork(wifiContent);
+    final result = analyzeWifiNetwork(wifiContent);
+    
+    final historyEntry = createWifiHistoryEntry(result);
+    historyProvider.addScan(historyEntry);
+    
+    return result;
   }
 
   QrWifiResponse analyzeWifiNetwork(String wifiContent) {

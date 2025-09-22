@@ -45,6 +45,7 @@ class _QrCameraScreenState extends State<QrCameraScreen> {
     for (final barcode in barcodes) {
       if (barcode.rawValue != null) {
         controller.stop();
+
         context.read<QrProvider>().processQrFromCamera(
           barcode.rawValue!,
           context,

@@ -42,6 +42,8 @@ Color getCardColor(String result) {
       return AppColors.successColor;
     case 'unsafe':
       return AppColors.dangerColor;
+    case 'threat':
+      return AppColors.dangerColor;
     default:
       return AppColors.warningColor;
   }

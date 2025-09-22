@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class QrUrlSummaryScreen extends StatefulWidget {
   final String urlToAnalyze;
+  final QRUrlResponseModel? analysisResult;
+  final bool? isCached;
 
-  const QrUrlSummaryScreen({super.key, required this.urlToAnalyze});
+  const QrUrlSummaryScreen({
+    super.key,
+    required this.urlToAnalyze,
+    this.analysisResult,
+    this.isCached,
+  });
 
   @override
   State<QrUrlSummaryScreen> createState() => _QrUrlSummaryScreenState();
@@ -23,12 +31,16 @@ class _QrUrlSummaryScreenState extends State<QrUrlSummaryScreen> {
     qrUrlProvider = Provider.of<QrUrlProvider>(context, listen: false);
   }
 
-  Future<void> analyzeQrUrl() async {
-    await qrUrlProvider.analyzeQrUrl(widget.urlToAnalyze);
-  }
-
   Future<void> refreshData() async {
-    await analyzeQrUrl();
+    if (widget.isCached != null) {
+      if (widget.isCached == true) return;
+    }
+
+    final historyProvider = Provider.of<HistoryProvider>(
+      context,
+      listen: false,
+    );
+    await qrUrlProvider.analyzeQrUrl(widget.urlToAnalyze, historyProvider);
   }
 
   @override
@@ -47,7 +59,11 @@ class _QrUrlSummaryScreenState extends State<QrUrlSummaryScreen> {
               decoration: getBordersScreen(context),
               child: RefreshIndicator(
                 onRefresh: refreshData,
-                child: _buildBody(qrUrlProvider),
+                child: widget.analysisResult != null
+                    ? ScanQrUrlResultState(
+                        analysisResult: widget.analysisResult!,
+                      )
+                    : _buildBody(qrUrlProvider),
               ),
             ),
           ),

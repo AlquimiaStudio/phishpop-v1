@@ -69,7 +69,7 @@ class QrWifiResponse {
       'id': id,
       'ssid': ssid,
       'password': password,
-      'security_type': securityType.name,
+      'security_type': securityTypeToString(securityType),
       'scan_type': scanType,
       'result': result.name,
       'risk_level': riskLevel.name,
@@ -140,6 +140,23 @@ class QrWifiResponse {
         return WifiClassification.suspicious;
       default:
         return WifiClassification.safe;
+    }
+  }
+
+  static String securityTypeToString(WifiSecurityType securityType) {
+    switch (securityType) {
+      case WifiSecurityType.open:
+        return 'open';
+      case WifiSecurityType.wep:
+        return 'wep';
+      case WifiSecurityType.wpa:
+        return 'wpa';
+      case WifiSecurityType.wpa2:
+        return 'wpa2';
+      case WifiSecurityType.wpa3:
+        return 'wpa3';
+      case WifiSecurityType.unknown:
+        return 'unknown';
     }
   }
 }

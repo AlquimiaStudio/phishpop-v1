@@ -39,7 +39,11 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
         String validUrl = validateAndFormatUrl(controller.text)!;
 
         final urlProvider = Provider.of<UrlProvider>(context, listen: false);
-        await urlProvider.analyzeUrl(validUrl);
+        final historyProvider = Provider.of<HistoryProvider>(
+          context,
+          listen: false,
+        );
+        await urlProvider.analyzeUrl(validUrl, historyProvider);
 
         if (context.mounted) {
           Navigator.of(context).pushReplacement(

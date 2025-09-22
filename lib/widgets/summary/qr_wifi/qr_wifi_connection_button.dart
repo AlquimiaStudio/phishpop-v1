@@ -90,7 +90,7 @@ class _QrWifiConnectionButtonState extends State<QrWifiConnectionButton> {
                 const SizedBox(height: 8),
                 Text('SSID: ${widget.result.ssid}'),
                 Text(
-                  'Security: ${widget.result.securityType.name.toUpperCase()}',
+                  'Security: ${QrWifiResponse.securityTypeToString(widget.result.securityType).toUpperCase()}',
                 ),
               ],
             ],

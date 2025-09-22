@@ -12,7 +12,7 @@ class HistoryScanItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => navigateToScanDetail(context, scanData),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
         decoration: getBoxShadow(context),

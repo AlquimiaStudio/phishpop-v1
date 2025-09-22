@@ -26,6 +26,7 @@ class PhishingApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => EmailInputProvider()),
+        ChangeNotifierProvider(create: (context) => HistoryProvider()),
         ChangeNotifierProvider(create: (context) => QrProvider()),
         ChangeNotifierProvider(create: (context) => QrUrlProvider()),
         ChangeNotifierProvider(create: (context) => QrWifiProvider()),

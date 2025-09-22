@@ -36,7 +36,9 @@ class QrWifiResultCard extends StatelessWidget {
           const SizedBox(height: 16),
           QrScanCardWifiInfo(
             ssid: result.ssid,
-            securityType: result.securityType.name,
+            securityType: QrWifiResponse.securityTypeToString(
+              result.securityType,
+            ),
             signalStrength: result.signalStrength,
           ),
           const SizedBox(height: 16),

@@ -19,7 +19,7 @@ class HistoryScanItemScore extends StatelessWidget {
       style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,
-        color: getStatusColor(status),
+        color: getCardColor(status),
       ),
     );
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../helpers/helpers.dart';
-import '../../providers/providers.dart';
 import '../../theme/theme.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -38,14 +36,7 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initializeApp() async {
     try {
-      if (widget.urlToAnalyze != null) {
-        await Provider.of<QrUrlProvider>(
-          context,
-          listen: false,
-        ).analyzeQrUrl(widget.urlToAnalyze!);
-      } else {
-        await Future.delayed(Duration(seconds: widget.time ?? 2));
-      }
+      await Future.delayed(Duration(seconds: widget.time ?? 2));
 
       if (mounted) {
         navigationWithoutAnimation(context, widget.screen);

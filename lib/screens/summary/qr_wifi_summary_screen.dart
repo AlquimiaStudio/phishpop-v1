@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class QrWifiSummaryScreen extends StatefulWidget {
   final String wifiContent;
+  final QrWifiResponse? analysisResult;
+  final bool? isCached;
 
-  const QrWifiSummaryScreen({super.key, required this.wifiContent});
+  const QrWifiSummaryScreen({
+    super.key,
+    required this.wifiContent,
+    this.analysisResult,
+    this.isCached,
+  });
 
   @override
   State<QrWifiSummaryScreen> createState() => _QrWifiSummaryScreenState();
@@ -21,17 +29,22 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   void initState() {
     super.initState();
     qrWifiProvider = Provider.of<QrWifiProvider>(context, listen: false);
-    analyzeQrWifi();
-  }
-
-  Future<void> analyzeQrWifi() async {
-    await qrWifiProvider.analyzeQrWifi(widget.wifiContent);
   }
 
   Future<void> refreshData() async {
-    qrWifiProvider.setLoading(true);
-    await qrWifiProvider.analyzeQrWifi(widget.wifiContent);
-    qrWifiProvider.setLoading(false);
+    if (widget.isCached != null) {
+      if (widget.isCached == true) return;
+    }
+
+    final historyProvider = Provider.of<HistoryProvider>(
+      context,
+      listen: false,
+    );
+    await qrWifiProvider.analyzeQrWifi(
+      widget.wifiContent,
+      historyProvider,
+      isRefresh: true,
+    );
   }
 
   @override
@@ -47,7 +60,11 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
               decoration: getBordersScreen(context),
               child: RefreshIndicator(
                 onRefresh: refreshData,
-                child: _buildBody(qrWifiProvider),
+                child: widget.analysisResult != null
+                    ? ScanQrWifiResultState(
+                        analysisResult: widget.analysisResult!,
+                      )
+                    : _buildBody(qrWifiProvider),
               ),
             ),
           ),
@@ -57,7 +74,7 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   }
 
   Widget _buildBody(QrWifiProvider qrWifiProvider) {
-    if (qrWifiProvider.isLoading) {
+    if (qrWifiProvider.isLoading && !qrWifiProvider.isRefreshing) {
       return ScanQrWifiLoadingState();
     }
 

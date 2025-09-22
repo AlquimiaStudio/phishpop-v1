@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'providers.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
@@ -20,13 +21,16 @@ class TextProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> analyzeText(String text) async {
+  Future<void> analyzeText(String text, HistoryProvider historyProvider) async {
     if (text.trim().isEmpty) return;
 
     setLoading(true);
 
     try {
-      textAnalysisResult = await TextAnalysisService().getTextAnalysis(text);
+      textAnalysisResult = await TextAnalysisService().getTextAnalysis(
+        text,
+        historyProvider,
+      );
     } catch (e) {
       error = 'Error analyzing text: ${e.toString()}';
       textAnalysisResult = null;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'providers.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
@@ -20,13 +21,16 @@ class QrUrlProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> analyzeQrUrl(String url) async {
+  Future<void> analyzeQrUrl(String url, HistoryProvider historyProvider) async {
     if (url.trim().isEmpty) return;
 
     setLoading(true);
 
     try {
-      qrUrlAnalysisResult = await QrUrlAnalysisService().getQrUrlAnalysis(url);
+      qrUrlAnalysisResult = await QrUrlAnalysisService().getQrUrlAnalysis(
+        url,
+        historyProvider,
+      );
     } catch (e) {
       error = 'Error analyzing QR URL: ${e.toString()}';
       qrUrlAnalysisResult = null;

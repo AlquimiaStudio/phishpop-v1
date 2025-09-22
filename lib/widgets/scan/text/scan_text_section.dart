@@ -39,7 +39,8 @@ class _ScanTextSectionState extends State<ScanTextSection> {
         String validText = validateAndFormatText(controller.text)!;
 
         final textProvider = Provider.of<TextProvider>(context, listen: false);
-        await textProvider.analyzeText(validText);
+        final historyProvider = Provider.of<HistoryProvider>(context, listen: false);
+        await textProvider.analyzeText(validText, historyProvider);
 
         if (context.mounted) {
           Navigator.of(context).pushReplacement(

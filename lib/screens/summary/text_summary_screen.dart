@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
+import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
 class TextSummaryScreen extends StatefulWidget {
   final String textToAnalyze;
+  final ITextResponse? analysisResult;
+  final bool? isCached;
 
-  const TextSummaryScreen({super.key, required this.textToAnalyze});
+  const TextSummaryScreen({
+    super.key,
+    required this.textToAnalyze,
+    this.analysisResult,
+    this.isCached,
+  });
 
   @override
   State<TextSummaryScreen> createState() => _TextSummaryScreenState();
@@ -23,12 +32,15 @@ class _TextSummaryScreenState extends State<TextSummaryScreen> {
     textProvider = Provider.of<TextProvider>(context, listen: false);
   }
 
-  Future<void> analyzeText() async {
-    await textProvider.analyzeText(widget.textToAnalyze);
-  }
-
   Future<void> refreshData() async {
-    await analyzeText();
+    if (widget.isCached != null) {
+      if (widget.isCached == true) return;
+    }
+    final historyProvider = Provider.of<HistoryProvider>(
+      context,
+      listen: false,
+    );
+    await textProvider.analyzeText(widget.textToAnalyze, historyProvider);
   }
 
   @override
@@ -39,12 +51,19 @@ class _TextSummaryScreenState extends State<TextSummaryScreen> {
           decoration: getAppBackground(context),
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: SecondaryAppbar(icon: Icons.message, title: 'Text Analysis'),
+            appBar: SecondaryAppbar(
+              icon: Icons.message,
+              title: 'Text Analysis',
+            ),
             body: Container(
               decoration: getBordersScreen(context),
               child: RefreshIndicator(
                 onRefresh: refreshData,
-                child: _buildBody(textProvider),
+                child: widget.analysisResult != null
+                    ? ScanTextResultState(
+                        analysisResult: widget.analysisResult!,
+                      )
+                    : _buildBody(textProvider),
               ),
             ),
           ),

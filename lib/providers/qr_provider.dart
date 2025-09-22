@@ -79,6 +79,12 @@ class QrProvider extends ChangeNotifier {
             reverseTransitionDuration: Duration.zero,
           ),
         );
+
+        final historyProvider = navigator.context.read<HistoryProvider>();
+        navigator.context.read<QrUrlProvider>().analyzeQrUrl(
+          qrResult,
+          historyProvider,
+        );
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
 
@@ -95,6 +101,12 @@ class QrProvider extends ChangeNotifier {
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
           ),
+        );
+
+        final historyProvider = navigator.context.read<HistoryProvider>();
+        navigator.context.read<QrWifiProvider>().analyzeQrWifi(
+          qrResult,
+          historyProvider,
         );
       } else {
         setState(QrScanState.unsupported);
@@ -145,7 +157,8 @@ class QrProvider extends ChangeNotifier {
           ),
         );
 
-        context.read<QrUrlProvider>().analyzeQrUrl(qrResult);
+        final historyProvider = context.read<HistoryProvider>();
+        context.read<QrUrlProvider>().analyzeQrUrl(qrResult, historyProvider);
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
 
@@ -163,6 +176,9 @@ class QrProvider extends ChangeNotifier {
             reverseTransitionDuration: Duration.zero,
           ),
         );
+
+        final historyProvider = context.read<HistoryProvider>();
+        context.read<QrWifiProvider>().analyzeQrWifi(qrResult, historyProvider);
       } else {
         setState(QrScanState.unsupported);
         errorMessage = 'QR code type not supported';

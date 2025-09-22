@@ -30,6 +30,7 @@ class PhishingApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => QrProvider()),
         ChangeNotifierProvider(create: (context) => QrUrlProvider()),
         ChangeNotifierProvider(create: (context) => QrWifiProvider()),
+        ChangeNotifierProvider(create: (context) => StatsProvider()),
         ChangeNotifierProvider(create: (context) => TextProvider()),
         ChangeNotifierProvider(create: (context) => UrlProvider()),
       ],

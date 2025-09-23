@@ -49,11 +49,11 @@ class ThreatsDetectedCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '${percentage.toStringAsFixed(1)}% of total scans',
+            '${percentage.toStringAsFixed(1)}% of scans',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: AppColors.darkText.withValues(alpha: 0.7),
-              fontSize: 12,
+              fontSize: 11,
             ),
           ),
         ],

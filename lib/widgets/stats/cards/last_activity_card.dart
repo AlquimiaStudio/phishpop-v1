@@ -26,6 +26,11 @@ class LastActivityCard extends StatelessWidget {
     return timeAgo.replaceAll(' ago', '');
   }
 
+  String formatScanType(String scanType) {
+    // Replace underscores with spaces and format properly
+    return scanType.replaceAll('_', ' ').toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final timeAgo = activityData['timeAgo'] as String;
@@ -72,7 +77,7 @@ class LastActivityCard extends StatelessWidget {
           const SizedBox(height: 22),
           Text(
             hasActivity
-                ? '${scanType.toUpperCase()} scan'
+                ? '${formatScanType(scanType)} scan'
                 : 'No recent activity',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

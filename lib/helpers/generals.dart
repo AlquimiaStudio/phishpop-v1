@@ -439,11 +439,18 @@ List<Map<String, dynamic>> getUrlAnalysisExplanations() {
   ];
 }
 
-void showExplanationModal(BuildContext context, List<Map<String, dynamic>> Function() getExplanations) {
+void showExplanationModal(
+  BuildContext context,
+  List<Map<String, dynamic>> Function() getExplanations, {
+  String? customTitle,
+}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => ExplanationModal(getExplanations: getExplanations),
+    builder: (context) => ExplanationModal(
+      getExplanations: getExplanations,
+      customTitle: customTitle,
+    ),
   );
 }

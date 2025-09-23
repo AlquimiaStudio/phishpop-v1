@@ -21,14 +21,6 @@ class StatValue extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   value,
-        //   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-        //     color: color,
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        //   textAlign: textAlign,
-        // ),
         if (subtitle != null) ...[
           const SizedBox(height: 2),
           Text(

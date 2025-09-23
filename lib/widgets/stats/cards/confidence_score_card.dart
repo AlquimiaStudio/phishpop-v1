@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
 class ConfidenceScoreCard extends StatelessWidget {
@@ -31,7 +32,7 @@ class ConfidenceScoreCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.4), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -40,53 +41,49 @@ class ConfidenceScoreCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.verified, size: 20, color: color),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Confidence Score',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Text(
-                      confidenceText,
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${confidenceScore.toStringAsFixed(0)}%',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.grey[500],
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                StatProgressBar(
-                  value: confidenceScore / 100,
-                  color: color,
-                  height: 5,
-                ),
-              ],
+          Icon(Icons.verified, size: 26, color: color),
+          const SizedBox(height: 8),
+          Text(
+            'Confidence Score',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.darkText,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
             ),
           ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                confidenceText,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${confidenceScore.toStringAsFixed(0)}%',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          StatProgressBar(
+            value: confidenceScore / 100,
+            color: color,
+            height: 5,
+          ),
+          const SizedBox(height: 4),
         ],
       ),
     );

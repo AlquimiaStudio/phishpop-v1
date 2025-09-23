@@ -4,10 +4,7 @@ import '../../../theme/theme.dart';
 class TopThreatsList extends StatelessWidget {
   final List<String> topThreats;
 
-  const TopThreatsList({
-    super.key,
-    required this.topThreats,
-  });
+  const TopThreatsList({super.key, required this.topThreats});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +19,7 @@ class TopThreatsList extends StatelessWidget {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.warning, size: 20, color: Colors.orange),
                 const SizedBox(width: 8),
@@ -37,9 +35,9 @@ class TopThreatsList extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'No security issues detected',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -64,6 +62,7 @@ class TopThreatsList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.warning, size: 20, color: Colors.orange),
               const SizedBox(width: 8),
@@ -80,7 +79,7 @@ class TopThreatsList extends StatelessWidget {
           ...topThreats.asMap().entries.map((entry) {
             final index = entry.key;
             final threat = entry.value;
-            
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: Row(
@@ -137,9 +136,11 @@ class TopThreatsList extends StatelessWidget {
   }
 
   String _formatThreat(String threat) {
-    if (threat.length > 50) {
-      return '${threat.substring(0, 47)}...';
+    String formattedThreat = threat.replaceAll('_', ' ');
+
+    if (formattedThreat.length > 50) {
+      return '${formattedThreat.substring(0, 47)}...';
     }
-    return threat;
+    return formattedThreat;
   }
 }

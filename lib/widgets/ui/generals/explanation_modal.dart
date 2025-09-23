@@ -4,8 +4,13 @@ import '../../../theme/theme.dart';
 
 class ExplanationModal extends StatelessWidget {
   final List<Map<String, dynamic>> Function() getExplanations;
+  final String? customTitle;
 
-  const ExplanationModal({super.key, required this.getExplanations});
+  const ExplanationModal({
+    super.key,
+    required this.getExplanations,
+    this.customTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +32,7 @@ class ExplanationModal extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Understanding Your Scan Results',
+                    customTitle ?? 'Understanding Your Scan Results',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

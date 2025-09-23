@@ -104,11 +104,11 @@ class StatsService implements IStatsService {
 
     for (final scan in scanHistory) {
       final status = scan.status.toLowerCase();
-      if (status == 'safe' || status == 'low') {
+      if (status == 'safe') {
         distribution['Safe'] = distribution['Safe']! + 1;
-      } else if (status == 'suspicious' || status == 'medium') {
+      } else if (status == 'warning') {
         distribution['Suspicious'] = distribution['Suspicious']! + 1;
-      } else if (status == 'unsafe' || status == 'high' || status == 'critical') {
+      } else if (status == 'threat') {
         distribution['Unsafe'] = distribution['Unsafe']! + 1;
       }
     }
@@ -160,7 +160,7 @@ class StatsService implements IStatsService {
   }
 
   bool _isThreat(String status) {
-    final threatStatuses = ['unsafe', 'suspicious', 'high', 'critical'];
+    final threatStatuses = ['warning', 'threat'];
     return threatStatuses.contains(status.toLowerCase());
   }
 

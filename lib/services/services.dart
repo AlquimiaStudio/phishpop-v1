@@ -6,3 +6,5 @@ export 'stats_service.dart';
 export 'text__analysis_service.dart';
 export 'url_analysis_service.dart';
 export 'wifi_risk_analyzer.dart';
+export 'persistent_stats_service.dart';
+export 'persistent_stats_database_service.dart';

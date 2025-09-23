@@ -10,14 +10,12 @@ class ProtectionLevelCard extends StatelessWidget {
 
   Color getProtectionColor(String classification) {
     switch (classification) {
-      case 'excellent':
-        return Colors.green;
-      case 'good':
-        return Colors.blue;
-      case 'fair':
-        return Colors.orange;
-      case 'poor':
-        return Colors.red;
+      case 'high':
+        return AppColors.successColor;
+      case 'medium':
+        return AppColors.warningColor;
+      case 'low':
+        return AppColors.dangerColor;
       default:
         return Colors.grey;
     }
@@ -49,14 +47,14 @@ class ProtectionLevelCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           StatHeader(title: 'Protection', icon: Icons.shield, color: color),
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
           Text(
             level,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
               color: color,
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 19,
               height: 1.0,
             ),
           ),

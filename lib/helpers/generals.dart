@@ -268,6 +268,59 @@ String getTextResultSubtitle(String classification) {
   }
 }
 
+List<Map<String, dynamic>> getStatsExplanations() {
+  return [
+    {
+      'title': 'Total Scans',
+      'icon': Icons.analytics,
+      'explanation':
+          'Shows the total number of security scans you have performed across all types (URLs, text, QR codes, and WiFi networks).',
+    },
+    {
+      'title': 'Threats Detected',
+      'icon': Icons.warning,
+      'explanation':
+          'Displays the number and percentage of scans that identified potential security threats or suspicious content.',
+    },
+    {
+      'title': 'Protection Level',
+      'icon': Icons.shield,
+      'explanation':
+          'Your overall security score based on scan results. Higher scores indicate better protection and fewer security risks.',
+    },
+    {
+      'title': 'Last Activity',
+      'icon': Icons.schedule,
+      'explanation':
+          'Shows when you last performed a security scan and what type of scan it was.',
+    },
+    {
+      'title': 'Confidence Score',
+      'icon': Icons.verified,
+      'explanation':
+          'Average confidence level of our security analysis. Higher scores indicate more reliable threat detection.',
+    },
+    {
+      'title': 'Security Classification',
+      'icon': Icons.bar_chart,
+      'explanation':
+          'Bar chart showing the distribution of scan results: Safe (no threats), Suspicious (potential risks), and Unsafe (confirmed threats).',
+    },
+    {
+      'title': 'Scan Types Distribution',
+      'icon': Icons.pie_chart,
+      'explanation':
+          'Pie chart displaying the breakdown of different types of scans you have performed (URL, Text, QR Code, WiFi).',
+    },
+    {
+      'title': 'Top Security Issues',
+      'icon': Icons.list,
+      'explanation':
+          'Lists the most frequently detected security problems in your scans, ranked by occurrence frequency.',
+    },
+  ];
+}
+
 List<Map<String, dynamic>> getTextAnalysisExplanations() {
   return [
     {

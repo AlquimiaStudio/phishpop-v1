@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../screens/screens.dart';
 
-ScanHistoryModel createWifiHistoryEntry(dynamic wifiResponse) {
+ScanHistoryModel createWifiHistoryEntry(QrWifiResponse wifiResponse) {
   final now = DateTime.now();
   return ScanHistoryModel(
     id: wifiResponse.id,
@@ -11,7 +11,7 @@ ScanHistoryModel createWifiHistoryEntry(dynamic wifiResponse) {
     title: wifiResponse.ssid,
     date: formatHistoryTimestamp(now),
     status: _getWifiClassificationString(wifiResponse.classification),
-    score: wifiResponse.securityScore * 100,
+    score: wifiResponse.confidenceScore,
     timestamp: now,
     details: wifiResponse.toJson(),
     flaggedIssues: wifiResponse.flaggedIssues,
@@ -35,10 +35,10 @@ ScanHistoryModel createQrUrlHistoryEntry(QRUrlResponseModel qrUrlResponse) {
   return ScanHistoryModel(
     id: qrUrlResponse.id,
     scanType: 'qr_url',
-    title: qrUrlResponse.url,
+    title: qrUrlResponse.destinationUrl,
     date: formatHistoryTimestamp(now),
     status: mapUrlClassificationToStatus(qrUrlResponse.classification.name),
-    score: qrUrlResponse.urlAnalysisScore * 100,
+    score: qrUrlResponse.confidenceScore,
     timestamp: now,
     details: qrUrlResponse.toJson(),
     flaggedIssues: qrUrlResponse.flaggedIssues,
@@ -53,7 +53,7 @@ ScanHistoryModel createTextHistoryEntry(ITextResponse textResponse) {
     title: _truncateText(textResponse.text, 50),
     date: formatHistoryTimestamp(now),
     status: mapGenericClassificationToStatus(textResponse.classification),
-    score: textResponse.textAnalysisScore * 100,
+    score: textResponse.confidenceScore,
     timestamp: now,
     details: textResponse.toJson(),
     flaggedIssues: textResponse.flaggedIssues,
@@ -68,7 +68,7 @@ ScanHistoryModel createUrlHistoryEntry(IUrlResponse urlResponse) {
     title: urlResponse.url,
     date: formatHistoryTimestamp(now),
     status: mapGenericClassificationToStatus(urlResponse.classification),
-    score: urlResponse.urlAnalysisScore * 100,
+    score: urlResponse.confidenceScore,
     timestamp: now,
     details: urlResponse.toJson(),
     flaggedIssues: urlResponse.flaggedIssues,

@@ -16,8 +16,8 @@ class UrlAnalysisService {
     );
 
     final urlResponse = IUrlResponse.fromJson(response.data);
-
     final historyEntry = createUrlHistoryEntry(urlResponse);
+
     historyProvider.addScan(historyEntry);
 
     return urlResponse;

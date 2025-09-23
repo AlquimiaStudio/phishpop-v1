@@ -172,3 +172,17 @@ extension StringCapitalization on String {
     return this[0].toUpperCase() + substring(1);
   }
 }
+
+Color getConfidenceColor(double score) {
+  if (score * 100 >= 80) return AppColors.successColor;
+  if (score * 100 >= 60) return AppColors.primaryColor;
+  if (score * 100 >= 40) return AppColors.warningColor;
+  return AppColors.dangerColor;
+}
+
+String getConfidenceText(double score) {
+  if (score * 100 >= 80) return 'High';
+  if (score * 100 >= 60) return 'Good';
+  if (score * 100 >= 40) return 'Fair';
+  return 'Low';
+}

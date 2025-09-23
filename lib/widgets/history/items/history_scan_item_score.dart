@@ -15,7 +15,7 @@ class HistoryScanItemScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '${score.toStringAsFixed(0)}%',
+      '${(score * 100).toStringAsFixed(0)}%',
       style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,

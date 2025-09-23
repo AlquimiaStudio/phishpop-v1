@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../helpers/helpers.dart';
 import '../../../theme/theme.dart';
 import '../../widgets.dart';
 
@@ -8,24 +9,10 @@ class ConfidenceScoreCard extends StatelessWidget {
 
   const ConfidenceScoreCard({super.key, required this.confidenceScore});
 
-  Color _getConfidenceColor(double score) {
-    if (score >= 80) return Colors.green;
-    if (score >= 60) return Colors.blue;
-    if (score >= 40) return Colors.orange;
-    return Colors.red;
-  }
-
-  String _getConfidenceText(double score) {
-    if (score >= 80) return 'High';
-    if (score >= 60) return 'Good';
-    if (score >= 40) return 'Fair';
-    return 'Low';
-  }
-
   @override
   Widget build(BuildContext context) {
-    final color = _getConfidenceColor(confidenceScore);
-    final confidenceText = _getConfidenceText(confidenceScore);
+    final color = getConfidenceColor(confidenceScore);
+    final confidenceText = getConfidenceText(confidenceScore);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -68,21 +55,17 @@ class ConfidenceScoreCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '${confidenceScore.toStringAsFixed(0)}%',
+                '${(confidenceScore * 100).toStringAsFixed(0)}%',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[500],
-                  fontWeight: FontWeight.w500,
+                  color: color,
+                  fontWeight: FontWeight.w300,
                   fontSize: 18,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          StatProgressBar(
-            value: confidenceScore / 100,
-            color: color,
-            height: 5,
-          ),
+          StatProgressBar(value: confidenceScore, color: color, height: 5),
           const SizedBox(height: 4),
         ],
       ),

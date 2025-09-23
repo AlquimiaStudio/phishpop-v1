@@ -4,6 +4,8 @@ import '../services/services.dart';
 
 class HistoryProvider extends ChangeNotifier {
   final ScanDatabaseService databaseService = ScanDatabaseService();
+  final PersistentStatsService persistentStatsService =
+      PersistentStatsService();
 
   List<ScanHistoryModel> scanHistory = [];
   bool isLoading = false;
@@ -58,6 +60,14 @@ class HistoryProvider extends ChangeNotifier {
   Future<void> addScan(ScanHistoryModel scan) async {
     try {
       await databaseService.saveScan(scan);
+
+      await persistentStatsService.recordScan(
+        scanType: scan.scanType,
+        status: scan.status,
+        confidence: scan.score,
+        flaggedIssues: scan.flaggedIssues,
+        scanDate: scan.timestamp,
+      );
 
       scanHistory.insert(0, scan);
 

@@ -17,7 +17,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -48,6 +48,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       const ScanScreen(),
                       const HistoryScreen(),
                       const StatsScreen(),
+                      const SafeParentScreen(),
                     ],
                   ),
                 ),
@@ -77,6 +78,12 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       icon: Icons.bar_chart,
                       label: 'Stats',
                       index: 2,
+                      tabController: tabController,
+                    ),
+                    CustomTab(
+                      icon: Icons.family_restroom,
+                      label: 'Safe',
+                      index: 3,
                       tabController: tabController,
                     ),
                   ],

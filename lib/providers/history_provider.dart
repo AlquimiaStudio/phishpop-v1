@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/services.dart';
+import '../helpers/helpers.dart';
 
 class HistoryProvider extends ChangeNotifier {
   final ScanDatabaseService databaseService = ScanDatabaseService();
@@ -156,6 +157,25 @@ class HistoryProvider extends ChangeNotifier {
   Future<void> loadHistoryFromDatabase() async {
     final scans = await databaseService.getRecentScans(limit: 10);
     scanHistory = scans;
+
+    // Add Safe Parent demo entries if history is empty or has less than 5 entries
+    if (scanHistory.length < 5) {
+      final safeParentEntries = createSafeParentHistoryEntries();
+      for (final entryData in safeParentEntries) {
+        final entry = ScanHistoryModel.fromJson(entryData);
+        // Only add if not already exists
+        if (!scanHistory.any((scan) => scan.id == entry.id)) {
+          scanHistory.add(entry);
+        }
+      }
+
+      // Sort by timestamp descending
+      scanHistory.sort(
+        (a, b) => (b.timestamp ?? DateTime.now()).compareTo(
+          a.timestamp ?? DateTime.now(),
+        ),
+      );
+    }
   }
 
   void setLoading(bool loading) {

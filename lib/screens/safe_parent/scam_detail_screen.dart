@@ -39,6 +39,10 @@ class ScamDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 ScamReportStepsSection(reportSteps: scamScript.reportSteps),
+                const SizedBox(height: 24),
+                ScamReportingWebsitesSection(
+                  reportingWebsites: scamScript.reportingWebsites,
+                ),
               ],
             ),
           ),

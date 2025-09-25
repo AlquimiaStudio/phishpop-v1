@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../helpers/helpers.dart';
+import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class FamilyModeScreen extends StatefulWidget {
   const FamilyModeScreen({super.key});
@@ -72,65 +74,74 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: SecondaryAppbar(
-        title: 'Family Mode',
-        icon: Icons.family_restroom,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              InfoHeaderMessage(
-                message:
-                    'Add trusted contacts to quickly send "Call Me" messages when you need help.',
-              ),
-              Expanded(
-                child: _contacts.isEmpty
-                    ? const EmptyContactsWidget()
-                    : ListView.separated(
-                        itemCount: _contacts.length,
-                        separatorBuilder: (_, __) => Divider(
-                          color: theme.colorScheme.outline.withValues(
-                            alpha: 0.2,
-                          ),
-                        ),
-                        itemBuilder: (context, index) {
-                          final contact = _contacts[index];
-                          return TrustedContactListItem(
-                            contact: contact,
-                            onEdit: () => _addOrEditContact(
-                              contact: contact,
-                              index: index,
+    return Container(
+      decoration: getAppBackground(context),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: SecondaryAppbar(
+          title: 'Family Mode',
+          icon: Icons.family_restroom,
+          screen: HomeScreen(initialIndex: 3),
+        ),
+        body: Container(
+          decoration: getBordersScreen(context),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  InfoHeaderMessage(
+                    message:
+                        'Add trusted contacts to quickly send "Call Me" messages when you need help.',
+                  ),
+                  Expanded(
+                    child: _contacts.isEmpty
+                        ? const EmptyContactsWidget()
+                        : ListView.separated(
+                            itemCount: _contacts.length,
+                            separatorBuilder: (_, __) => Divider(
+                              color: theme.colorScheme.outline.withValues(
+                                alpha: 0.2,
+                              ),
                             ),
-                            onDelete: () => _deleteContact(index),
-                            onSendMessage: () => _sendCallMeMessage(contact),
-                          );
-                        },
+                            itemBuilder: (context, index) {
+                              final contact = _contacts[index];
+                              return TrustedContactListItem(
+                                contact: contact,
+                                onEdit: () => _addOrEditContact(
+                                  contact: contact,
+                                  index: index,
+                                ),
+                                onDelete: () => _deleteContact(index),
+                                onSendMessage: () =>
+                                    _sendCallMeMessage(contact),
+                              );
+                            },
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.add_circle_outline, size: 20),
+                        label: const Text('Add Trusted Contact'),
+                        onPressed: _contacts.length >= 3
+                            ? null
+                            : () => _addOrEditContact(),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
                       ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.add_circle_outline, size: 20),
-                    label: const Text('Add Trusted Contact'),
-                    onPressed: _contacts.length >= 3
-                        ? null
-                        : () => _addOrEditContact(),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

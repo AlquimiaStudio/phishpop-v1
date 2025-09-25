@@ -6,6 +6,7 @@ class ScamScript {
   final List<String> nextSteps;
   final Map<String, String> officialNumbers;
   final List<String> reportSteps;
+  final Map<String, String> reportingWebsites;
 
   const ScamScript({
     required this.id,
@@ -15,6 +16,7 @@ class ScamScript {
     required this.nextSteps,
     required this.officialNumbers,
     required this.reportSteps,
+    required this.reportingWebsites,
   });
 
   factory ScamScript.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class ScamScript {
       nextSteps: List<String>.from(json['nextSteps'] as List),
       officialNumbers: Map<String, String>.from(json['officialNumbers'] as Map),
       reportSteps: List<String>.from(json['reportSteps'] as List),
+      reportingWebsites: Map<String, String>.from(json['reportingWebsites'] as Map),
     );
   }
 
@@ -38,6 +41,7 @@ class ScamScript {
       'nextSteps': nextSteps,
       'officialNumbers': officialNumbers,
       'reportSteps': reportSteps,
+      'reportingWebsites': reportingWebsites,
     };
   }
 }

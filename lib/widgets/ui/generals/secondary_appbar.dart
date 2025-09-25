@@ -9,8 +9,14 @@ import '../../../screens/screens.dart';
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
   final IconData icon;
   final String title;
+  final Widget? screen;
 
-  const SecondaryAppbar({super.key, required this.icon, required this.title});
+  const SecondaryAppbar({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.screen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,7 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  navigationWithoutAnimation(context, HomeScreen());
+                  navigationWithoutAnimation(context, screen ?? HomeScreen());
                 },
                 icon: Icon(Icons.arrow_back_ios_new),
                 color: Colors.white,

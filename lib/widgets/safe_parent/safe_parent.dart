@@ -5,7 +5,6 @@ export 'dashboard/safe_parent_feature_card.dart';
 export 'scam_library/scam_list_item.dart';
 
 // Scam Detail widgets
-export 'scam_detail/scam_list_item_row.dart';
 export 'scam_detail/scam_next_steps_section.dart';
 export 'scam_detail/scam_official_numbers_section.dart';
 export 'scam_detail/scam_red_flags_section.dart';

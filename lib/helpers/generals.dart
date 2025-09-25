@@ -492,6 +492,35 @@ List<Map<String, dynamic>> getUrlAnalysisExplanations() {
   ];
 }
 
+List<Map<String, dynamic>> getSafeParentModulesExplanations() {
+  return [
+    {
+      'title': 'Scam Library',
+      'icon': Icons.library_books,
+      'explanation':
+          'Access a comprehensive database of known scam types and patterns:\n• Learn to identify common phone scams\n• View real examples of fraudulent messages\n• Understand scammer tactics and red flags\n• Stay updated on emerging threats',
+    },
+    {
+      'title': 'Decision Helper',
+      'icon': Icons.help_outline,
+      'explanation':
+          'Get instant guidance when you\'re unsure about a communication:\n• Step-by-step questions to assess threats\n• Quick yes/no decisions for suspicious messages\n• Expert recommendations based on your answers\n• Peace of mind for uncertain situations',
+    },
+    {
+      'title': 'Family Mode',
+      'icon': Icons.family_restroom,
+      'explanation':
+          'Protect your family members from scams and fraud:\n• Set up protection for elderly relatives\n• Monitor and block suspicious communications\n• Share safety tips and alerts with family\n• Remote assistance for vulnerable family members',
+    },
+    {
+      'title': 'Quick Report',
+      'icon': Icons.report_problem,
+      'explanation':
+          'Easily report suspicious communications to authorities:\n• One-tap reporting of scam attempts\n• Automatically formatted reports for law enforcement\n• Contribute to community safety databases\n• Help protect others from similar threats',
+    },
+  ];
+}
+
 void showExplanationModal(
   BuildContext context,
   List<Map<String, dynamic>> Function() getExplanations, {

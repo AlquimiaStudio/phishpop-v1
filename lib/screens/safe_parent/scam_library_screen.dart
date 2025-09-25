@@ -1,33 +1,51 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/data_utils.dart';
+import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class ScamLibraryScreen extends StatelessWidget {
   const ScamLibraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final scamScripts = getScamScripts();
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: SecondaryAppbar(
-        title: 'Scam Library',
-        icon: Icons.library_books,
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        itemCount: scamScripts.length,
-        separatorBuilder: (_, __) => Divider(
-          height: 1,
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+    return Container(
+      decoration: getAppBackground(context),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: SecondaryAppbar(
+          title: 'Scam Library',
+          icon: Icons.library_books,
+          screen: HomeScreen(initialIndex: 3),
         ),
-        itemBuilder: (context, index) {
-          final scam = scamScripts[index];
-          return ScamListItem(scam: scam);
-        },
+        body: Container(
+          decoration: getBordersScreen(context),
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: scamScripts.length,
+            itemBuilder: (context, index) {
+              final scam = scamScripts[index];
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: BoxBorder.all(color: Colors.grey.shade300),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ScamListItem(scam: scam),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

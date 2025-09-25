@@ -60,9 +60,7 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
 
     if (confirmed) {
       await deleteTrustedContact(_contacts, index);
-      setState(() {
-        // La lista ya fue modificada por deleteTrustedContact
-      });
+      setState(() {});
     }
   }
 
@@ -89,7 +87,6 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
                 message:
                     'Add trusted contacts to quickly send "Call Me" messages when you need help.',
               ),
-              const SizedBox(height: 16),
               Expanded(
                 child: _contacts.isEmpty
                     ? const EmptyContactsWidget()
@@ -115,7 +112,7 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
                       ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 12),
+                padding: const EdgeInsets.only(top: 6),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(

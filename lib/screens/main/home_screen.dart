@@ -5,7 +5,9 @@ import '../../widgets/ui/ui.dart';
 import '/screens/screens.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final int initialIndex;
+
+  const HomeScreen({super.key, this.initialIndex = 0});
 
   @override
   State<HomeScreen> createState() => HomeScreenState();
@@ -17,7 +19,11 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(
+      length: 4, 
+      vsync: this,
+      initialIndex: widget.initialIndex,
+    );
   }
 
   @override

@@ -55,14 +55,14 @@ class CustomTab extends StatelessWidget {
                     color: isSelected
                         ? AppColors.primaryColor
                         : Colors.grey[600],
-                    size: isSelected ? 28 : 26,
+                    size: isSelected ? 27 : 26,
                   ),
                 ),
                 const SizedBox(height: 1),
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
                   style: TextStyle(
-                    fontSize: isSelected ? 11 : 10,
+                    fontSize: isSelected ? 10 : 10,
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.normal,

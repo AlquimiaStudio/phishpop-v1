@@ -35,7 +35,7 @@ class ScanTextInputState extends State<ScanTextInput> {
     if (focusNode.hasFocus) {
       Scrollable.ensureVisible(
         context,
-        duration: Duration(milliseconds: 100),
+        duration: Duration(milliseconds: 200),
         curve: Curves.easeOut,
       );
     }

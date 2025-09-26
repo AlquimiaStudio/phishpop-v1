@@ -25,7 +25,7 @@ class ScanScreen extends StatelessWidget {
           ScanUrlSection(),
           const SizedBox(height: 26),
           ScanQrSection(),
-          SizedBox(height: Platform.isIOS ? 140 : 60),
+          SizedBox(height: Platform.isIOS ? 140 : 100),
         ],
       ),
     );

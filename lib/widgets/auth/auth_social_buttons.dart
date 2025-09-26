@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:phishing_app/screens/main/home_screen.dart';
 
+import '../../helpers/helpers.dart';
 import '../../theme/theme.dart';
 import '../widgets.dart';
 
-class AuthSocialButtons extends StatelessWidget {
-  final VoidCallback? onGooglePressed;
-  final VoidCallback? onApplePressed;
-  final VoidCallback? onGitHubPressed;
-  final bool isLoading;
+class AuthSocialButtons extends StatefulWidget {
+  const AuthSocialButtons({super.key});
 
-  const AuthSocialButtons({
-    super.key,
-    this.onGooglePressed,
-    this.onApplePressed,
-    this.onGitHubPressed,
-    this.isLoading = false,
-  });
+  @override
+  State<AuthSocialButtons> createState() => _AuthSocialButtonsState();
+}
+
+class _AuthSocialButtonsState extends State<AuthSocialButtons> {
+  bool isLoading = false;
+
+  void handleSocialLogin(String provider) {
+    // ignore: avoid_print
+    print('ESTE ES EL PUTOOOOOOOO PROVEDOR: $provider');
+    HapticFeedback.lightImpact();
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 1), () {});
+
+    setState(() {
+      isLoading = false;
+    });
+
+    navigationWithoutAnimation(context, HomeScreen(initialIndex: 0));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +64,7 @@ class AuthSocialButtons extends StatelessWidget {
                   size: 22,
                 ),
                 label: 'Google',
-                onPressed: onGooglePressed,
+                onPressed: () => handleSocialLogin('google'),
                 backgroundColor: Colors.white,
                 isLoading: isLoading,
               ),
@@ -62,7 +78,7 @@ class AuthSocialButtons extends StatelessWidget {
                   size: 22,
                 ),
                 label: 'Apple',
-                onPressed: onApplePressed,
+                onPressed: () => handleSocialLogin('apple'),
                 backgroundColor: Colors.black,
                 textColor: Colors.white,
                 isLoading: isLoading,
@@ -77,7 +93,7 @@ class AuthSocialButtons extends StatelessWidget {
                   size: 22,
                 ),
                 label: 'GitHub',
-                onPressed: onGitHubPressed,
+                onPressed: () => handleSocialLogin('gitHub'),
                 backgroundColor: const Color(0xFF24292e),
                 textColor: Colors.white,
                 isLoading: isLoading,

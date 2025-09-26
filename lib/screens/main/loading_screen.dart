@@ -36,7 +36,7 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initializeApp() async {
     try {
-      await Future.delayed(Duration(seconds: widget.time ?? 2));
+      await Future.delayed(Duration(seconds: widget.time ?? 1));
 
       if (mounted) {
         navigationWithoutAnimation(context, widget.screen);

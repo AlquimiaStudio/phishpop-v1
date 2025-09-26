@@ -24,22 +24,27 @@ class ScanUrlInputState extends State<ScanUrlInput> {
     focusNode.addListener(moveScrollBotton);
   }
 
-  void moveScrollBotton() {
-    if (focusNode.hasFocus) {
-      Scrollable.ensureVisible(
-        context,
-        duration: Duration(milliseconds: 100),
-        curve: Curves.ease,
-      );
-    }
-  }
-
   @override
   void dispose() {
     widget.controller.removeListener(onTextChanged);
     focusNode.removeListener(moveScrollBotton);
     focusNode.dispose();
     super.dispose();
+  }
+
+  void moveScrollBotton() {
+    if (focusNode.hasFocus) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted && focusNode.hasFocus) {
+          Scrollable.ensureVisible(
+            context,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            alignment: 0.5,
+          );
+        }
+      });
+    }
   }
 
   void onTextChanged() {
@@ -60,33 +65,41 @@ class ScanUrlInputState extends State<ScanUrlInput> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      focusNode: focusNode,
-      decoration: InputDecoration(
-        hintText: 'https://suspicious-website.com',
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        filled: true,
-        fillColor: Colors.white,
-        border: AppComponents.inputBorder,
-        enabledBorder: AppComponents.inputBorder,
-        focusedBorder: AppComponents.inputFocusBorder,
-        prefixIcon: const PrefixIcon(),
-        suffixIcon: showClearButton
-            ? IconButton(
-                icon: const Icon(Icons.clear, color: Colors.grey, size: 18),
-                onPressed: clearText,
-                splashRadius: 15,
-                padding: const EdgeInsets.all(4),
-                constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-              )
-            : null,
-        contentPadding: const EdgeInsets.all(15),
-      ),
-      style: const TextStyle(fontSize: 16),
-      keyboardType: TextInputType.url,
-      textInputAction: TextInputAction.done,
-      onTapOutside: (_) => focusNode.unfocus(),
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        TextFormField(
+          controller: widget.controller,
+          focusNode: focusNode,
+          decoration: InputDecoration(
+            hintText: 'https://suspicious-website.com',
+            hintStyle: TextStyle(color: Colors.grey[500]),
+            filled: true,
+            fillColor: Colors.white,
+            border: AppComponents.inputBorder,
+            enabledBorder: AppComponents.inputBorder,
+            focusedBorder: AppComponents.inputFocusBorder,
+            prefixIcon: const PrefixIcon(),
+            suffixIcon: showClearButton
+                ? IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.grey, size: 18),
+                    onPressed: clearText,
+                    splashRadius: 15,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(
+                      minWidth: 24,
+                      minHeight: 24,
+                    ),
+                  )
+                : null,
+            contentPadding: const EdgeInsets.all(15),
+          ),
+          style: const TextStyle(fontSize: 16),
+          keyboardType: TextInputType.url,
+          textInputAction: TextInputAction.done,
+          onTapOutside: (_) => focusNode.unfocus(),
+        ),
+      ],
     );
   }
 }

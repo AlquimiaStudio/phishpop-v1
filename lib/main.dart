@@ -25,7 +25,6 @@ class PhishingApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => EmailInputProvider()),
         ChangeNotifierProvider(create: (context) => HistoryProvider()),
         ChangeNotifierProvider(create: (context) => QrProvider()),
         ChangeNotifierProvider(create: (context) => QrUrlProvider()),

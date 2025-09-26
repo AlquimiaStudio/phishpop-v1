@@ -16,6 +16,7 @@ class ScanUrlSection extends StatefulWidget {
 
 class _ScanUrlSectionState extends State<ScanUrlSection> {
   final TextEditingController controller = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   bool isLoading = false;
 
   @override

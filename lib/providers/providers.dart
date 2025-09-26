@@ -6,5 +6,3 @@ export 'qr_wifi_provider.dart';
 export 'stats_provider.dart';
 export 'text_provider.dart';
 export 'url_provider.dart';
-
-export 'form/email_input_provider.dart';

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../widgets.dart';
 
-enum AuthMode { login, register }
-
 class AuthToggle extends StatelessWidget {
   final AuthMode currentMode;
   final ValueChanged<AuthMode> onModeChanged;

@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 import '../helpers/helpers.dart';
+import 'scan_database_service.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -111,17 +115,13 @@ class FirebaseAuthService {
     }
   }
 
-  // GitHub Sign In
   Future<UserCredential?> signInWithGitHub() async {
     try {
-      // Create a GitHub provider
       final githubProvider = OAuthProvider("github.com");
 
-      // Set the scopes you want to request
       githubProvider.addScope('user:email');
       githubProvider.addScope('read:user');
 
-      // Sign in with popup or redirect
       final userCredential = await _auth.signInWithProvider(githubProvider);
 
       return userCredential;
@@ -132,7 +132,8 @@ class FirebaseAuthService {
 
   Future<void> signOut() async {
     try {
-      await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
+      await _googleSignIn.signOut();
+      await _auth.signOut();
     } catch (e) {
       throw 'Sign out failed. Please try again.';
     }
@@ -150,11 +151,30 @@ class FirebaseAuthService {
 
   Future<void> deleteAccount() async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      final scanDatabaseService = ScanDatabaseService();
+      await scanDatabaseService.clearAllScans();
+
+      await deleteSQLiteDatabase();
+      await signOut();
+
       await _auth.currentUser?.delete();
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
     } catch (e) {
       throw 'Failed to delete account. Please try again.';
+    }
+  }
+
+  Future<void> deleteSQLiteDatabase() async {
+    try {
+      final databasesPath = await getDatabasesPath();
+      final path = join(databasesPath, 'app_database.db');
+      await deleteDatabase(path);
+    } catch (e) {
+      // Database might not exist, ignore error
     }
   }
 }

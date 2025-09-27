@@ -45,7 +45,7 @@ class _AuthLoginFormState extends State<AuthLoginForm> {
     HapticFeedback.lightImpact();
 
     if (formKey.currentState?.validate() ?? false) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
       final success = await authProvider.login(
         emailController.text.trim(),
@@ -68,7 +68,7 @@ class _AuthLoginFormState extends State<AuthLoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
+    return Consumer<AppAuthProvider>(
       builder: (context, authProvider, child) {
         return Form(
           key: formKey,

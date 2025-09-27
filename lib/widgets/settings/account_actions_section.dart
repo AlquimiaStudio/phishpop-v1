@@ -1,110 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../services/services.dart';
 import '../../theme/theme.dart';
 
 class AccountActionsSection extends StatelessWidget {
   const AccountActionsSection({super.key});
 
-  void handleChangePassword(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Change password feature coming soon'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void handleSignOut(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(Icons.logout, color: Colors.orange, size: 24),
-              const SizedBox(width: 8),
-              const Text('Sign Out'),
-            ],
-          ),
-          content: const Text(
-            'Are you sure you want to sign out? You will need to sign in again to access your account.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Provider.of<AuthProvider>(context, listen: false).logout();
-              },
-              child: const Text('Sign Out'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void handleDeleteAccount(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Row(
-            children: [
-              Icon(Icons.delete_forever, color: Colors.red, size: 24),
-              const SizedBox(width: 8),
-              const Text('Delete Account'),
-            ],
-          ),
-          content: const Text(
-            'This action cannot be undone. All your data will be permanently deleted. Are you sure you want to delete your account?',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Delete account feature coming soon'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final appAuthProvider = context.read<AppAuthProvider>();
+
     return Container(
           width: double.infinity,
           padding: const EdgeInsets.all(20),
@@ -136,19 +45,22 @@ class AccountActionsSection extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              AccountActionButton(
-                icon: Icons.lock_outline,
-                label: 'Change Password',
-                subtitle: 'Update your account password',
-                onTap: () => handleChangePassword(context),
-                iconColor: AppColors.primaryColor,
-              ),
-              const SizedBox(height: 12),
+              if (appAuthProvider.isEmailPasswordUser) ...[
+                AccountActionButton(
+                  icon: Icons.lock_outline,
+                  label: 'Change Password',
+                  subtitle: 'Update your account password',
+                  onTap: () =>
+                      AccountActionsService.handleChangePassword(context),
+                  iconColor: AppColors.primaryColor,
+                ),
+                const SizedBox(height: 12),
+              ],
               AccountActionButton(
                 icon: Icons.logout,
                 label: 'Sign Out',
                 subtitle: 'Sign out from your account',
-                onTap: () => handleSignOut(context),
+                onTap: () => AccountActionsService.handleSignOut(context),
                 iconColor: Colors.orange,
               ),
               const SizedBox(height: 12),
@@ -156,7 +68,7 @@ class AccountActionsSection extends StatelessWidget {
                 icon: Icons.delete_forever,
                 label: 'Delete Account',
                 subtitle: 'Permanently delete your account',
-                onTap: () => handleDeleteAccount(context),
+                onTap: () => AccountActionsService.handleDeleteAccount(context),
                 iconColor: Colors.red,
               ),
             ],

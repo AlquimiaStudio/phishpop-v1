@@ -19,7 +19,7 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
   bool isLoading = false;
 
   Future<void> handleSocialLogin(String provider) async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
     HapticFeedback.lightImpact();
     setState(() {

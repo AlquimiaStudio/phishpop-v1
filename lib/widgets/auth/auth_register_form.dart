@@ -58,7 +58,7 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
     HapticFeedback.lightImpact();
 
     if (formKey.currentState?.validate() ?? false) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
       final success = await authProvider.register(
         nameController.text.trim(),
@@ -91,7 +91,7 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
+    return Consumer<AppAuthProvider>(
       builder: (context, authProvider, child) {
         return Form(
           key: formKey,

@@ -1,4 +1,7 @@
+export 'account_actions_service.dart';
 export 'firebase_auth_service.dart';
+export 'persistent_stats_database_service.dart';
+export 'persistent_stats_service.dart';
 export 'qr_gallery_service.dart';
 export 'qr_url_analysis_service.dart';
 export 'qr_wifi_analysis_service.dart';
@@ -7,5 +10,3 @@ export 'stats_service.dart';
 export 'text__analysis_service.dart';
 export 'url_analysis_service.dart';
 export 'wifi_risk_analyzer.dart';
-export 'persistent_stats_service.dart';
-export 'persistent_stats_database_service.dart';

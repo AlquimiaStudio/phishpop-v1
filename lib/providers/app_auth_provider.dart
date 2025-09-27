@@ -6,7 +6,7 @@ import 'package:phishpop/helpers/helpers.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
-class AuthProvider extends ChangeNotifier {
+class AppAuthProvider extends ChangeNotifier {
   final FirebaseAuthService authService = FirebaseAuthService();
   Timer? errorTimer;
 
@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
   User? currentUser;
   String? token;
 
-  AuthProvider() {
+  AppAuthProvider() {
     checkAuthStatus();
     authService.authStateChanges.listen((firebase_auth.User? firebaseUser) {
       if (firebaseUser != null) {
@@ -39,6 +39,13 @@ class AuthProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  bool get isEmailPasswordUser {
+    final user = authService.currentUser;
+    if (user == null) return false;
+
+    return user.providerData.any((info) => info.providerId == 'password');
   }
 
   void setError(String error) {
@@ -212,6 +219,43 @@ class AuthProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       return credential != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> deleteAccount() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      await authService.deleteAccount();
+      currentUser = null;
+      token = null;
+      isAuthenticated = false;
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> sendPasswordResetEmail(String email) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      await authService.sendPasswordResetEmail(email);
+      isLoading = false;
+      notifyListeners();
+      return true;
     } catch (e) {
       isLoading = false;
       setError(e.toString());

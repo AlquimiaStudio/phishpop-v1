@@ -1,9 +1,11 @@
 export 'main/auth_screen.dart';
+export 'main/auth_wrapper.dart';
 export 'main/history_screen.dart';
 export 'main/home_screen.dart';
 export 'main/loading_screen.dart';
 export 'main/safe_parent_screen.dart';
 export 'main/scan_screen.dart';
+export 'main/splash_screen.dart';
 export 'main/stats_screen.dart';
 
 export 'settings/settings_screen.dart';

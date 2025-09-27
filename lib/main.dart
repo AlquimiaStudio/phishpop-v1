@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'providers/providers.dart';
 import 'screens/screens.dart';
-import 'screens/main/splash_screen.dart';
 import 'theme/theme.dart';
 
 void main() async {
@@ -28,7 +27,7 @@ class PhishingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => AppAuthProvider()),
         ChangeNotifierProvider(create: (context) => HistoryProvider()),
         ChangeNotifierProvider(create: (context) => QrProvider()),
         ChangeNotifierProvider(create: (context) => QrUrlProvider()),
@@ -43,22 +42,9 @@ class PhishingApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: Consumer<AuthProvider>(
-          builder: (context, authProvider, child) {
-            if (authProvider.isLoading) {
-              return const SplashScreen();
-            }
-
-            if (authProvider.isAuthenticated) {
-              return const HomeScreen(initialIndex: 0);
-            } else {
-              return const AuthScreen();
-            }
-          },
-        ),
+        home: const AuthWrapper(),
         routes: {
           '/history': (context) => const HistoryScreen(),
-          '/home': (context) => const HomeScreen(),
           '/settings': (context) => const SettingsScreen(),
           '/stats': (context) => const StatsScreen(),
           '/auth': (context) => const AuthScreen(),

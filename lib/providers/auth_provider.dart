@@ -1,14 +1,56 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:phishing_app/helpers/helpers.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:phishpop/helpers/helpers.dart';
 
 import '../models/models.dart';
+import '../services/services.dart';
 
 class AuthProvider extends ChangeNotifier {
+  final FirebaseAuthService authService = FirebaseAuthService();
+  Timer? errorTimer;
+
   bool isLoading = false;
   bool isAuthenticated = false;
   String? errorMessage;
   User? currentUser;
   String? token;
+
+  AuthProvider() {
+    checkAuthStatus();
+    authService.authStateChanges.listen((firebase_auth.User? firebaseUser) {
+      if (firebaseUser != null) {
+        currentUser = User(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          name:
+              firebaseUser.displayName ??
+              firebaseUser.email?.split('@').first ??
+              'User',
+          createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+        );
+        token = firebaseUser.uid;
+        isAuthenticated = true;
+      } else {
+        currentUser = null;
+        token = null;
+        isAuthenticated = false;
+        errorMessage = null;
+      }
+      notifyListeners();
+    });
+  }
+
+  void setError(String error) {
+    errorTimer?.cancel();
+    errorMessage = error;
+    notifyListeners();
+
+    errorTimer = Timer(const Duration(seconds: 3), () {
+      errorMessage = null;
+      notifyListeners();
+    });
+  }
 
   Future<bool> login(String email, String password) async {
     isLoading = true;
@@ -17,41 +59,42 @@ class AuthProvider extends ChangeNotifier {
 
     final emailValidation = Validators.validateEmail(email);
     if (emailValidation != null) {
-      errorMessage = emailValidation;
       isLoading = false;
-      notifyListeners();
+      setError(emailValidation);
       return false;
     }
 
     final passwordValidation = Validators.validatePassword(password);
     if (passwordValidation != null) {
-      errorMessage = passwordValidation;
       isLoading = false;
-      notifyListeners();
+      setError(passwordValidation);
       return false;
     }
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
+      final userCredential = await authService.signInWithEmail(email, password);
 
-      currentUser = User(
-        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        email: email,
-        name: email.split('@').first,
-        createdAt: DateTime.now(),
-      );
+      if (userCredential?.user != null) {
+        final firebaseUser = userCredential!.user!;
+        currentUser = User(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          name:
+              firebaseUser.displayName ??
+              firebaseUser.email?.split('@').first ??
+              'User',
+          createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+        );
+        token = firebaseUser.uid;
+        isAuthenticated = true;
+      }
 
-      token = 'fake_token_${DateTime.now().millisecondsSinceEpoch}';
-      isAuthenticated = true;
       isLoading = false;
-
       notifyListeners();
-
       return true;
     } catch (e) {
-      errorMessage = 'Authentication failed. Please try again.';
       isLoading = false;
-      notifyListeners();
+      setError(e.toString());
       return false;
     }
   }
@@ -63,46 +106,50 @@ class AuthProvider extends ChangeNotifier {
 
     final nameValidation = Validators.validateName(name);
     if (nameValidation != null) {
-      errorMessage = nameValidation;
       isLoading = false;
-      notifyListeners();
+      setError(nameValidation);
       return false;
     }
 
     final emailValidation = Validators.validateEmail(email);
     if (emailValidation != null) {
-      errorMessage = emailValidation;
       isLoading = false;
-      notifyListeners();
+      setError(emailValidation);
       return false;
     }
 
     final passwordValidation = Validators.validatePassword(password);
     if (passwordValidation != null) {
-      errorMessage = passwordValidation;
       isLoading = false;
-      notifyListeners();
+      setError(passwordValidation);
       return false;
     }
 
     try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      currentUser = User(
-        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        email: email,
-        name: name,
-        createdAt: DateTime.now(),
+      final userCredential = await authService.registerWithEmail(
+        email,
+        password,
       );
-      token = 'fake_token_${DateTime.now().millisecondsSinceEpoch}';
-      isAuthenticated = true;
+      await authService.updateUserProfile(displayName: name);
+
+      if (userCredential?.user != null) {
+        final firebaseUser = userCredential!.user!;
+        currentUser = User(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          name: name,
+          createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+        );
+        token = firebaseUser.uid;
+        isAuthenticated = true;
+      }
+
       isLoading = false;
       notifyListeners();
       return true;
     } catch (e) {
-      errorMessage = 'Registration failed. Please try again.';
       isLoading = false;
-      notifyListeners();
+      setError(e.toString());
       return false;
     }
   }
@@ -112,19 +159,29 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      currentUser = null;
-      token = null;
-      isAuthenticated = false;
-      errorMessage = null;
+      await authService.signOut();
       isLoading = false;
-
       notifyListeners();
     } catch (e) {
-      errorMessage = 'Logout failed. Please try again.';
+      isLoading = false;
+      setError(e.toString());
+    }
+  }
+
+  Future<bool> signInWithGoogle() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final credential = await authService.signInWithGoogle();
       isLoading = false;
       notifyListeners();
+      return credential != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
     }
   }
 
@@ -133,17 +190,33 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(milliseconds: 800));
+      final firebaseUser = authService.currentUser;
 
-      final hasStoredToken = token != null && token!.isNotEmpty;
-      final hasStoredUser = currentUser != null;
+      if (firebaseUser != null) {
+        try {
+          await firebaseUser.getIdToken(true);
 
-      if (hasStoredToken && hasStoredUser) {
-        isAuthenticated = true;
+          currentUser = User(
+            id: firebaseUser.uid,
+            email: firebaseUser.email ?? '',
+            name:
+                firebaseUser.displayName ??
+                firebaseUser.email?.split('@').first ??
+                'User',
+            createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+          );
+          token = firebaseUser.uid;
+          isAuthenticated = true;
+        } catch (e) {
+          await authService.signOut();
+          currentUser = null;
+          token = null;
+          isAuthenticated = false;
+        }
       } else {
-        isAuthenticated = false;
         currentUser = null;
         token = null;
+        isAuthenticated = false;
       }
 
       isLoading = false;
@@ -153,9 +226,8 @@ class AuthProvider extends ChangeNotifier {
       isAuthenticated = false;
       currentUser = null;
       token = null;
-      errorMessage = 'Failed to check authentication status';
       isLoading = false;
-      notifyListeners();
+      setError('Failed to check authentication status');
     }
   }
 }

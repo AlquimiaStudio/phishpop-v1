@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:phishing_app/screens/main/home_screen.dart';
+import 'package:phishpop/screens/main/home_screen.dart';
 
 import '../../helpers/helpers.dart';
 import '../../theme/theme.dart';

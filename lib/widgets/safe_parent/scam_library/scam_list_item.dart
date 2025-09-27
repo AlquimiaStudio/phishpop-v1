@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phishing_app/theme/theme.dart';
+import 'package:phishpop/theme/theme.dart';
 
 import '../../../helpers/navigation.dart';
 import '../../../models/models.dart';

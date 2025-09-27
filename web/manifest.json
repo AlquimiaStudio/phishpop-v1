@@ -1,6 +1,6 @@
 {
-    "name": "phishing_app",
-    "short_name": "phishing_app",
+    "name": "phishpop",
+    "short_name": "phishpop",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

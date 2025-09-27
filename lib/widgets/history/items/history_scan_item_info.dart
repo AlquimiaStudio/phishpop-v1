@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phishing_app/helpers/generals.dart';
+import 'package:phishpop/helpers/generals.dart';
 
 class HistoryScanItemInfo extends StatelessWidget {
   final String date;

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'providers/providers.dart';
 import 'screens/screens.dart';
+import 'screens/main/splash_screen.dart';
 import 'theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -39,11 +43,18 @@ class PhishingApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: const LoadingScreen(
-          icon: Icons.security,
-          title: 'Phishing App',
-          subtitle: 'Protecting you from phishing attempts',
-          screen: AuthScreen(),
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            if (authProvider.isLoading) {
+              return const SplashScreen();
+            }
+
+            if (authProvider.isAuthenticated) {
+              return const HomeScreen(initialIndex: 0);
+            } else {
+              return const AuthScreen();
+            }
+          },
         ),
         routes: {
           '/history': (context) => const HistoryScreen(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phishing_app/screens/screens.dart';
+import 'package:phishpop/screens/screens.dart';
 
 import '../../helpers/helpers.dart';
 import '../../theme/theme.dart';

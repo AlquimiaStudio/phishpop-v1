@@ -1,3 +1,3 @@
-# phishing_app
+# phishpop
 
 A new Flutter project.

@@ -1,4 +1,4 @@
-package com.example.phishing_app
+package com.example.phishpop
 
 import io.flutter.embedding.android.FlutterActivity
 

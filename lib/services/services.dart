@@ -1,3 +1,4 @@
+export 'firebase_auth_service.dart';
 export 'qr_gallery_service.dart';
 export 'qr_url_analysis_service.dart';
 export 'qr_wifi_analysis_service.dart';

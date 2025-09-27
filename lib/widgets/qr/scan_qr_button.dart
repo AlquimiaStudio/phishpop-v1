@@ -30,11 +30,7 @@ class ScanQrButton extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: OutlinedButton.icon(
         onPressed: () => showQrScanModal(context),
-        icon: Icon(
-          Icons.qr_code_scanner,
-          size: 20,
-          color: AppColors.primaryColor,
-        ),
+        icon: Icon(Icons.qr_code_scanner, size: 20, color: AppColors.primaryColor),
         label: Text(
           'Scan QR Code',
           style: TextStyle(

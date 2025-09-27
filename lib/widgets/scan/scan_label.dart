@@ -5,6 +5,7 @@ class ScanLabel extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onScanPressed;
   final bool isLoading;
+
   const ScanLabel({
     super.key,
     required this.label,
@@ -15,6 +16,8 @@ class ScanLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final displayText = isLoading ? 'Processing...' : label;
+
     return SizedBox(
       height: 36,
       child: ElevatedButton.icon(
@@ -32,15 +35,21 @@ class ScanLabel extends StatelessWidget {
               )
             : Icon(icon, size: 16),
         label: Text(
-          isLoading ? 'Processing...' : label,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          displayText,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
           elevation: 4,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 8,
+          ),
         ),
       ),
     );

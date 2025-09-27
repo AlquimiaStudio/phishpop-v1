@@ -25,6 +25,14 @@ class CustomTab extends StatelessWidget {
         animation: tabController,
         builder: (context, child) {
           bool isSelected = tabController.index == index;
+
+          final iconColor = isSelected
+              ? AppColors.primaryColor
+              : Colors.grey[600];
+          final textColor = isSelected
+              ? AppColors.primaryColor
+              : Colors.grey[600];
+
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: EdgeInsets.symmetric(
@@ -52,9 +60,7 @@ class CustomTab extends StatelessWidget {
                   ),
                   child: Icon(
                     icon,
-                    color: isSelected
-                        ? AppColors.primaryColor
-                        : Colors.grey[600],
+                    color: iconColor,
                     size: isSelected ? 27 : 26,
                   ),
                 ),
@@ -62,13 +68,11 @@ class CustomTab extends StatelessWidget {
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
                   style: TextStyle(
-                    fontSize: isSelected ? 10 : 10,
+                    fontSize: 10,
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.normal,
-                    color: isSelected
-                        ? AppColors.primaryColor
-                        : Colors.grey[600],
+                    color: textColor,
                   ),
                   child: Text(label),
                 ),

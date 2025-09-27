@@ -20,7 +20,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     tabController = TabController(
-      length: 4, 
+      length: 4,
       vsync: this,
       initialIndex: widget.initialIndex,
     );
@@ -50,11 +50,11 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   removeBottom: true,
                   child: TabBarView(
                     controller: tabController,
-                    children: [
-                      const ScanScreen(),
-                      const HistoryScreen(),
-                      const StatsScreen(),
-                      const SafeParentScreen(),
+                    children: const [
+                      ScanScreen(),
+                      HistoryScreen(),
+                      StatsScreen(),
+                      SafeParentScreen(),
                     ],
                   ),
                 ),

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phishpop/screens/screens.dart';
 
-import '../../helpers/helpers.dart';
-import '../../theme/theme.dart';
 import '../widgets.dart';
 
 enum AuthMode { login, register }
@@ -63,22 +60,6 @@ class _AuthCardState extends State<AuthCard> {
 
                 const SizedBox(height: 32),
                 AuthSocialButtons(),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: authState == AuthState.loading
-                      ? null
-                      : () => navigationWithoutAnimation(
-                          context,
-                          HomeScreen(initialIndex: 0),
-                        ),
-                  child: Text(
-                    'Continue as Guest',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

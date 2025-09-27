@@ -1,4 +1,5 @@
 export 'design.dart';
+export 'firebase_helpers.dart';
 export 'generals.dart';
 export 'history.dart';
 export 'navigation.dart';

@@ -12,7 +12,7 @@ class ScanQrSection extends StatelessWidget {
       children: [
         ScanTitle(title: 'QR Code Scanner', icon: Icons.qr_code_scanner),
         const SizedBox(height: 20),
-        ScanQrButton(),
+        const ScanQrButton(),
       ],
     );
   }

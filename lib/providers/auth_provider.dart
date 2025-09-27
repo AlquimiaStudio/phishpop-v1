@@ -185,6 +185,40 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> signInWithApple() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final credential = await authService.signInWithApple();
+      isLoading = false;
+      notifyListeners();
+      return credential != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> signInWithGitHub() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final credential = await authService.signInWithGitHub();
+      isLoading = false;
+      notifyListeners();
+      return credential != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
   Future<void> checkAuthStatus() async {
     isLoading = true;
     notifyListeners();

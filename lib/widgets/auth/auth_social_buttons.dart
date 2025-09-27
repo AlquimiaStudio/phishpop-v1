@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:phishpop/screens/main/home_screen.dart';
+import 'package:provider/provider.dart';
 
-import '../../helpers/helpers.dart';
+import '../../providers/providers.dart';
 import '../../theme/theme.dart';
 import '../widgets.dart';
 
@@ -17,32 +18,91 @@ class AuthSocialButtons extends StatefulWidget {
 class _AuthSocialButtonsState extends State<AuthSocialButtons> {
   bool isLoading = false;
 
-  void handleSocialLogin(String provider) {
-    // ignore: avoid_print
-    print('ESTE ES EL PUTOOOOOOOO PROVEDOR: $provider');
+  Future<void> handleSocialLogin(String provider) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
     HapticFeedback.lightImpact();
     setState(() {
       isLoading = true;
     });
 
-    Future.delayed(const Duration(seconds: 1), () {});
+    try {
+      bool success = false;
 
-    setState(() {
-      isLoading = false;
-    });
+      switch (provider) {
+        case 'google':
+          success = await authProvider.signInWithGoogle();
+          break;
+        case 'apple':
+          success = await authProvider.signInWithApple();
+          break;
+        case 'gitHub':
+          success = await authProvider.signInWithGitHub();
+          break;
+      }
 
-    navigationWithoutAnimation(context, HomeScreen(initialIndex: 0));
+      if (success) {
+        // El AuthProvider manejará la navegación automáticamente
+        // a través del Consumer en main.dart
+      }
+    } catch (e) {
+      // Los errores ya son manejados por el AuthProvider
+      // Opcionalmente puedes agregar logging aquí
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final socialButtons = <Widget>[
+      Expanded(
+        child: AuthSocialButton(
+          icon: Icon(FontAwesomeIcons.google, color: Colors.red, size: 22),
+          label: 'Google',
+          onPressed: () => handleSocialLogin('google'),
+          backgroundColor: Colors.white,
+          isLoading: isLoading,
+        ),
+      ),
+
+      if (Platform.isIOS) ...[
+        const SizedBox(width: 12),
+        Expanded(
+          child: AuthSocialButton(
+            icon: Icon(FontAwesomeIcons.apple, color: Colors.white, size: 22),
+            label: 'Apple',
+            onPressed: () => handleSocialLogin('apple'),
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            isLoading: isLoading,
+          ),
+        ),
+      ],
+      const SizedBox(width: 12),
+      Expanded(
+        child: AuthSocialButton(
+          icon: Icon(FontAwesomeIcons.github, color: Colors.white, size: 22),
+          label: 'GitHub',
+          onPressed: () => handleSocialLogin('gitHub'),
+          backgroundColor: const Color(0xFF24292e),
+          textColor: Colors.white,
+          isLoading: isLoading,
+        ),
+      ),
+    ];
+
     return Column(
       children: [
         Row(
           children: [
             Expanded(child: Divider(color: Colors.grey[300])),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or continue with',
                 style: AppTextStyles.bodyMedium.copyWith(
@@ -54,53 +114,12 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
           ],
         ),
         const SizedBox(height: 24),
-        Row(
-          children: [
-            Expanded(
-              child: AuthSocialButton(
-                icon: Icon(
-                  FontAwesomeIcons.google,
-                  color: Colors.red,
-                  size: 22,
-                ),
-                label: 'Google',
-                onPressed: () => handleSocialLogin('google'),
-                backgroundColor: Colors.white,
-                isLoading: isLoading,
+        Platform.isIOS
+            ? Row(children: socialButtons)
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Row(children: socialButtons),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: AuthSocialButton(
-                icon: Icon(
-                  FontAwesomeIcons.apple,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                label: 'Apple',
-                onPressed: () => handleSocialLogin('apple'),
-                backgroundColor: Colors.black,
-                textColor: Colors.white,
-                isLoading: isLoading,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: AuthSocialButton(
-                icon: Icon(
-                  FontAwesomeIcons.github,
-                  color: Colors.white,
-                  size: 22,
-                ),
-                label: 'GitHub',
-                onPressed: () => handleSocialLogin('gitHub'),
-                backgroundColor: const Color(0xFF24292e),
-                textColor: Colors.white,
-                isLoading: isLoading,
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }

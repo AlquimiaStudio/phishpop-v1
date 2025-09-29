@@ -19,6 +19,7 @@ class SettingsScreen extends StatelessWidget {
         appBar: SecondaryAppbar(
           icon: Icons.settings_suggest_outlined,
           title: 'Settings',
+          useNavigatorPop: true,
         ),
         body: Container(
           decoration: getBordersScreen(context),

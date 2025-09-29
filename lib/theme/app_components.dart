@@ -173,4 +173,73 @@ class AppComponents {
     borderRadius: BorderRadius.circular(16),
     borderSide: const BorderSide(color: AppColors.dangerColor, width: 1),
   );
+
+  static InputDecoration getReportBorders(String hintText) {
+    return InputDecoration(
+      hintText: hintText,
+      hintStyle: TextStyle(
+        color: Colors.grey.shade600,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(
+          color: AppColors.primaryColor.withValues(alpha: 0.8),
+          width: 2,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(
+          color: AppColors.dangerColor.withValues(alpha: 0.7),
+          width: 1,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.dangerColor, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    );
+  }
+
+  static InputDecoration getTrustedContactDecoration(
+    String hintText,
+    IconData icon,
+    double paddingDecoration,
+  ) {
+    return InputDecoration(
+      hintText: hintText,
+      prefixIcon: Icon(icon, color: AppColors.primaryColor),
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade200),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade200),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: paddingDecoration,
+        vertical: paddingDecoration,
+      ),
+    );
+  }
 }

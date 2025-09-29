@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../helpers/helpers.dart';
 import '../../../theme/theme.dart';
 
-class ReportFormFields extends StatelessWidget {
+class ReportFormFields extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final String selectedScamType;
   final TextEditingController descriptionController;
@@ -20,79 +20,109 @@ class ReportFormFields extends StatelessWidget {
   });
 
   @override
+  State<ReportFormFields> createState() => _ReportFormFieldsState();
+}
+
+class _ReportFormFieldsState extends State<ReportFormFields> {
+  final FocusNode dropdownFocusNode = FocusNode();
+  final FocusNode descriptionFocusNode = FocusNode();
+  final FocusNode phoneNumberFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    dropdownFocusNode.dispose();
+    descriptionFocusNode.dispose();
+    phoneNumberFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Form(
-        key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 12),
-            buildSectionHeader(
-              context: context,
-              icon: Icons.category_outlined,
-              title: 'Scam Type',
-              color: AppColors.primaryColor,
+    return GestureDetector(
+      onTap: () {
+        dropdownFocusNode.unfocus();
+        descriptionFocusNode.unfocus();
+        phoneNumberFocusNode.unfocus();
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: selectedScamType.isEmpty ? null : selectedScamType,
-              decoration: getReportBorders('Select scam type'),
-              items: scamTypes.map((type) {
-                return DropdownMenuItem<String>(value: type, child: Text(type));
-              }).toList(),
-              onChanged: onScamTypeChanged,
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Please select a scam type'
-                  : null,
-            ),
-            const SizedBox(height: 24),
-            buildSectionHeader(
-              context: context,
-              icon: Icons.description_outlined,
-              title: 'Description',
-              color: AppColors.secondaryColor,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: descriptionController,
-              decoration: getReportBorders(
-                'Describe what happened, including dates, times, and any details you remember...',
-              ),
-              maxLines: 6,
-              validator: (value) => value == null || value.trim().isEmpty
-                  ? 'Please describe the scam incident'
-                  : null,
-            ),
-            const SizedBox(height: 24),
-            buildSectionHeader(
-              context: context,
-              icon: Icons.phone_outlined,
-              title: 'Phone Number (Optional)',
-              color: AppColors.warningColor,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: phoneNumberController,
-              decoration: getReportBorders(
-                'Phone number used in the scam (if applicable)',
-              ),
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 12),
           ],
+        ),
+        child: Form(
+          key: widget.formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 12),
+              buildSectionHeader(
+                context: context,
+                icon: Icons.category_outlined,
+                title: 'Scam Type',
+                color: AppColors.primaryColor,
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                initialValue: widget.selectedScamType.isEmpty
+                    ? null
+                    : widget.selectedScamType,
+                decoration: AppComponents.getReportBorders('Select scam type'),
+                focusNode: dropdownFocusNode,
+                items: scamTypes.map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: widget.onScamTypeChanged,
+                validator: Validators.validateScamType,
+              ),
+              const SizedBox(height: 24),
+              buildSectionHeader(
+                context: context,
+                icon: Icons.description_outlined,
+                title: 'Description',
+                color: AppColors.secondaryColor,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: widget.descriptionController,
+                focusNode: descriptionFocusNode,
+                decoration: AppComponents.getReportBorders(
+                  'Describe what happened, including dates, times, and any details you remember...',
+                ),
+                maxLines: 6,
+                validator: Validators.validateDescription,
+              ),
+              const SizedBox(height: 24),
+              buildSectionHeader(
+                context: context,
+                icon: Icons.phone_outlined,
+                title: 'Phone Number (Optional)',
+                color: AppColors.warningColor,
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: widget.phoneNumberController,
+                focusNode: phoneNumberFocusNode,
+                decoration: AppComponents.getReportBorders(
+                  'Phone number used in the scam (if applicable)',
+                ),
+                keyboardType: TextInputType.phone,
+                validator: Validators.validatePhone,
+              ),
+              const SizedBox(height: 12),
+            ],
+          ),
         ),
       ),
     );
@@ -125,46 +155,6 @@ class ReportFormFields extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  InputDecoration getReportBorders(String description) {
-    return InputDecoration(
-      hintText: description,
-      hintStyle: TextStyle(
-        color: Colors.grey.shade600,
-        fontSize: 14,
-        fontWeight: FontWeight.w400,
-      ),
-      filled: true,
-      fillColor: Colors.grey.shade50,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.grey.shade400, width: 1),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: AppColors.primaryColor.withValues(alpha: 0.8),
-          width: 2,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(
-          color: AppColors.dangerColor.withValues(alpha: 0.7),
-          width: 1,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.dangerColor, width: 2),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     );
   }
 }

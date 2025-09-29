@@ -10,12 +10,13 @@ class EmptyContactsWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(40),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      padding: const EdgeInsets.all(30),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: AppColors.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(50),
@@ -43,9 +44,9 @@ class EmptyContactsWidget extends StatelessWidget {
               height: 1.5,
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 25),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppColors.primaryColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
@@ -62,19 +63,23 @@ class EmptyContactsWidget extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: 12),
-                Expanded(
+                Flexible(
                   child: Text(
                     'Tap the + button above to add your first trusted contact',
+                    textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.w500,
                     ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
                   ),
                 ),
               ],
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }

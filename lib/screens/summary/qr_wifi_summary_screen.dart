@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class QrWifiSummaryScreen extends StatefulWidget {
   final String wifiContent;
   final QrWifiResponse? analysisResult;
   final bool? isCached;
+  final Widget? returnScreen;
 
   const QrWifiSummaryScreen({
     super.key,
     required this.wifiContent,
     this.analysisResult,
     this.isCached,
+    this.returnScreen,
   });
 
   @override
@@ -51,11 +55,25 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
   Widget build(BuildContext context) {
     return Consumer<QrWifiProvider>(
       builder: (context, qrWifiProvider, child) {
-        return Container(
-          decoration: getAppBackground(context),
-          child: Scaffold(
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (widget.returnScreen != null) {
+              navigationWithoutAnimation(context, widget.returnScreen!);
+            } else {
+              navigationWithoutAnimation(context, HomeScreen());
+            }
+          },
+          child: Container(
+            decoration: getAppBackground(context),
+            child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: SecondaryAppbar(icon: Icons.wifi, title: 'WiFi Analysis'),
+            appBar: SecondaryAppbar(
+              icon: Icons.wifi,
+              title: 'WiFi Analysis',
+              returnScreen: widget.returnScreen,
+            ),
             body: Container(
               decoration: getBordersScreen(context),
               child: RefreshIndicator(
@@ -67,6 +85,7 @@ class _QrWifiSummaryScreenState extends State<QrWifiSummaryScreen> {
                     : _buildBody(qrWifiProvider),
               ),
             ),
+          ),
           ),
         );
       },

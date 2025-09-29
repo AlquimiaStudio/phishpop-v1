@@ -22,6 +22,11 @@ class _QuickReportScreenState extends State<QuickReportScreen> {
   bool isGeneratingReport = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
     descriptionController.dispose();
     phoneNumberController.dispose();
@@ -53,9 +58,10 @@ class _QuickReportScreenState extends State<QuickReportScreen> {
           : phoneNumberController.text.trim(),
     );
 
-    await Clipboard.setData(ClipboardData(text: report));
-
     clearFormFields();
+    reportFormKey.currentState?.reset();
+
+    await Clipboard.setData(ClipboardData(text: report));
 
     setState(() {
       isGeneratingReport = false;
@@ -78,7 +84,7 @@ class _QuickReportScreenState extends State<QuickReportScreen> {
         appBar: const SecondaryAppbar(
           title: 'Quick Report',
           icon: Icons.report_problem,
-          screen: HomeScreen(initialIndex: 3),
+          returnScreen: HomeScreen(initialIndex: 3),
         ),
         body: Container(
           decoration: getBordersScreen(context),

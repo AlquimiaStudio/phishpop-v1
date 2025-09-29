@@ -17,7 +17,7 @@ class ReportGenerateButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        icon: isGenerating 
+        icon: isGenerating
             ? SizedBox(
                 width: 20,
                 height: 20,
@@ -28,10 +28,7 @@ class ReportGenerateButton extends StatelessWidget {
                   ),
                 ),
               )
-            : Icon(
-                Icons.copy,
-                color: theme.colorScheme.onPrimary,
-              ),
+            : Icon(Icons.copy, color: theme.colorScheme.onPrimary),
         label: Text(
           isGenerating ? 'Generating Report...' : 'Generate & Copy Report',
           style: theme.textTheme.labelLarge?.copyWith(

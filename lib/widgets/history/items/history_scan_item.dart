@@ -11,44 +11,47 @@ class HistoryScanItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => navigateToScanDetail(context, scanData),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-        decoration: getBoxShadow(context),
-        child: Row(
-          children: [
-            HistoryScanItemIcon(
-              scanType: scanData.scanType,
-              scanStatus: scanData.status,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => navigateToScanDetail(context, scanData),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+          decoration: getBoxShadow(context),
+          child: Row(
+            children: [
+              HistoryScanItemIcon(
+                scanType: scanData.scanType,
+                scanStatus: scanData.status,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    HistoryScanItemTitle(title: scanData.title),
+                    const SizedBox(height: 4),
+                    HistoryScanItemInfo(
+                      date: scanData.date,
+                      status: scanData.status,
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  HistoryScanItemTitle(title: scanData.title),
-                  const SizedBox(height: 4),
-                  HistoryScanItemInfo(
-                    date: scanData.date,
+                  HistoryScanItemScore(
+                    score: scanData.score,
                     status: scanData.status,
                   ),
+                  const SizedBox(height: 4),
+                  Icon(Icons.chevron_right, color: Colors.grey[500], size: 24),
                 ],
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                HistoryScanItemScore(
-                  score: scanData.score,
-                  status: scanData.status,
-                ),
-                const SizedBox(height: 4),
-                Icon(Icons.chevron_right, color: Colors.grey[500], size: 24),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

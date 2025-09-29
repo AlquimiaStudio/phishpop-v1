@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 void navigationWithoutAnimation(BuildContext context, Widget screen) {
   HapticFeedback.lightImpact();
-  Navigator.of(context).pushReplacement(
+  Navigator.of(context).push(
     PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => screen,
       transitionDuration: Duration.zero,

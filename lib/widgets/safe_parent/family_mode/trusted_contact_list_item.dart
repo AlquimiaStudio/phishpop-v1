@@ -21,10 +21,7 @@ class TrustedContactListItem extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 12,
-      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       title: Text(
         contact.name,
         style: theme.textTheme.titleMedium?.copyWith(
@@ -33,12 +30,12 @@ class TrustedContactListItem extends StatelessWidget {
       ),
       subtitle: Text(
         contact.phone,
-        style: theme.textTheme.bodyMedium,
+        style: theme.textTheme.bodySmall!.copyWith(fontSize: 13),
       ),
       leading: Icon(
         Icons.contact_phone,
         color: theme.colorScheme.primary,
-        size: 28,
+        size: 24,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -50,22 +47,19 @@ class TrustedContactListItem extends StatelessWidget {
             ),
             tooltip: 'Send "Call Me" SMS',
             onPressed: onSendMessage,
+            padding: EdgeInsets.zero,
           ),
           IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: theme.colorScheme.secondary,
-            ),
+            icon: Icon(Icons.edit, color: theme.colorScheme.secondary),
             tooltip: 'Edit Contact',
             onPressed: onEdit,
+            padding: EdgeInsets.zero,
           ),
           IconButton(
-            icon: Icon(
-              Icons.delete,
-              color: theme.colorScheme.error,
-            ),
+            icon: Icon(Icons.delete, color: theme.colorScheme.error),
             tooltip: 'Delete Contact',
             onPressed: onDelete,
+            padding: EdgeInsets.zero,
           ),
         ],
       ),

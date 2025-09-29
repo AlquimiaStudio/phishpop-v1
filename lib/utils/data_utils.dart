@@ -136,7 +136,7 @@ List<ScamScript> getScamScripts() {
     ),
     ScamScript(
       id: 'package_delivery',
-      title: 'Package Delivery Scam',
+      title: 'Package Scam',
       redFlags: [
         'Text or email about failed delivery for package you didn\'t order',
         'Suspicious links asking for personal information',

@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class QrUrlSummaryScreen extends StatefulWidget {
   final String urlToAnalyze;
   final QRUrlResponseModel? analysisResult;
   final bool? isCached;
+  final Widget? returnScreen;
 
   const QrUrlSummaryScreen({
     super.key,
     required this.urlToAnalyze,
     this.analysisResult,
     this.isCached,
+    this.returnScreen,
   });
 
   @override
@@ -47,23 +51,35 @@ class _QrUrlSummaryScreenState extends State<QrUrlSummaryScreen> {
   Widget build(BuildContext context) {
     return Consumer<QrUrlProvider>(
       builder: (context, qrUrlProvider, child) {
-        return Container(
-          decoration: getAppBackground(context),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: SecondaryAppbar(
-              icon: Icons.qr_code,
-              title: 'QR Code Analysis',
-            ),
-            body: Container(
-              decoration: getBordersScreen(context),
-              child: RefreshIndicator(
-                onRefresh: refreshData,
-                child: widget.analysisResult != null
-                    ? ScanQrUrlResultState(
-                        analysisResult: widget.analysisResult!,
-                      )
-                    : _buildBody(qrUrlProvider),
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (widget.returnScreen != null) {
+              navigationWithoutAnimation(context, widget.returnScreen!);
+            } else {
+              navigationWithoutAnimation(context, HomeScreen());
+            }
+          },
+          child: Container(
+            decoration: getAppBackground(context),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: SecondaryAppbar(
+                icon: Icons.qr_code,
+                title: 'QR Code Analysis',
+                returnScreen: widget.returnScreen,
+              ),
+              body: Container(
+                decoration: getBordersScreen(context),
+                child: RefreshIndicator(
+                  onRefresh: refreshData,
+                  child: widget.analysisResult != null
+                      ? ScanQrUrlResultState(
+                          analysisResult: widget.analysisResult!,
+                        )
+                      : _buildBody(qrUrlProvider),
+                ),
               ),
             ),
           ),

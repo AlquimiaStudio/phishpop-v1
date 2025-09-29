@@ -6,12 +6,17 @@ import '../../../theme/theme.dart';
 class ScamReportingWebsitesSection extends StatelessWidget {
   final Map<String, String> reportingWebsites;
 
-  const ScamReportingWebsitesSection({super.key, required this.reportingWebsites});
+  const ScamReportingWebsitesSection({
+    super.key,
+    required this.reportingWebsites,
+  });
 
   Future<void> _launchWebsite(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    try {
+      final uri = Uri.parse(url);
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch $url: $e');
     }
   }
 
@@ -106,7 +111,11 @@ class ScamReportingWebsitesSection extends StatelessWidget {
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(Icons.open_in_new, color: Colors.white, size: 18),
+                      child: Icon(
+                        Icons.open_in_new,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ),
                 ],

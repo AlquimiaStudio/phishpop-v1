@@ -170,6 +170,7 @@ void navigateToScanDetail(BuildContext context, ScanHistoryModel historyItem) {
                   'WIFI:T:${QrWifiResponse.securityTypeToString(originalResponse.securityType)};S:${originalResponse.ssid};P:${originalResponse.password};;',
               analysisResult: originalResponse,
               isCached: true,
+              returnScreen: HomeScreen(initialIndex: 1),
             ),
           ),
         );
@@ -182,6 +183,7 @@ void navigateToScanDetail(BuildContext context, ScanHistoryModel historyItem) {
               urlToAnalyze: originalResponse.url,
               analysisResult: originalResponse,
               isCached: true,
+              returnScreen: HomeScreen(initialIndex: 1),
             ),
           ),
         );
@@ -194,6 +196,7 @@ void navigateToScanDetail(BuildContext context, ScanHistoryModel historyItem) {
               textToAnalyze: originalResponse.text,
               analysisResult: originalResponse,
               isCached: true,
+              returnScreen: HomeScreen(initialIndex: 1),
             ),
           ),
         );
@@ -206,6 +209,7 @@ void navigateToScanDetail(BuildContext context, ScanHistoryModel historyItem) {
               urlToAnalyze: originalResponse.url,
               analysisResult: originalResponse,
               isCached: true,
+              returnScreen: HomeScreen(initialIndex: 1),
             ),
           ),
         );

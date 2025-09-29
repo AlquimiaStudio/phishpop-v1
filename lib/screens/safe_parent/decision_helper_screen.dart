@@ -43,7 +43,7 @@ class _DecisionHelperScreenState extends State<DecisionHelperScreen> {
         appBar: SecondaryAppbar(
           title: 'Decision Helper',
           icon: Icons.help_outline,
-          screen: HomeScreen(initialIndex: 3),
+          returnScreen: HomeScreen(initialIndex: 3),
         ),
         body: Container(
           decoration: getBordersScreen(context),

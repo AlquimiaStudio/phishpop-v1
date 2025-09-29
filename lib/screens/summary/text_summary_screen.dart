@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class TextSummaryScreen extends StatefulWidget {
   final String textToAnalyze;
   final ITextResponse? analysisResult;
   final bool? isCached;
+  final Widget? returnScreen;
 
   const TextSummaryScreen({
     super.key,
     required this.textToAnalyze,
     this.analysisResult,
     this.isCached,
+    this.returnScreen,
   });
 
   @override
@@ -47,13 +51,24 @@ class _TextSummaryScreenState extends State<TextSummaryScreen> {
   Widget build(BuildContext context) {
     return Consumer<TextProvider>(
       builder: (context, textProvider, child) {
-        return Container(
-          decoration: getAppBackground(context),
-          child: Scaffold(
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (widget.returnScreen != null) {
+              navigationWithoutAnimation(context, widget.returnScreen!);
+            } else {
+              navigationWithoutAnimation(context, HomeScreen());
+            }
+          },
+          child: Container(
+            decoration: getAppBackground(context),
+            child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: SecondaryAppbar(
               icon: Icons.message,
               title: 'Text Analysis',
+              returnScreen: widget.returnScreen,
             ),
             body: Container(
               decoration: getBordersScreen(context),
@@ -66,6 +81,7 @@ class _TextSummaryScreenState extends State<TextSummaryScreen> {
                     : _buildBody(textProvider),
               ),
             ),
+          ),
           ),
         );
       },

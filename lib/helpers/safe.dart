@@ -95,7 +95,7 @@ Future<void> sendCallMeMessage(
   final uri = Uri.parse(uriString);
 
   if (await canLaunchUrl(uri)) {
-    await launchUrl(uri);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   } else {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,7 +108,6 @@ Future<void> sendCallMeMessage(
   }
 }
 
-// Quick Report Helper Functions
 String generateScamReport({
   required String scamType,
   required String description,
@@ -294,88 +293,6 @@ Map<String, dynamic> getScamReportData(String scamType) {
         ],
       };
   }
-}
-
-List<Map<String, dynamic>> createSafeParentHistoryEntries() {
-  final now = DateTime.now();
-
-  return [
-    {
-      'id': 'safe_scam_detection_${now.millisecondsSinceEpoch}',
-      'scanType': 'Safe Parent',
-      'title': 'Scam Detection Quiz',
-      'date': _formatDate(now.subtract(const Duration(hours: 2))),
-      'status': 'Likely Scam',
-      'score': 85.0,
-      'timestamp': now.subtract(const Duration(hours: 2)).toIso8601String(),
-      'details': {
-        'feature': 'Decision Helper',
-        'result': 'Likely Scam',
-        'yesCount': 4,
-        'totalQuestions': 6,
-        'recommendation': 'Do not share info or money. Block and report.',
-      },
-      'flaggedIssues': [
-        'Pressure to act immediately',
-        'Money requested',
-        'Asked to keep secret',
-        'Claimed to be government official',
-      ],
-    },
-    {
-      'id': 'safe_family_contact_${now.millisecondsSinceEpoch - 1}',
-      'scanType': 'Safe Parent',
-      'title': 'Family Contact Added',
-      'date': _formatDate(now.subtract(const Duration(days: 1))),
-      'status': 'Safe',
-      'score': 100.0,
-      'timestamp': now.subtract(const Duration(days: 1)).toIso8601String(),
-      'details': {
-        'feature': 'Family Mode',
-        'action': 'Added trusted contact',
-        'contactName': 'Mom',
-        'contactCount': 2,
-      },
-      'flaggedIssues': null,
-    },
-    {
-      'id': 'safe_scam_report_${now.millisecondsSinceEpoch - 2}',
-      'scanType': 'Safe Parent',
-      'title': 'Scam Report Generated',
-      'date': _formatDate(now.subtract(const Duration(days: 3))),
-      'status': 'Reported',
-      'score': 90.0,
-      'timestamp': now.subtract(const Duration(days: 3)).toIso8601String(),
-      'details': {
-        'feature': 'Quick Report',
-        'scamType': 'Phone Call Scam',
-        'reportGenerated': true,
-        'copiedToClipboard': true,
-      },
-      'flaggedIssues': [
-        'Suspicious phone call',
-        'Requested personal information',
-      ],
-    },
-  ];
-}
-
-String _formatDate(DateTime date) {
-  final months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return '${months[date.month - 1]} ${date.day}, ${date.year}';
 }
 
 const List<String> scamTypes = [

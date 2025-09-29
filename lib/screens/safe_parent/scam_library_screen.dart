@@ -18,7 +18,7 @@ class ScamLibraryScreen extends StatelessWidget {
         appBar: SecondaryAppbar(
           title: 'Scam Library',
           icon: Icons.library_books,
-          screen: HomeScreen(initialIndex: 3),
+          returnScreen: HomeScreen(initialIndex: 3),
         ),
         body: Container(
           decoration: getBordersScreen(context),

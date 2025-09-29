@@ -75,4 +75,24 @@ class Validators {
     }
     return null;
   }
+
+  static String? validateDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please describe the scam incident';
+    }
+    if (value.trim().length < 10) {
+      return 'Description must be at least 10 characters';
+    }
+    if (value.trim().length > 1000) {
+      return 'Description cannot exceed 1000 characters';
+    }
+    return null;
+  }
+
+  static String? validateScamType(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select a scam type';
+    }
+    return null;
+  }
 }

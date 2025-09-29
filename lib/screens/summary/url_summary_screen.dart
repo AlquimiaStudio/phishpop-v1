@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class UrlSummaryScreen extends StatefulWidget {
   final String urlToAnalyze;
   final IUrlResponse? analysisResult;
   final bool? isCached;
+  final Widget? returnScreen;
 
   const UrlSummaryScreen({
     super.key,
     required this.urlToAnalyze,
     this.analysisResult,
     this.isCached,
+    this.returnScreen,
   });
 
   @override
@@ -48,18 +52,35 @@ class _UrlSummaryScreenState extends State<UrlSummaryScreen> {
   Widget build(BuildContext context) {
     return Consumer<UrlProvider>(
       builder: (context, urlProvider, child) {
-        return Container(
-          decoration: getAppBackground(context),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: SecondaryAppbar(icon: Icons.link, title: 'URL Analysis'),
-            body: Container(
-              decoration: getBordersScreen(context),
-              child: RefreshIndicator(
-                onRefresh: refreshData,
-                child: widget.analysisResult != null
-                    ? ScanUrlResultState(analysisResult: widget.analysisResult!)
-                    : _buildBody(urlProvider),
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (widget.returnScreen != null) {
+              navigationWithoutAnimation(context, widget.returnScreen!);
+            } else {
+              navigationWithoutAnimation(context, HomeScreen());
+            }
+          },
+          child: Container(
+            decoration: getAppBackground(context),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: SecondaryAppbar(
+                icon: Icons.link,
+                title: 'URL Analysis',
+                returnScreen: widget.returnScreen,
+              ),
+              body: Container(
+                decoration: getBordersScreen(context),
+                child: RefreshIndicator(
+                  onRefresh: refreshData,
+                  child: widget.analysisResult != null
+                      ? ScanUrlResultState(
+                          analysisResult: widget.analysisResult!,
+                        )
+                      : _buildBody(urlProvider),
+                ),
               ),
             ),
           ),

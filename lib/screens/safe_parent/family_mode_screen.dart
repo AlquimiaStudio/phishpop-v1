@@ -81,7 +81,7 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
         appBar: SecondaryAppbar(
           title: 'Family Mode',
           icon: Icons.family_restroom,
-          screen: HomeScreen(initialIndex: 3),
+          returnScreen: HomeScreen(initialIndex: 3),
         ),
         body: Container(
           decoration: getBordersScreen(context),

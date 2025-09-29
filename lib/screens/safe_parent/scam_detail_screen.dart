@@ -19,7 +19,7 @@ class ScamDetailScreen extends StatelessWidget {
         appBar: SecondaryAppbar(
           title: scamScript.title,
           icon: Icons.warning_amber,
-          screen: ScamLibraryScreen(),
+          returnScreen: ScamLibraryScreen(),
         ),
         body: Container(
           decoration: getBordersScreen(context),

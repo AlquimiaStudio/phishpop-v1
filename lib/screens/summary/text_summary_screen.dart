@@ -64,24 +64,24 @@ class _TextSummaryScreenState extends State<TextSummaryScreen> {
           child: Container(
             decoration: getAppBackground(context),
             child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: SecondaryAppbar(
-              icon: Icons.message,
-              title: 'Text Analysis',
-              returnScreen: widget.returnScreen,
-            ),
-            body: Container(
-              decoration: getBordersScreen(context),
-              child: RefreshIndicator(
-                onRefresh: refreshData,
-                child: widget.analysisResult != null
-                    ? ScanTextResultState(
-                        analysisResult: widget.analysisResult!,
-                      )
-                    : _buildBody(textProvider),
+              backgroundColor: Colors.transparent,
+              appBar: SecondaryAppbar(
+                icon: Icons.message,
+                title: 'Text Analysis',
+                returnScreen: widget.returnScreen,
+              ),
+              body: Container(
+                decoration: getBordersScreen(context),
+                child: RefreshIndicator(
+                  onRefresh: refreshData,
+                  child: widget.analysisResult != null
+                      ? ScanTextResultState(
+                          analysisResult: widget.analysisResult!,
+                        )
+                      : _buildBody(textProvider),
+                ),
               ),
             ),
-          ),
           ),
         );
       },

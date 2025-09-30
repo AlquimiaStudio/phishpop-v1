@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../helpers/helpers.dart';
 import '../screens/screens.dart';
 import '../services/services.dart';
+import '../widgets/ui/generals/generals.dart';
 import 'providers.dart';
 
 enum QrScanState { idle, scanning, success, error, unsupported }
@@ -61,8 +62,25 @@ class QrProvider extends ChangeNotifier {
   }
 
   void processQrFromGallery(String qrResult, NavigatorState navigator) async {
+    final context = navigator.context;
+    final historyProvider = context.read<HistoryProvider>();
+    final qrUrlProvider = context.read<QrUrlProvider>();
+    final qrWifiProvider = context.read<QrWifiProvider>();
+
     try {
       if (isUrl(qrResult)) {
+        final hasInternet = await ConnectivityHelper.hasInternetConnection();
+        if (!hasInternet) {
+          if (context.mounted) {
+            GlobalSnackBar.showError(
+              context,
+              'No internet connection available',
+            );
+          }
+          setState(QrScanState.idle);
+          return;
+        }
+
         setState(QrScanState.success);
 
         navigator.pushReplacement(
@@ -80,11 +98,7 @@ class QrProvider extends ChangeNotifier {
           ),
         );
 
-        final historyProvider = navigator.context.read<HistoryProvider>();
-        navigator.context.read<QrUrlProvider>().analyzeQrUrl(
-          qrResult,
-          historyProvider,
-        );
+        qrUrlProvider.analyzeQrUrl(qrResult, historyProvider);
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
 
@@ -103,27 +117,25 @@ class QrProvider extends ChangeNotifier {
           ),
         );
 
-        final historyProvider = navigator.context.read<HistoryProvider>();
-        navigator.context.read<QrWifiProvider>().analyzeQrWifi(
-          qrResult,
-          historyProvider,
-        );
+        qrWifiProvider.analyzeQrWifi(qrResult, historyProvider);
       } else {
         setState(QrScanState.unsupported);
         errorMessage = 'QR code type not supported';
 
-        ScaffoldMessenger.of(navigator.context).showSnackBar(
-          SnackBar(
-            content: const Text('QR code type not supported'),
-            duration: const Duration(seconds: 3),
-            backgroundColor: Colors.red[300],
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('QR code type not supported'),
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.red[300],
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       setState(QrScanState.error);
@@ -138,27 +150,45 @@ class QrProvider extends ChangeNotifier {
   ) async {
     lastResult = qrResult;
 
+    final historyProvider = context.read<HistoryProvider>();
+    final qrUrlProvider = context.read<QrUrlProvider>();
+    final qrWifiProvider = context.read<QrWifiProvider>();
+
     try {
       if (isUrl(qrResult)) {
+        final hasInternet = await ConnectivityHelper.hasInternetConnection();
+        if (!hasInternet) {
+          if (context.mounted) {
+            GlobalSnackBar.showError(
+              context,
+              'No internet connection available',
+            );
+            Navigator.of(context).pop();
+          }
+          setState(QrScanState.idle);
+          return;
+        }
+
         setState(QrScanState.success);
 
-        Navigator.of(context).pushReplacement(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                LoadingScreen(
-                  icon: Icons.qr_code_scanner,
-                  title: 'Analyzing QR Code...',
-                  subtitle: 'Please wait while we analyze the QR code URL',
-                  screen: QrUrlSummaryScreen(urlToAnalyze: qrResult),
-                  time: 4,
-                ),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        );
+        if (context.mounted) {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  LoadingScreen(
+                    icon: Icons.qr_code_scanner,
+                    title: 'Analyzing QR Code...',
+                    subtitle: 'Please wait while we analyze the QR code URL',
+                    screen: QrUrlSummaryScreen(urlToAnalyze: qrResult),
+                    time: 4,
+                  ),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          );
+        }
 
-        final historyProvider = context.read<HistoryProvider>();
-        context.read<QrUrlProvider>().analyzeQrUrl(qrResult, historyProvider);
+        qrUrlProvider.analyzeQrUrl(qrResult, historyProvider);
       } else if (isWifi(qrResult)) {
         setState(QrScanState.success);
 
@@ -177,25 +207,26 @@ class QrProvider extends ChangeNotifier {
           ),
         );
 
-        final historyProvider = context.read<HistoryProvider>();
-        context.read<QrWifiProvider>().analyzeQrWifi(qrResult, historyProvider);
+        qrWifiProvider.analyzeQrWifi(qrResult, historyProvider);
       } else {
         setState(QrScanState.unsupported);
         errorMessage = 'QR code type not supported';
-        Navigator.of(context).pop();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('QR code type not supported'),
-            duration: const Duration(seconds: 3),
-            backgroundColor: Colors.red[300],
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        if (context.mounted) {
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('QR code type not supported'),
+              duration: const Duration(seconds: 3),
+              backgroundColor: Colors.red[300],
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       setState(QrScanState.error);

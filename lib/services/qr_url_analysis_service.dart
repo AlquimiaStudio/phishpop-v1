@@ -1,15 +1,12 @@
-import 'package:dio/dio.dart';
-
 import '../models/models.dart';
 import '../helpers/helpers.dart';
 import '../providers/providers.dart';
+import 'http_client.dart';
 
 class QrUrlAnalysisService {
-  final _dio = Dio();
-
   Future<QRUrlResponseModel> getQrUrlAnalysis(String url, HistoryProvider historyProvider) async {
-    final response = await _dio.get(
-      "https://phish-pop-express-backend.vercel.app/api/v1/qr-analysis",
+    final response = await HttpClient.getWithRetry(
+      "/api/v1/qr-analysis",
       queryParameters: {'url': url},
     );
 

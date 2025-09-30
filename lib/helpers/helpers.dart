@@ -1,3 +1,4 @@
+export 'connectivity_helper.dart';
 export 'design.dart';
 export 'firebase_helpers.dart';
 export 'generals.dart';

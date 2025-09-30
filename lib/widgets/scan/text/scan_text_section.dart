@@ -29,6 +29,20 @@ class _ScanTextSectionState extends State<ScanTextSection> {
     handleTextScan() async {
       if (controller.text.isEmpty) return;
 
+      final textProvider = Provider.of<TextProvider>(context, listen: false);
+      final historyProvider = Provider.of<HistoryProvider>(
+        context,
+        listen: false,
+      );
+
+      final hasInternet = await ConnectivityHelper.hasInternetConnection();
+      if (!hasInternet) {
+        if (context.mounted) {
+          GlobalSnackBar.showError(context, 'No internet connection available');
+        }
+        return;
+      }
+
       setState(() {
         isLoading = true;
       });
@@ -38,11 +52,6 @@ class _ScanTextSectionState extends State<ScanTextSection> {
 
         String validText = validateAndFormatText(controller.text)!;
 
-        final textProvider = Provider.of<TextProvider>(context, listen: false);
-        final historyProvider = Provider.of<HistoryProvider>(
-          context,
-          listen: false,
-        );
         await textProvider.analyzeText(validText, historyProvider);
 
         if (context.mounted) {

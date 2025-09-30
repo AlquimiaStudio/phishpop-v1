@@ -44,6 +44,7 @@ class _QrUrlSummaryScreenState extends State<QrUrlSummaryScreen> {
       context,
       listen: false,
     );
+
     await qrUrlProvider.analyzeQrUrl(widget.urlToAnalyze, historyProvider);
   }
 

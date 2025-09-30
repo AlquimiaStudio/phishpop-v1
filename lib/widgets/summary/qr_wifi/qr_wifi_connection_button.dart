@@ -31,26 +31,8 @@ class _QrWifiConnectionButtonState extends State<QrWifiConnectionButton> {
         context,
         listen: false,
       );
-      final success = await qrWifiProvider.connectToWifi();
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              success
-                  ? 'Successfully connected to ${widget.result.ssid}'
-                  : 'Failed to connect to WiFi network',
-            ),
-            backgroundColor: success
-                ? AppColors.successColor
-                : AppColors.dangerColor,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
+      qrWifiProvider.showWifiInstructions(context);
     } catch (e) {
       if (mounted) {
         _showConnectionDialog(e.toString());

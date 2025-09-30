@@ -30,6 +30,20 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
     handleUrlScan() async {
       if (controller.text.isEmpty) return;
 
+      final urlProvider = Provider.of<UrlProvider>(context, listen: false);
+      final historyProvider = Provider.of<HistoryProvider>(
+        context,
+        listen: false,
+      );
+
+      final hasInternet = await ConnectivityHelper.hasInternetConnection();
+      if (!hasInternet) {
+        if (context.mounted) {
+          GlobalSnackBar.showError(context, 'No internet connection available');
+        }
+        return;
+      }
+
       setState(() {
         isLoading = true;
       });
@@ -39,11 +53,6 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
 
         String validUrl = validateAndFormatUrl(controller.text)!;
 
-        final urlProvider = Provider.of<UrlProvider>(context, listen: false);
-        final historyProvider = Provider.of<HistoryProvider>(
-          context,
-          listen: false,
-        );
         await urlProvider.analyzeUrl(validUrl, historyProvider);
 
         if (context.mounted) {

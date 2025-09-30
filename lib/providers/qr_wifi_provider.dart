@@ -54,15 +54,17 @@ class QrWifiProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> connectToWifi() async {
-    if (qrWifiAnalysisResult == null) return false;
+  void showWifiInstructions(BuildContext context) {
+    if (qrWifiAnalysisResult == null) return;
 
     try {
-      return await QrWifiAnalysisService().connectToWifi(qrWifiAnalysisResult!);
+      QrWifiAnalysisService().showWifiConnectionDialog(
+        context,
+        qrWifiAnalysisResult!,
+      );
     } catch (e) {
-      error = 'Error connecting to WiFi: ${e.toString()}';
+      error = 'Error showing WiFi instructions: ${e.toString()}';
       notifyListeners();
-      return false;
     }
   }
 }

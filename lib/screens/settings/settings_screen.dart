@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
-import '../../widgets/settings/user_profile_section.dart';
-import '../../widgets/settings/user_info_card.dart';
-import '../../widgets/settings/account_actions_section.dart';
-import '../../widgets/settings/settings_menu_section.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -38,7 +34,19 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   const UserProfileSection(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
+                  SubscriptionStatusCard(
+                    subscriptionType: SubscriptionType.free,
+                    onUpgradePressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Upgrade functionality coming soon!'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 5),
                   const UserInfoCard(),
                   const SizedBox(height: 20),
                   const AccountActionsSection(),

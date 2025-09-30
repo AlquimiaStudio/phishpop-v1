@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../widgets/widgets.dart';
@@ -25,7 +23,11 @@ class ScanScreen extends StatelessWidget {
           ScanUrlSection(),
           const SizedBox(height: 26),
           ScanQrSection(),
-          SizedBox(height: Platform.isIOS ? 140 : 100),
+          const SizedBox(height: 40),
+          const DisclaimerMessage(
+            message:
+                'Security analysis results are for informational purposes only. PhishPop cannot guarantee 100% accuracy in threat detection. Always exercise caution and verify suspicious content through multiple sources before taking action.',
+          ),
         ],
       ),
     );

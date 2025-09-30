@@ -8,6 +8,7 @@ export 'main/scan_screen.dart';
 export 'main/splash_screen.dart';
 export 'main/stats_screen.dart';
 
+export 'settings/privacy_security_screen.dart';
 export 'settings/settings_screen.dart';
 
 export 'summary/qr_url_summary_screen.dart';

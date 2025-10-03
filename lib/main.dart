@@ -7,12 +7,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'providers/providers.dart';
 import 'screens/screens.dart';
 import 'theme/theme.dart';
+import 'services/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
+  await RevenueCatService().initialize();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

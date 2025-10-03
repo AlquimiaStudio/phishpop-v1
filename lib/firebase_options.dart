@@ -67,6 +67,6 @@ class DefaultFirebaseOptions {
         '803080174735-gesh3072t1jlhhn7titi5nhtfok6ektt.apps.googleusercontent.com',
     iosClientId:
         '803080174735-3q7abft9eduqinuk57qtp066dlnki6ui.apps.googleusercontent.com',
-    iosBundleId: 'com.example.phishpop',
+    iosBundleId: 'com.andressaumet.phishpop',
   );
 }

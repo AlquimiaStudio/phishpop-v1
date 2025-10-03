@@ -1,5 +1,6 @@
 export 'auth/auth.dart';
 export 'history/history.dart';
+export 'pricing/pricing.dart';
 export 'privacy_security/security.dart';
 export 'qr/qr.dart';
 export 'safe_parent/safe_parent.dart';

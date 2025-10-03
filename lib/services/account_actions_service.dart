@@ -9,9 +9,11 @@ class AccountActionsService {
   static void handleChangePassword(BuildContext context) {
     final authProvider = context.read<AppAuthProvider>();
     final userEmail = authProvider.currentUser?.email;
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     if (userEmail == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(
           content: Text('Unable to get user email'),
           duration: Duration(seconds: 2),
@@ -28,7 +30,7 @@ class AccountActionsService {
           iconColor: Colors.blue,
           title: 'Reset Password',
           content:
-              'A password reset email will be sent to $userEmail. Check your email to reset your password.',
+              'A password reset email will be sent to $userEmail. Check your email to reset your password. If you don\'t see it, please check your spam folder.',
           confirmText: 'Send Email',
           confirmButtonColor: Colors.blue,
           onConfirm: () async {
@@ -38,26 +40,21 @@ class AccountActionsService {
               userEmail,
             );
 
-            if (context.mounted) {
-              if (success) {
-                await authProvider.logout();
-
-                if (context.mounted) {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const AuthScreen()),
-                    (route) => false,
-                  );
-                }
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      authProvider.errorMessage ?? 'Failed to send email',
-                    ),
-                    duration: const Duration(seconds: 3),
+            if (success) {
+              await authProvider.logout();
+              navigator.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const AuthWrapper()),
+                (route) => false,
+              );
+            } else {
+              scaffoldMessenger.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    authProvider.errorMessage ?? 'Failed to send email',
                   ),
-                );
-              }
+                  duration: const Duration(seconds: 3),
+                ),
+              );
             }
           },
         );
@@ -66,9 +63,12 @@ class AccountActionsService {
   }
 
   static void handleSignOut(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final authProvider = context.read<AppAuthProvider>();
+
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return ConfirmationDialog(
           icon: Icons.logout,
           iconColor: Colors.orange,
@@ -78,13 +78,12 @@ class AccountActionsService {
           confirmText: 'Sign Out',
           confirmButtonColor: Colors.orange,
           onConfirm: () async {
-            await context.read<AppAuthProvider>().logout();
-
-            if (context.mounted) {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil('/', (route) => false);
-            }
+            Navigator.of(dialogContext).pop();
+            await authProvider.logout();
+            navigator.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const AuthWrapper()),
+              (route) => false,
+            );
           },
         );
       },
@@ -92,9 +91,12 @@ class AccountActionsService {
   }
 
   static void handleDeleteAccount(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final authProvider = context.read<AppAuthProvider>();
+
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return ConfirmationDialog(
           icon: Icons.delete_forever,
           iconColor: Colors.red,
@@ -104,12 +106,12 @@ class AccountActionsService {
           confirmText: 'Delete',
           confirmButtonColor: Colors.red,
           onConfirm: () async {
-            await context.read<AppAuthProvider>().deleteAccount();
-            if (context.mounted) {
-              Navigator.of(
-                context,
-              ).pushNamedAndRemoveUntil('/', (route) => false);
-            }
+            Navigator.of(dialogContext).pop();
+            await authProvider.deleteAccount();
+            navigator.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const AuthWrapper()),
+              (route) => false,
+            );
           },
         );
       },

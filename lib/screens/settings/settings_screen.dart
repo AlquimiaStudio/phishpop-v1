@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
+import '../screens.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -38,10 +39,12 @@ class SettingsScreen extends StatelessWidget {
                   SubscriptionStatusCard(
                     subscriptionType: SubscriptionType.free,
                     onUpgradePressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Upgrade functionality coming soon!'),
-                          behavior: SnackBarBehavior.floating,
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) =>
+                              const PricingScreen(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
                         ),
                       );
                     },

@@ -36,18 +36,11 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
         case 'apple':
           success = await authProvider.signInWithApple();
           break;
-        case 'gitHub':
-          success = await authProvider.signInWithGitHub();
-          break;
       }
 
-      if (success) {
-        // El AuthProvider manejará la navegación automáticamente
-        // a través del Consumer en main.dart
-      }
+      if (success) {}
     } catch (e) {
       // Los errores ya son manejados por el AuthProvider
-      // Opcionalmente puedes agregar logging aquí
     } finally {
       if (mounted) {
         setState(() {
@@ -71,7 +64,7 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
       ),
 
       if (Platform.isIOS) ...[
-        const SizedBox(width: 12),
+        const SizedBox(width: 14),
         Expanded(
           child: AuthSocialButton(
             icon: Icon(FontAwesomeIcons.apple, color: Colors.white, size: 22),
@@ -83,17 +76,6 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
           ),
         ),
       ],
-      const SizedBox(width: 12),
-      Expanded(
-        child: AuthSocialButton(
-          icon: Icon(FontAwesomeIcons.github, color: Colors.white, size: 22),
-          label: 'GitHub',
-          onPressed: () => handleSocialLogin('gitHub'),
-          backgroundColor: const Color(0xFF24292e),
-          textColor: Colors.white,
-          isLoading: isLoading,
-        ),
-      ),
     ];
 
     return Column(
@@ -115,9 +97,12 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
         ),
         const SizedBox(height: 24),
         Platform.isIOS
-            ? Row(children: socialButtons)
-            : Padding(
+            ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Row(children: socialButtons),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 70.0),
                 child: Row(children: socialButtons),
               ),
       ],

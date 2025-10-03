@@ -151,6 +151,9 @@ class FirebaseAuthService {
 
   Future<void> deleteAccount() async {
     try {
+      // Save user reference before any operations
+      final user = _auth.currentUser;
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
@@ -158,9 +161,13 @@ class FirebaseAuthService {
       await scanDatabaseService.clearAllScans();
 
       await deleteSQLiteDatabase();
-      await signOut();
 
-      await _auth.currentUser?.delete();
+      if (user != null) {
+        await user.delete();
+        await signOut();
+      } else {
+        await signOut();
+      }
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
     } catch (e) {

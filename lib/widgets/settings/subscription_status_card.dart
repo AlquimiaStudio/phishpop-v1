@@ -126,9 +126,17 @@ class SubscriptionStatusCard extends StatelessWidget {
             'Unlimited scans',
             'Advanced threat detection',
             'Priority support',
-            'Ad-free experience',
+            'Family Mode: Quick report to authorities',
+            'Family Mode: Scam library with official guides',
+            'Family Mode: Emergency family contacts (3)',
+            'Family Mode: One-tap SOS alert',
           ]
-        : ['Basic scans (limited)', 'Standard protection', 'Community support'];
+        : [
+            'Basic scans (3 free trial only)',
+            'Standard protection',
+            'Community support',
+            'No Family Mode access',
+          ];
 
     return Column(
       children: features.map((feature) => _buildFeatureItem(feature)).toList(),

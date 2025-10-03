@@ -536,3 +536,84 @@ void showExplanationModal(
     ),
   );
 }
+
+Map<String, String> getPricingInfo(bool isAnnual) {
+  if (isAnnual) {
+    return {
+      'price': '24',
+      'cents': '.99',
+      'period': 'per year',
+      'savings': 'Normally \$35.88/year • Save \$10.89',
+    };
+  } else {
+    return {
+      'price': '2',
+      'cents': '.99',
+      'period': 'per month',
+      'savings': '',
+    };
+  }
+}
+
+List<Map<String, dynamic>> getPremiumFeatures() {
+  return [
+    {
+      'icon': Icons.all_inclusive,
+      'title': 'Unlimited Scans',
+      'description': 'No limits on SMS, email, QR, and URL analysis',
+    },
+    {
+      'icon': Icons.psychology,
+      'title': 'Advanced AI Detection',
+      'description': 'Enhanced threat detection with latest AI models',
+    },
+    {
+      'icon': Icons.headset_mic,
+      'title': 'Priority Support',
+      'description': '24/7 premium customer support',
+    },
+    {
+      'icon': Icons.family_restroom,
+      'title': 'Family Mode',
+      'description': 'Exclusive elderly protection features',
+    },
+  ];
+}
+
+List<Map<String, dynamic>> getFamilyModeFeatures() {
+  return [
+    {
+      'icon': Icons.report,
+      'title': 'Quick Government Reporting',
+    },
+    {
+      'icon': Icons.library_books,
+      'title': 'Official Scam Library',
+    },
+    {
+      'icon': Icons.contacts,
+      'title': 'Emergency Family Contacts',
+    },
+    {
+      'icon': Icons.sos,
+      'title': 'One-tap SOS Messages',
+    },
+  ];
+}
+
+List<Map<String, dynamic>> getTrustBadges() {
+  return [
+    {
+      'icon': Icons.security,
+      'text': '256-bit\nEncryption',
+    },
+    {
+      'icon': Icons.privacy_tip,
+      'text': 'Privacy\nFirst',
+    },
+    {
+      'icon': Icons.verified_user,
+      'text': 'Trusted by\n10K+ Users',
+    },
+  ];
+}

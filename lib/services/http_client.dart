@@ -9,9 +9,9 @@ class HttpClient {
   static final Dio _dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: Duration(seconds: 5),
-      receiveTimeout: Duration(seconds: 8),
-      sendTimeout: Duration(seconds: 3),
+      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 45),
+      sendTimeout: Duration(seconds: 30),
       headers: {'Content-Type': 'application/json'},
     ),
   );

@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/theme.dart';
 
-// TrustedContact model
+
 class TrustedContact {
   String name;
   String phone;

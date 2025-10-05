@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:share_handler/share_handler.dart';
 
 import 'providers/providers.dart';
 import 'screens/screens.dart';
@@ -36,30 +37,72 @@ class PhishingApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => QrProvider()),
         ChangeNotifierProvider(create: (context) => QrUrlProvider()),
         ChangeNotifierProvider(create: (context) => QrWifiProvider()),
+        ChangeNotifierProvider(create: (context) => SharedContentProvider()),
         ChangeNotifierProvider(create: (context) => StatsProvider()),
         ChangeNotifierProvider(create: (context) => TextProvider()),
         ChangeNotifierProvider(create: (context) => UrlProvider()),
       ],
-      child: MaterialApp(
-        title: 'Phishing App',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        themeMode: ThemeMode.system,
-        home: const AuthWrapper(),
-        routes: {
-          '/history': (context) => const HistoryScreen(),
-          '/settings': (context) => const SettingsScreen(),
-          '/stats': (context) => const StatsScreen(),
-          '/auth': (context) => const AuthScreen(),
-          '/text-summary': (context) =>
-              const TextSummaryScreen(textToAnalyze: ''),
-          '/url-summary': (context) => const UrlSummaryScreen(urlToAnalyze: ''),
-          '/qr-url-summary': (context) =>
-              const QrUrlSummaryScreen(urlToAnalyze: ''),
-          '/qr-wifi-summary': (context) =>
-              const QrWifiSummaryScreen(wifiContent: ''),
-        },
-      ),
+      child: const PhishingAppContent(),
+    );
+  }
+}
+
+class PhishingAppContent extends StatefulWidget {
+  const PhishingAppContent({super.key});
+
+  @override
+  State<PhishingAppContent> createState() => PhishingAppContentState();
+}
+
+class PhishingAppContentState extends State<PhishingAppContent> {
+  @override
+  void initState() {
+    super.initState();
+    initShareHandler();
+  }
+
+  void initShareHandler() async {
+    final handler = ShareHandlerPlatform.instance;
+    final sharedContentProvider = Provider.of<SharedContentProvider>(
+      context,
+      listen: false,
+    );
+
+    handler.sharedMediaStream.listen((SharedMedia media) {
+      if (media.content != null && media.content!.isNotEmpty) {
+        sharedContentProvider.setSharedContent(media.content);
+      }
+    });
+
+    final initialMedia = await handler.getInitialSharedMedia();
+    if (initialMedia != null &&
+        initialMedia.content != null &&
+        initialMedia.content!.isNotEmpty) {
+      sharedContentProvider.setSharedContent(initialMedia.content);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Phishing App',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      themeMode: ThemeMode.system,
+      home: const AuthWrapper(),
+      routes: {
+        '/history': (context) => const HistoryScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/stats': (context) => const StatsScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/text-summary': (context) =>
+            const TextSummaryScreen(textToAnalyze: ''),
+        '/url-summary': (context) => const UrlSummaryScreen(urlToAnalyze: ''),
+        '/qr-url-summary': (context) =>
+            const QrUrlSummaryScreen(urlToAnalyze: ''),
+        '/qr-wifi-summary': (context) =>
+            const QrWifiSummaryScreen(wifiContent: ''),
+      },
     );
   }
 }

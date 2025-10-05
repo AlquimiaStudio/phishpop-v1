@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../helpers/helpers.dart';
 import '../../../providers/providers.dart';
 import '../../../screens/screens.dart';
+import '../../../services/services.dart';
 import '../../widgets.dart';
 
 class ScanTextSection extends StatefulWidget {
@@ -17,6 +18,31 @@ class ScanTextSection extends StatefulWidget {
 class _ScanTextSectionState extends State<ScanTextSection> {
   final TextEditingController controller = TextEditingController();
   bool isLoading = false;
+  bool hasConsumedSharedContent = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!hasConsumedSharedContent) {
+      checkSharedContent();
+    }
+  }
+
+  void checkSharedContent() {
+    final sharedContentProvider = Provider.of<SharedContentProvider>(context, listen: true);
+
+    if (sharedContentProvider.sharedContent != null &&
+        sharedContentProvider.contentType == SharedContentType.text &&
+        !hasConsumedSharedContent) {
+      final content = sharedContentProvider.consumeSharedContent();
+      if (content != null) {
+        setState(() {
+          controller.text = content;
+          hasConsumedSharedContent = true;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {

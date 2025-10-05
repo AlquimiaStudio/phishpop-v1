@@ -25,15 +25,16 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(7),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: const Icon(
-                      Icons.shield,
-                      color: Colors.white,
-                      size: 28,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 35,
+                      height: 35,
+                      fit: BoxFit.contain,
                     ),
                   ).animate().scale(delay: 200.ms, duration: 400.ms).fadeIn(),
                   const SizedBox(width: 12),
@@ -42,7 +43,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                            'PhishPOP',
+                            'Phishpop',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,

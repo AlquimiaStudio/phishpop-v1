@@ -3,6 +3,7 @@ export 'history_provider.dart';
 export 'qr_provider.dart';
 export 'qr_url_provider.dart';
 export 'qr_wifi_provider.dart';
+export 'shared_content_provider.dart';
 export 'stats_provider.dart';
 export 'text_provider.dart';
 export 'url_provider.dart';

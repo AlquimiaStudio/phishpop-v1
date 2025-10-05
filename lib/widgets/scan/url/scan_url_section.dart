@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../helpers/helpers.dart';
 import '../../../providers/providers.dart';
 import '../../../screens/screens.dart';
+import '../../../services/services.dart';
 import '../../widgets.dart';
 
 class ScanUrlSection extends StatefulWidget {
@@ -18,6 +19,31 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
   final TextEditingController controller = TextEditingController();
   final ScrollController scrollController = ScrollController();
   bool isLoading = false;
+  bool hasConsumedSharedContent = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!hasConsumedSharedContent) {
+      checkSharedContent();
+    }
+  }
+
+  void checkSharedContent() {
+    final sharedContentProvider = Provider.of<SharedContentProvider>(context, listen: true);
+
+    if (sharedContentProvider.sharedContent != null &&
+        sharedContentProvider.contentType == SharedContentType.url &&
+        !hasConsumedSharedContent) {
+      final content = sharedContentProvider.consumeSharedContent();
+      if (content != null) {
+        setState(() {
+          controller.text = SharedContentDetectorService.normalizeUrl(content);
+          hasConsumedSharedContent = true;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {

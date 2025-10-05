@@ -48,14 +48,32 @@ class QrProvider extends ChangeNotifier {
     setState(QrScanState.scanning);
     navigator.pop();
 
-    final String? qrResult = await QrGalleryService.pickAndScanQrFromGallery(
-      context,
-    );
+    final response = await QrGalleryService.pickAndScanQrFromGallery(context);
 
-    if (qrResult != null) {
-      lastResult = qrResult;
+    final navigatorContext = navigator.context;
 
-      processQrFromGallery(qrResult, navigator);
+    if (response.result == QrScanResult.success && response.qrCode != null) {
+      lastResult = response.qrCode;
+      processQrFromGallery(response.qrCode!, navigator);
+    } else if (response.result == QrScanResult.noQrFound) {
+      setState(QrScanState.idle);
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (navigatorContext.mounted) {
+        GlobalSnackBar.showError(
+          navigatorContext,
+          'Invalid image - No QR code detected',
+        );
+      }
+    } else if (response.result == QrScanResult.error) {
+      setState(QrScanState.idle);
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      if (navigatorContext.mounted) {
+        GlobalSnackBar.showError(navigatorContext, 'Error processing image');
+      }
     } else {
       setState(QrScanState.idle);
     }
@@ -91,7 +109,7 @@ class QrProvider extends ChangeNotifier {
                   title: 'Analyzing QR Code...',
                   subtitle: 'Please wait while we analyze the QR code URL',
                   screen: QrUrlSummaryScreen(urlToAnalyze: qrResult),
-                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                  urlToAnalyze: qrResult,
                 ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
@@ -110,7 +128,7 @@ class QrProvider extends ChangeNotifier {
                   title: 'Analyzing QR Code...',
                   subtitle: 'Please wait while we analyze the QR code WIFI',
                   screen: QrWifiSummaryScreen(wifiContent: qrResult),
-                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                  urlToAnalyze: qrResult,
                 ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
@@ -123,23 +141,16 @@ class QrProvider extends ChangeNotifier {
         errorMessage = 'QR code type not supported';
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('QR code type not supported'),
-              duration: const Duration(seconds: 3),
-              backgroundColor: Colors.red[300],
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
+          GlobalSnackBar.showError(context, 'QR code type not supported');
         }
       }
     } catch (e) {
       setState(QrScanState.error);
       errorMessage = e.toString();
+
+      if (context.mounted) {
+        GlobalSnackBar.showError(context, 'Error processing QR code');
+      }
     }
   }
 
@@ -200,7 +211,7 @@ class QrProvider extends ChangeNotifier {
                   title: 'Analyzing QR Code...',
                   subtitle: 'Please wait while we analyze the QR code WIFI',
                   screen: QrWifiSummaryScreen(wifiContent: qrResult),
-                  urlToAnalyze: qrResult, // Nuevo parámetro para análisis real
+                  urlToAnalyze: qrResult,
                 ),
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
@@ -214,23 +225,17 @@ class QrProvider extends ChangeNotifier {
 
         if (context.mounted) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('QR code type not supported'),
-              duration: const Duration(seconds: 3),
-              backgroundColor: Colors.red[300],
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.all(16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          );
+          GlobalSnackBar.showError(context, 'QR code type not supported');
         }
       }
     } catch (e) {
       setState(QrScanState.error);
       errorMessage = e.toString();
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        GlobalSnackBar.showError(context, 'Error processing QR code');
+      }
     }
   }
 }

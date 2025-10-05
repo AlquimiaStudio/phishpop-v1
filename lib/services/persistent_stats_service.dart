@@ -153,8 +153,8 @@ class PersistentStatsService {
 
   /// Helper method to get protection classification
   String _getProtectionClassification(double score) {
-    if (score >= 80) return 'high';
-    if (score >= 60) return 'medium';
+    if (score >= 75) return 'high';
+    if (score >= 40) return 'medium';
     return 'low';
   }
 

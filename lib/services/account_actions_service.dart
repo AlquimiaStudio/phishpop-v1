@@ -3,6 +3,7 @@ import 'package:phishpop/providers/providers.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/screens.dart';
+import '../services/services.dart';
 import '../widgets/ui/generals/confirmation_dialog.dart';
 
 class AccountActionsService {
@@ -107,7 +108,12 @@ class AccountActionsService {
           confirmButtonColor: Colors.red,
           onConfirm: () async {
             Navigator.of(dialogContext).pop();
+
             await authProvider.deleteAccount();
+
+            await ScanDatabaseService().clearAllScans();
+            await PersistentStatsDatabaseService().resetStats();
+
             navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const AuthWrapper()),
               (route) => false,

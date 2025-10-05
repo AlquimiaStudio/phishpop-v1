@@ -53,18 +53,4 @@ class QrWifiProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  void showWifiInstructions(BuildContext context) {
-    if (qrWifiAnalysisResult == null) return;
-
-    try {
-      QrWifiAnalysisService().showWifiConnectionDialog(
-        context,
-        qrWifiAnalysisResult!,
-      );
-    } catch (e) {
-      error = 'Error showing WiFi instructions: ${e.toString()}';
-      notifyListeners();
-    }
-  }
 }

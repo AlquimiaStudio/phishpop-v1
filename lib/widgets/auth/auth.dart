@@ -5,5 +5,6 @@ export 'auth_login_form.dart';
 export 'auth_register_form.dart';
 export 'auth_social_button.dart';
 export 'auth_social_buttons.dart';
+export 'auth_terms_checkbox.dart';
 export 'auth_toggle_button.dart';
 export 'auth_toggle.dart';

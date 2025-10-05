@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:phishpop/widgets/auth/auth_error_message.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/helpers.dart';
 import '../../providers/providers.dart';
 import '../../theme/theme.dart';
+import '../widgets.dart';
 
 class AuthRegisterForm extends StatefulWidget {
   const AuthRegisterForm({super.key});
@@ -29,6 +29,7 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
   bool obscureConfirmPassword = true;
   bool showClearNameButton = false;
   bool showClearEmailButton = false;
+  bool acceptedTerms = false;
 
   @override
   void initState() {
@@ -57,6 +58,14 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
   void handleRegister() async {
     HapticFeedback.lightImpact();
 
+    if (!acceptedTerms) {
+      GlobalSnackBar.showError(
+        context,
+        'Please accept the Terms of Service and Privacy Policy to continue',
+      );
+      return;
+    }
+
     if (formKey.currentState?.validate() ?? false) {
       final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
@@ -71,6 +80,9 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
         emailController.clear();
         passwordController.clear();
         confirmPasswordController.clear();
+        setState(() {
+          acceptedTerms = false;
+        });
       }
     }
   }
@@ -246,6 +258,15 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
                 const SizedBox(height: 16),
                 AuthErrorMessage(errorMessage: authProvider.errorMessage!),
               ],
+              const SizedBox(height: 20),
+              AuthTermsCheckbox(
+                isChecked: acceptedTerms,
+                onChanged: (value) {
+                  setState(() {
+                    acceptedTerms = value ?? false;
+                  });
+                },
+              ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,

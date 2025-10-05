@@ -32,6 +32,14 @@
 				<string>com.googleusercontent.apps.803080174735-q346ubln3b8na2e1d0la7id6ka6eg1na</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.andressaumet.phishpop</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>phishpop</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -74,5 +82,9 @@
 	<array>
 		<string>NSUserActivityTypeBrowsingWeb</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>PhishPop needs access to your camera to scan QR codes and analyze them for potential phishing threats, malicious links, and security risks to protect you from scams.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PhishPop needs access to your photo library to analyze QR codes from saved images and detect potential phishing attempts, fraudulent links, and security threats.</string>
 </dict>
 </plist>

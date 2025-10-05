@@ -1,14 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:share_handler/share_handler.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 import 'providers/providers.dart';
 import 'screens/screens.dart';
 import 'theme/theme.dart';
 import 'services/services.dart';
+import 'widgets/widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,31 +58,70 @@ class PhishingAppContent extends StatefulWidget {
 }
 
 class PhishingAppContentState extends State<PhishingAppContent> {
+  StreamSubscription? intentTextStreamSubscription;
+
   @override
   void initState() {
     super.initState();
     initShareHandler();
   }
 
+  @override
+  void dispose() {
+    intentTextStreamSubscription?.cancel();
+    super.dispose();
+  }
+
   void initShareHandler() async {
-    final handler = ShareHandlerPlatform.instance;
     final sharedContentProvider = Provider.of<SharedContentProvider>(
       context,
       listen: false,
     );
 
-    handler.sharedMediaStream.listen((SharedMedia media) {
-      if (media.content != null && media.content!.isNotEmpty) {
-        sharedContentProvider.setSharedContent(media.content);
+    intentTextStreamSubscription = ReceiveSharingIntent.instance
+        .getMediaStream()
+        .listen(
+          (List<SharedMediaFile> value) {
+            if (value.isNotEmpty) {
+              final media = value.first;
+
+              final sharedText =
+                  media.type == SharedMediaType.text ||
+                      media.type == SharedMediaType.url
+                  ? media.path
+                  : (media.message ?? media.path);
+              if (sharedText.isNotEmpty) {
+                sharedContentProvider.setSharedContent(sharedText);
+              }
+            }
+          },
+          onError: (err) {
+            if (mounted) {
+              GlobalSnackBar.showError(
+                context,
+                'Error receiving shared content',
+              );
+            }
+          },
+        );
+
+    ReceiveSharingIntent.instance.getInitialMedia().then((
+      List<SharedMediaFile> value,
+    ) {
+      if (value.isNotEmpty) {
+        final media = value.first;
+
+        final sharedText =
+            media.type == SharedMediaType.text ||
+                media.type == SharedMediaType.url
+            ? media.path
+            : (media.message ?? media.path);
+        if (sharedText.isNotEmpty) {
+          sharedContentProvider.setSharedContent(sharedText);
+          ReceiveSharingIntent.instance.reset();
+        }
       }
     });
-
-    final initialMedia = await handler.getInitialSharedMedia();
-    if (initialMedia != null &&
-        initialMedia.content != null &&
-        initialMedia.content!.isNotEmpty) {
-      sharedContentProvider.setSharedContent(initialMedia.content);
-    }
   }
 
   @override

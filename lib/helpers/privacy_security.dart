@@ -174,6 +174,26 @@ Widget buildLegalDisclaimerSection() {
   );
 }
 
+Widget buildLegalLinksSection() {
+  return PolicySection(
+    title: 'Legal Documents',
+    icon: Icons.description_outlined,
+    children: [
+      PolicyLinkItem(
+        title: 'View Full Privacy Policy',
+        url: 'https://tudominio.com/privacy-policy',
+        icon: Icons.privacy_tip_outlined,
+      ),
+      const SizedBox(height: 4),
+      PolicyLinkItem(
+        title: 'View Terms of Service',
+        url: 'https://tudominio.com/terms-of-service',
+        icon: Icons.gavel_outlined,
+      ),
+    ],
+  );
+}
+
 Widget buildContactSection() {
   return PolicySection(
     title: 'Contact Us',

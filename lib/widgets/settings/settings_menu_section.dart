@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../screens/settings/privacy_security_screen.dart';
 import '../../theme/theme.dart';
@@ -13,6 +14,20 @@ class SettingsMenuSection extends StatelessWidget {
       context,
       MaterialPageRoute(builder: (context) => const PrivacySecurityScreen()),
     );
+  }
+
+  Future<void> handlePrivacyPolicy() async {
+    final uri = Uri.parse('https://tudominio.com/privacy-policy');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> handleTermsOfService() async {
+    final uri = Uri.parse('https://tudominio.com/terms-of-service');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   void handleAbout(BuildContext context) {
@@ -196,6 +211,22 @@ class SettingsMenuSection extends StatelessWidget {
                 subtitle: 'Manage your privacy settings',
                 onTap: () => handlePrivacySecurity(context),
                 iconColor: Colors.green,
+              ),
+              const SizedBox(height: 12),
+              SettingsMenuItem(
+                icon: Icons.privacy_tip_outlined,
+                title: 'Privacy Policy',
+                subtitle: 'View our privacy policy',
+                onTap: handlePrivacyPolicy,
+                iconColor: Colors.purple,
+              ),
+              const SizedBox(height: 12),
+              SettingsMenuItem(
+                icon: Icons.gavel_outlined,
+                title: 'Terms of Service',
+                subtitle: 'Read our terms and conditions',
+                onTap: handleTermsOfService,
+                iconColor: Colors.orange,
               ),
               const SizedBox(height: 12),
               SettingsMenuItem(

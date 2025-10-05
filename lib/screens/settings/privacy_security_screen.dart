@@ -38,6 +38,8 @@ class PrivacySecurityScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 buildLegalDisclaimerSection(),
                 const SizedBox(height: 16),
+                buildLegalLinksSection(),
+                const SizedBox(height: 16),
                 buildContactSection(),
                 const SizedBox(height: 32),
               ],

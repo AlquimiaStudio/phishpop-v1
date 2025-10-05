@@ -70,7 +70,19 @@ class HistoryScanList extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 16),
+        if (scanHistory.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 2, bottom: 2, left: 7),
+            child: Text(
+              'Swipe left to delete',
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey.withValues(alpha: 0.6),
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),

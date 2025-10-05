@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:provider/provider.dart';
 
 import '../../../models/models.dart';
-import '../../../providers/providers.dart';
+import '../../../services/services.dart';
 import '../../../theme/theme.dart';
 
 class QrWifiConnectionButton extends StatefulWidget {
@@ -27,12 +26,9 @@ class _QrWifiConnectionButtonState extends State<QrWifiConnectionButton> {
     });
 
     try {
-      final qrWifiProvider = Provider.of<QrWifiProvider>(
-        context,
-        listen: false,
-      );
-
-      qrWifiProvider.showWifiInstructions(context);
+      // Use widget.result directly instead of provider
+      final qrWifiService = QrWifiAnalysisService();
+      qrWifiService.showWifiConnectionDialog(context, widget.result);
     } catch (e) {
       if (mounted) {
         _showConnectionDialog(e.toString());

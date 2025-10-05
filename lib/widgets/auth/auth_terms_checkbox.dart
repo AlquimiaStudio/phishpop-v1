@@ -63,7 +63,7 @@ class AuthTermsCheckbox extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => _launchURL('https://tudominio.com/terms-of-service'),
+                      ..onTap = () => _launchURL('https://www.andressaumet.com/proyectos/phishpop/terms-of-service'),
                   ),
                   const TextSpan(text: ' and '),
                   TextSpan(
@@ -74,7 +74,7 @@ class AuthTermsCheckbox extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => _launchURL('https://tudominio.com/privacy-policy'),
+                      ..onTap = () => _launchURL('https://www.andressaumet.com/proyectos/phishpop/privacy-policy'),
                   ),
                 ],
               ),

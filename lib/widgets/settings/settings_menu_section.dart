@@ -17,14 +17,14 @@ class SettingsMenuSection extends StatelessWidget {
   }
 
   Future<void> handlePrivacyPolicy() async {
-    final uri = Uri.parse('https://tudominio.com/privacy-policy');
+    final uri = Uri.parse('https://www.andressaumet.com/proyectos/phishpop/privacy-policy');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
 
   Future<void> handleTermsOfService() async {
-    final uri = Uri.parse('https://tudominio.com/terms-of-service');
+    final uri = Uri.parse('https://www.andressaumet.com/proyectos/phishpop/terms-of-service');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }

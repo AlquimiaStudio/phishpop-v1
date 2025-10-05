@@ -181,13 +181,13 @@ Widget buildLegalLinksSection() {
     children: [
       PolicyLinkItem(
         title: 'View Full Privacy Policy',
-        url: 'https://tudominio.com/privacy-policy',
+        url: 'https://www.andressaumet.com/proyectos/phishpop/privacy-policy',
         icon: Icons.privacy_tip_outlined,
       ),
       const SizedBox(height: 4),
       PolicyLinkItem(
         title: 'View Terms of Service',
-        url: 'https://tudominio.com/terms-of-service',
+        url: 'https://www.andressaumet.com/proyectos/phishpop/terms-of-service',
         icon: Icons.gavel_outlined,
       ),
     ],

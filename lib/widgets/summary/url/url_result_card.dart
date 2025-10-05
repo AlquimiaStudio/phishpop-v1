@@ -51,6 +51,14 @@ class UrlResultCard extends StatelessWidget {
             const SizedBox(height: 16),
             IssuesList(issues: result.flaggedIssues, result: result.result),
           ],
+          if (shouldShowEmergencyContacts(
+            result.result,
+            result.classification,
+            result.flaggedIssues,
+          )) ...[
+            const SizedBox(height: 16),
+            const EmergencyContactsSection(),
+          ],
           const SizedBox(height: 16),
           Center(
             child: OutlinedButton.icon(

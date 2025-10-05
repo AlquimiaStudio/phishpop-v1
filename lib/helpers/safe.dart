@@ -304,3 +304,35 @@ const List<String> scamTypes = [
   'In-Person Scam',
   'Other',
 ];
+
+bool shouldShowEmergencyContacts(
+  String result,
+  String classification,
+  List<String> flaggedIssues,
+) {
+  final dangerousResults = [
+    'warning',
+    'threat',
+    'unsafe',
+    'danger',
+    'suspicious',
+    'insecure'
+  ];
+
+  final dangerousClassifications = [
+    'spam',
+    'phishing',
+    'malware',
+    'scam',
+    'threat'
+  ];
+
+  final hasDangerousIssues = flaggedIssues.any((issue) =>
+      issue.toLowerCase().contains('phish') ||
+      issue.toLowerCase().contains('scam') ||
+      issue.toLowerCase().contains('malware'));
+
+  return dangerousResults.contains(result.toLowerCase()) ||
+      dangerousClassifications.contains(classification.toLowerCase()) ||
+      hasDangerousIssues;
+}

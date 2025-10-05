@@ -15,8 +15,10 @@ class PolicyLinkItem extends StatelessWidget {
 
   Future<void> _launchURL() async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch URL: $url - $e');
     }
   }
 
@@ -35,11 +37,7 @@ class PolicyLinkItem extends StatelessWidget {
                 color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Icon(
-                icon,
-                color: Colors.blue,
-                size: 18,
-              ),
+              child: Icon(icon, color: Colors.blue, size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -54,11 +52,7 @@ class PolicyLinkItem extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey[400]),
           ],
         ),
       ),

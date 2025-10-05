@@ -16,8 +16,10 @@ class AuthTermsCheckbox extends StatelessWidget {
 
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch URL: $url - $e');
     }
   }
 
@@ -63,7 +65,9 @@ class AuthTermsCheckbox extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => _launchURL('https://www.andressaumet.com/proyectos/phishpop/terms-of-service'),
+                      ..onTap = () => _launchURL(
+                        'https://www.andressaumet.com/proyectos/phishpop/terms-of-service',
+                      ),
                   ),
                   const TextSpan(text: ' and '),
                   TextSpan(
@@ -74,7 +78,9 @@ class AuthTermsCheckbox extends StatelessWidget {
                       decoration: TextDecoration.underline,
                     ),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () => _launchURL('https://www.andressaumet.com/proyectos/phishpop/privacy-policy'),
+                      ..onTap = () => _launchURL(
+                        'https://www.andressaumet.com/proyectos/phishpop/privacy-policy',
+                      ),
                   ),
                 ],
               ),

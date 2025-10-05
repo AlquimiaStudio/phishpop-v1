@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../helpers/helpers.dart';
+import '../../../theme/theme.dart';
 
 class TrustedContactListItem extends StatelessWidget {
   final TrustedContact contact;
@@ -18,50 +19,111 @@ class TrustedContactListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      title: Text(
-        contact.name,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        contact.phone,
-        style: theme.textTheme.bodySmall!.copyWith(fontSize: 13),
-      ),
-      leading: Icon(
-        Icons.contact_phone,
-        color: theme.colorScheme.primary,
-        size: 24,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: getBoxShadow(context),
+      child: Row(
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.send_to_mobile_outlined,
-              color: theme.colorScheme.secondary,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-            tooltip: 'Send "Call Me" SMS',
-            onPressed: onSendMessage,
-            padding: EdgeInsets.zero,
+            child: const Icon(
+              Icons.contact_phone,
+              color: AppColors.primaryColor,
+              size: 24,
+            ),
           ),
-          IconButton(
-            icon: Icon(Icons.edit, color: theme.colorScheme.secondary),
-            tooltip: 'Edit Contact',
-            onPressed: onEdit,
-            padding: EdgeInsets.zero,
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  contact.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.darkText,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  contact.phone,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.lightText,
+                  ),
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            icon: Icon(Icons.delete, color: theme.colorScheme.error),
-            tooltip: 'Delete Contact',
-            onPressed: onDelete,
-            padding: EdgeInsets.zero,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _ActionButton(
+                icon: Icons.send_to_mobile_outlined,
+                color: AppColors.infoColor,
+                tooltip: 'Send "Call Me" SMS',
+                onPressed: onSendMessage,
+              ),
+              const SizedBox(width: 4),
+              _ActionButton(
+                icon: Icons.edit_outlined,
+                color: AppColors.secondaryColor,
+                tooltip: 'Edit Contact',
+                onPressed: onEdit,
+              ),
+              const SizedBox(width: 4),
+              _ActionButton(
+                icon: Icons.delete_outline,
+                color: AppColors.dangerColor,
+                tooltip: 'Delete Contact',
+                onPressed: onDelete,
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String tooltip;
+  final VoidCallback onPressed;
+
+  const _ActionButton({
+    required this.icon,
+    required this.color,
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 20,
+          ),
+        ),
       ),
     );
   }

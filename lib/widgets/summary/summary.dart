@@ -1,3 +1,6 @@
+export 'emergency_contact_item.dart';
+export 'emergency_contacts_section.dart';
+
 export 'url/scan_card_url_header.dart';
 export 'url/scan_card_url_metadata.dart';
 export 'url/scan_card_url_metrics.dart';

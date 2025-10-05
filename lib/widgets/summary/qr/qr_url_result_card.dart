@@ -57,6 +57,14 @@ class QrUrlResultCard extends StatelessWidget {
               result: result.result.name,
             ),
           ],
+          if (shouldShowEmergencyContacts(
+            result.result.name,
+            result.classification.name,
+            result.flaggedIssues,
+          )) ...[
+            const SizedBox(height: 16),
+            const EmergencyContactsSection(),
+          ],
           const SizedBox(height: 16),
           Center(
             child: OutlinedButton.icon(

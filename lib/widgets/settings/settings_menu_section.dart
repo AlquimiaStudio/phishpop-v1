@@ -18,15 +18,19 @@ class SettingsMenuSection extends StatelessWidget {
 
   Future<void> handlePrivacyPolicy() async {
     final uri = Uri.parse('https://www.andressaumet.com/proyectos/phishpop/privacy-policy');
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch privacy policy URL: $e');
     }
   }
 
   Future<void> handleTermsOfService() async {
     final uri = Uri.parse('https://www.andressaumet.com/proyectos/phishpop/terms-of-service');
-    if (await canLaunchUrl(uri)) {
+    try {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      debugPrint('Could not launch terms of service URL: $e');
     }
   }
 

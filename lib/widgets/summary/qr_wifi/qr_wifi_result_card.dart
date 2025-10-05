@@ -64,6 +64,14 @@ class QrWifiResultCard extends StatelessWidget {
               result: result.classification.name,
             ),
           ],
+          if (shouldShowEmergencyContacts(
+            result.classification.name,
+            result.classification.name,
+            result.flaggedIssues,
+          )) ...[
+            const SizedBox(height: 16),
+            const EmergencyContactsSection(),
+          ],
           const SizedBox(height: 16),
           if (result.result == Results.safe) ...[
             QrWifiConnectionButton(result: result),

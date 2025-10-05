@@ -95,6 +95,7 @@ class _FamilyModeScreenState extends State<FamilyModeScreen> {
                     message:
                         'Add trusted contacts to quickly send "Call Me" messages when you need help.',
                   ),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: _contacts.isEmpty
                         ? const EmptyContactsWidget()

@@ -56,13 +56,14 @@ class UrlResultCard extends StatelessWidget {
             result.classification,
             result.flaggedIssues,
           )) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             const EmergencyContactsSection(),
           ],
           const SizedBox(height: 16),
           Center(
             child: OutlinedButton.icon(
-              onPressed: () => showExplanationModal(context, getUrlAnalysisExplanations),
+              onPressed: () =>
+                  showExplanationModal(context, getUrlAnalysisExplanations),
               icon: Icon(Icons.help_outline, size: 18),
               label: Text('What does this mean?'),
               style: OutlinedButton.styleFrom(

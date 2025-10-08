@@ -44,10 +44,10 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppColors.dangerColor.withValues(alpha: 0.1),
+            color: AppColors.secondaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.dangerColor.withValues(alpha: 0.3),
+              color: AppColors.secondaryColor.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
@@ -56,12 +56,12 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.dangerColor.withValues(alpha: 0.2),
+                  color: AppColors.secondaryColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
                   Icons.warning_amber,
-                  color: AppColors.dangerColor,
+                  color: AppColors.secondaryColor,
                   size: 20,
                 ),
               ),
@@ -75,7 +75,7 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.dangerColor,
+                        color: AppColors.secondaryColor,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -83,7 +83,7 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
                       'Alert your trusted contacts about this threat',
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.dangerColor.withValues(alpha: 0.8),
+                        color: AppColors.secondaryColor.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -99,25 +99,16 @@ class _EmergencyContactsSectionState extends State<EmergencyContactsSection> {
             decoration: BoxDecoration(
               color: Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.grey.withValues(alpha: 0.3),
-              ),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.info_outline,
-                  color: AppColors.lightText,
-                  size: 20,
-                ),
+                Icon(Icons.info_outline, color: AppColors.lightText, size: 20),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'No emergency contacts configured. Add contacts in Family Mode settings.',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.mediumText,
-                    ),
+                    style: TextStyle(fontSize: 13, color: AppColors.mediumText),
                   ),
                 ),
               ],

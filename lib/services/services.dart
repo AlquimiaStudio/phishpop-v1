@@ -1,4 +1,5 @@
 export 'account_actions_service.dart';
+export 'analytics_service.dart';
 export 'firebase_auth_service.dart';
 export 'persistent_stats_database_service.dart';
 export 'persistent_stats_service.dart';

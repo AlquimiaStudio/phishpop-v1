@@ -4,9 +4,11 @@ import '../models/models.dart';
 import '../helpers/helpers.dart';
 import '../providers/providers.dart';
 import 'wifi_risk_analyzer.dart';
+import 'analytics_service.dart';
 
 class QrWifiAnalysisService {
   final IRiskAnalyzer _riskAnalyzer;
+  final AnalyticsService _analytics = AnalyticsService();
 
   QrWifiAnalysisService({IRiskAnalyzer? riskAnalyzer})
     : _riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
@@ -23,6 +25,21 @@ class QrWifiAnalysisService {
 
     final historyEntry = createWifiHistoryEntry(result);
     historyProvider.addScan(historyEntry);
+
+    // Log analytics event
+    _analytics.logQrScan(
+      scanType: 'wifi',
+      riskLevel: result.riskLevel.toString(),
+    );
+
+    // Log threat if detected
+    if (result.classification == WifiClassification.unsafe) {
+      _analytics.logThreatDetected(
+        threatType: 'Unsafe WiFi Network',
+        scanType: 'qr_wifi',
+        confidenceScore: result.confidenceScore * 100,
+      );
+    }
 
     return result;
   }

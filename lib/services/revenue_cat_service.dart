@@ -3,16 +3,18 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'analytics_service.dart';
 
 class RevenueCatService {
   static final RevenueCatService _instance = RevenueCatService._internal();
   factory RevenueCatService() => _instance;
   RevenueCatService._internal();
 
+  final AnalyticsService _analytics = AnalyticsService();
+
   static final String _androidApiKey =
       dotenv.env['REVENUECAT_ANDROID_API_KEY'] ?? '';
-  static final String _iosApiKey =
-      dotenv.env['REVENUECAT_IOS_API_KEY'] ?? '';
+  static final String _iosApiKey = dotenv.env['REVENUECAT_IOS_API_KEY'] ?? '';
 
   static const String monthlyPackageId = '\$rc_monthly';
   static const String annualPackageId = '\$rc_annual';
@@ -94,34 +96,66 @@ class RevenueCatService {
     try {
       final customerInfo = await Purchases.purchasePackage(package);
       log('Purchase successful');
+
+      // Log successful subscription
+      await _analytics.logSubscriptionStarted(
+        packageId: package.identifier,
+        price: package.storeProduct.priceString,
+        period: _getPeriodFromPackageId(package.identifier),
+      );
+
+      // Update user subscription status
+      await _analytics.setSubscriptionStatus(true);
+
       return customerInfo;
     } on PlatformException catch (e) {
       final errorCode = PurchasesErrorHelper.getErrorCode(e);
 
       if (errorCode == PurchasesErrorCode.purchaseCancelledError) {
         log('User cancelled the purchase');
+        await _analytics.logSubscriptionFailed(reason: 'User cancelled');
       } else if (errorCode == PurchasesErrorCode.purchaseNotAllowedError) {
         log('User is not allowed to make purchases');
+        await _analytics.logSubscriptionFailed(reason: 'Not allowed');
       } else if (errorCode == PurchasesErrorCode.productAlreadyPurchasedError) {
         log('Product already purchased');
+        await _analytics.logSubscriptionFailed(reason: 'Already purchased');
       } else {
         log('Purchase error: ${e.message}');
+        await _analytics.logSubscriptionFailed(
+          reason: e.message ?? 'Unknown error',
+        );
       }
 
       return null;
     } catch (e) {
       log('Unknown purchase error: $e');
+      await _analytics.logSubscriptionFailed(reason: 'Unknown error');
       return null;
     }
+  }
+
+  String _getPeriodFromPackageId(String packageId) {
+    if (packageId.contains('monthly')) return 'monthly';
+    if (packageId.contains('annual')) return 'annual';
+    if (packageId.contains('launch')) return 'launch';
+    return 'unknown';
   }
 
   Future<CustomerInfo?> restorePurchases() async {
     try {
       final customerInfo = await Purchases.restorePurchases();
       log('Purchases restored successfully');
+
+      // Log restore success
+      final hasActivePurchase =
+          customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+      await _analytics.logRestorePurchases(success: hasActivePurchase);
+
       return customerInfo;
     } catch (e) {
       log('Error restoring purchases: $e');
+      await _analytics.logRestorePurchases(success: false);
       return null;
     }
   }

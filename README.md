@@ -148,12 +148,167 @@ lib/
 
 ### Backend API
 
-PhishPop requires a backend API for threat analysis. The API should implement these endpoints:
+PhishPop requires a backend API for threat analysis. **Current backend**: Deployed on Vercel (Express.js)
 
-- `POST /api/v1/text-analysis` - Analyze text content
-- `GET /api/v1/url-analysis?url=<url>` - Analyze URLs
+**Base URL**: `https://phish-pop-express-backend.vercel.app`
 
-**Current backend**: Deployed on Vercel (Express.js)
+---
+
+#### **1. URL Analysis**
+
+Analyzes URLs for phishing, malware, and security threats.
+
+**Endpoint**: `GET /api/v1/url-analysis`
+
+**Query Parameters**:
+- `url` (string, required) - The URL to analyze
+
+**Example Request**:
+```bash
+GET /api/v1/url-analysis?url=https://example.com
+```
+
+**Success Response** (200 OK):
+```json
+{
+  "id": "abc123",
+  "url": "https://example.com",
+  "scan_type": "url",
+  "result": "Safe content detected",
+  "risk_level": "Safe",
+  "classification": "Safe Content",
+  "confidence_score": 95.5,
+  "url_analysis_score": 92.0,
+  "flagged_issues": ["No issues found"],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "processing_time": 1500,
+  "cached": false,
+  "expire_time": "2024-01-01T13:00:00Z"
+}
+```
+
+**Response Fields**:
+- `id` (string) - Unique scan identifier
+- `url` (string) - Analyzed URL
+- `scan_type` (string) - Always "url"
+- `result` (string) - Human-readable analysis result
+- `risk_level` (string) - "Safe" | "Warning" | "Threat"
+- `classification` (string) - Threat category
+- `confidence_score` (number) - AI confidence (0-100)
+- `url_analysis_score` (number) - URL-specific score (0-100)
+- `flagged_issues` (array) - List of detected problems
+- `timestamp` (string) - ISO 8601 timestamp
+- `processing_time` (number) - Analysis duration in milliseconds
+- `cached` (boolean) - Whether result was cached
+- `expire_time` (string|null) - Cache expiration time
+
+**Classification Types**:
+- `Safe Content` - Legitimate, safe website
+- `Phishing` - Credential harvesting attempt
+- `Malware Link` - Contains malicious software
+- `Suspicious Content` - Potentially dangerous
+- `Spam` - Unsolicited content
+- `Official Communication` - Verified legitimate source
+
+---
+
+#### **2. Text Analysis**
+
+Analyzes text messages and emails for phishing indicators.
+
+**Endpoint**: `POST /api/v1/text-analysis`
+
+**Request Body**:
+```json
+{
+  "text": "Your message content here"
+}
+```
+
+**Example Request**:
+```bash
+POST /api/v1/text-analysis
+Content-Type: application/json
+
+{
+  "text": "Congratulations! You've won $1,000,000. Click here to claim your prize."
+}
+```
+
+**Success Response** (200 OK):
+```json
+{
+  "id": "xyz789",
+  "scan_type": "text",
+  "text": "Congratulations! You've won $1,000,000...",
+  "result": "Phishing attempt detected",
+  "risk_level": "Threat",
+  "classification": "Phishing",
+  "confidence_score": 15.5,
+  "text_analysis_score": 12.0,
+  "normalized_score": 0.12,
+  "flagged_issues": [
+    "Urgency tactics detected",
+    "Suspicious prize claim",
+    "Generic greeting",
+    "Request for personal information"
+  ],
+  "timestamp": "2024-01-01T12:00:00Z",
+  "processing_time": 800,
+  "cached": false
+}
+```
+
+**Response Fields**:
+- `id` (string) - Unique scan identifier
+- `scan_type` (string) - Always "text"
+- `text` (string) - Analyzed text content
+- `result` (string) - Human-readable analysis result
+- `risk_level` (string) - "Safe" | "Warning" | "Threat"
+- `classification` (string) - Threat category
+- `confidence_score` (number) - AI confidence (0-100)
+- `text_analysis_score` (number) - Text-specific score (0-100)
+- `normalized_score` (number|null) - Normalized score (0-1)
+- `flagged_issues` (array) - List of detected problems
+- `timestamp` (string) - ISO 8601 timestamp
+- `processing_time` (number) - Analysis duration in milliseconds
+- `cached` (boolean) - Whether result was cached
+
+---
+
+#### **Error Responses**
+
+**400 Bad Request**:
+```json
+{
+  "error": "Missing required parameter: url"
+}
+```
+
+**500 Internal Server Error**:
+```json
+{
+  "error": "Analysis service temporarily unavailable"
+}
+```
+
+---
+
+#### **Rate Limiting**
+
+- No official rate limits currently enforced
+- Backend deployed on Vercel free tier
+- Best practice: Implement client-side throttling
+
+---
+
+#### **Risk Level Thresholds**
+
+```
+Safe:    confidence_score >= 80
+Warning: confidence_score 40-79
+Threat:  confidence_score < 40
+```
 
 ### Firebase Setup
 
@@ -165,10 +320,75 @@ Required Firebase services:
 
 - ✅ Android
 - ✅ iOS
-- ✅ macOS
-- ✅ Web
-- ✅ Linux
-- ✅ Windows
+
+**Note**: App requires active internet connection for threat analysis.
+
+---
+
+## 📱 App Icon & Splash Screen
+
+### App Icon Status
+
+**iOS** ✅ **Configured**
+- All required icon sizes present (20pt to 1024pt)
+- Location: `ios/Runner/Assets.xcassets/AppIcon.appiconset/`
+- Includes:
+  - 1024x1024 (App Store)
+  - iPhone icons: 180, 120, 114, 87, 80, 76, 60, 58, 57, 40, 29, 20 (various scales)
+  - iPad icons: 152, 144, 100, 80, 76, 72, 58, 50, 40, 29, 20 (various scales)
+  - iPad Pro: 167x167
+
+**Android** ✅ **Configured**
+- All density buckets covered
+- Location: `android/app/src/main/res/mipmap-*/`
+- Densities:
+  - mdpi: 48x48
+  - hdpi: 72x72
+  - xhdpi: 96x96
+  - xxhdpi: 144x144
+  - xxxhdpi: 192x192
+
+### Splash Screen Status
+
+**iOS** ⚠️ **Placeholder Only**
+- Uses 1x1 transparent PNG placeholder
+- Location: `ios/Runner/Assets.xcassets/LaunchImage.imageset/`
+- Files: LaunchImage.png, LaunchImage@2x.png, LaunchImage@3x.png
+- **Recommendation**: Replace with branded splash screen
+
+**Android** ⚠️ **Basic Configuration**
+- Uses white background only
+- Location: `android/app/src/main/res/drawable/launch_background.xml`
+- No custom logo/branding displayed
+- **Recommendation**: Add centered logo to splash screen
+
+### Logo Asset
+
+**Available**:
+- `assets/images/logo.png` (75KB)
+- Can be used for splash screen branding
+
+### Recommended Updates
+
+To improve splash screen experience:
+
+1. **iOS Splash Screen**:
+   ```
+   - Replace LaunchImage.png (1x) with 1242x2688 branded image
+   - Replace LaunchImage@2x.png (2x) with same image
+   - Replace LaunchImage@3x.png (3x) with same image
+   ```
+
+2. **Android Splash Screen**:
+   Edit `android/app/src/main/res/drawable/launch_background.xml`:
+   ```xml
+   <item>
+     <bitmap
+       android:gravity="center"
+       android:src="@drawable/splash_logo" />
+   </item>
+   ```
+   Then add splash_logo.png to drawable folders
 
 ---
 
@@ -233,7 +453,7 @@ PhishPop uses **Material Design 3** with a custom theme system:
 - **Primary Color**: Custom blue
 - **Secondary Color**: Complementary accent
 - **Semantic Colors**: Success, Warning, Danger
-- **Backgrounds**: Light and dark mode support
+- **Background**: Light mode only
 
 ### Components
 - Custom AppBar with gradient backgrounds
@@ -247,7 +467,7 @@ PhishPop uses **Material Design 3** with a custom theme system:
 ### Typography
 - Google Fonts integration
 - Responsive text styles
-- Light and dark theme variants
+- Light theme optimized
 
 ---
 
@@ -378,14 +598,6 @@ Evaluates:
 
 ---
 
-## 🌐 Internationalization
-
-Currently supporting:
-- 🇺🇸 English (primary)
-
-**Ready for expansion**: `intl` package integrated for future localization.
-
----
 
 ## 🚦 State Management
 
@@ -462,14 +674,10 @@ For bug reports and feature requests, please contact the development team.
 ### Current Version: 0.1.0
 
 ### Planned Features
-- [ ] Offline mode for basic analysis
-- [ ] Dark mode toggle in UI
 - [ ] Machine learning model integration
-- [ ] Multi-language support
 - [ ] Firebase Analytics integration
 - [ ] Crashlytics error reporting
-- [x] Unit and integration tests
-- [ ] CI/CD pipeline
+- [x] Unit tests (68 passing tests)
 - [ ] Rate limiting protection
 - [ ] Export scan history (PDF/CSV)
 
@@ -500,18 +708,6 @@ open coverage/html/index.html  # View coverage report
 flutter test test/unit/helpers/validators_test.dart
 flutter test test/unit/models/url_response_model_test.dart
 flutter test test/unit/services/wifi_risk_analyzer_test.dart
-
-# Widget tests
-flutter test test/widget/confidence_score_bar_test.dart
-flutter test test/widget/metric_card_test.dart
-
-# Integration tests
-flutter test test/integration/url_scan_flow_test.dart
-```
-
-**Run tests in watch mode:**
-```bash
-flutter test --watch
 ```
 
 ### Test Structure
@@ -519,22 +715,17 @@ flutter test --watch
 ```
 test/
 ├── unit/                    # Unit tests for business logic
-│   ├── helpers/            # Validator tests
-│   ├── models/             # Model serialization tests
-│   └── services/           # Service logic tests
-├── widget/                  # Widget/UI component tests
-├── integration/             # Integration flow tests
-├── fixtures/                # Test data and fixtures
-└── mocks/                   # Mock objects for testing
+│   ├── helpers/            # Validator tests (24 tests)
+│   ├── models/             # Model serialization tests (9 tests)
+│   └── services/           # Service logic tests (35 tests)
+└── fixtures/                # Test data and fixtures
 ```
 
-### Test Coverage
+### Test Coverage (68 passing tests)
 
 - **Validators**: Email, password, phone, name validation
 - **Models**: JSON serialization/deserialization
 - **Services**: WiFi risk analysis, threat detection
-- **Widgets**: UI components (score bars, metric cards)
-- **Integration**: Complete user flows (URL scanning, threat detection)
 
 ### Adding New Tests
 
@@ -614,9 +805,9 @@ REVENUECAT_IOS_API_KEY=your_ios_api_key_here
 1. **Family-Focused**: Unique Safe Parent mode with emergency contacts
 2. **Educational**: Scam library with practical guidance
 3. **Multi-Type Analysis**: Text, URL, QR codes, and WiFi networks
-4. **Offline Capable**: WiFi analysis works without internet
-5. **Cross-Platform**: Available on all major platforms
-6. **Privacy-First**: Local data storage, complete deletion option
+4. **Cross-Platform**: Available on iOS and Android
+5. **Privacy-First**: Local data storage, complete deletion option
+6. **USA/Canada Only**: Optimized for North American markets
 
 ---
 

@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpClient {
-  static final String baseUrl =
-      dotenv.env['API_BASE_URL'] ??
-      'https://phish-pop-express-backend.vercel.app';
+  static final String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
 
   static final Dio _dio = Dio(
     BaseOptions(

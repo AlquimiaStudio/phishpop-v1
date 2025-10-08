@@ -468,10 +468,83 @@ For bug reports and feature requests, please contact the development team.
 - [ ] Multi-language support
 - [ ] Firebase Analytics integration
 - [ ] Crashlytics error reporting
-- [ ] Unit and integration tests
+- [x] Unit and integration tests
 - [ ] CI/CD pipeline
 - [ ] Rate limiting protection
 - [ ] Export scan history (PDF/CSV)
+
+---
+
+## 🧪 Testing
+
+PhishPop includes comprehensive test coverage across unit, widget, and integration tests.
+
+### Running Tests
+
+**Run all tests:**
+```bash
+flutter test
+```
+
+**Run tests with coverage:**
+```bash
+flutter test --coverage
+flutter pub global activate coverage
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html  # View coverage report
+```
+
+**Run specific test files:**
+```bash
+# Unit tests
+flutter test test/unit/helpers/validators_test.dart
+flutter test test/unit/models/url_response_model_test.dart
+flutter test test/unit/services/wifi_risk_analyzer_test.dart
+
+# Widget tests
+flutter test test/widget/confidence_score_bar_test.dart
+flutter test test/widget/metric_card_test.dart
+
+# Integration tests
+flutter test test/integration/url_scan_flow_test.dart
+```
+
+**Run tests in watch mode:**
+```bash
+flutter test --watch
+```
+
+### Test Structure
+
+```
+test/
+├── unit/                    # Unit tests for business logic
+│   ├── helpers/            # Validator tests
+│   ├── models/             # Model serialization tests
+│   └── services/           # Service logic tests
+├── widget/                  # Widget/UI component tests
+├── integration/             # Integration flow tests
+├── fixtures/                # Test data and fixtures
+└── mocks/                   # Mock objects for testing
+```
+
+### Test Coverage
+
+- **Validators**: Email, password, phone, name validation
+- **Models**: JSON serialization/deserialization
+- **Services**: WiFi risk analysis, threat detection
+- **Widgets**: UI components (score bars, metric cards)
+- **Integration**: Complete user flows (URL scanning, threat detection)
+
+### Adding New Tests
+
+1. Create test file in appropriate directory
+2. Import test dependencies:
+   ```dart
+   import 'package:flutter_test/flutter_test.dart';
+   ```
+3. Use fixtures from `test/fixtures/test_data.dart`
+4. Follow existing test patterns
 
 ---
 
@@ -506,10 +579,12 @@ Required `.env` configuration:
 
 ```env
 # Backend API
-API_BASE_URL=https://your-backend-api.com
+API_BASE_URL=https://phish-pop-express-backend.vercel.app
+ENVIRONMENT=production
 
-# Environment
-ENVIRONMENT=production  # or development
+# RevenueCat API Keys
+REVENUECAT_ANDROID_API_KEY=your_android_api_key_here
+REVENUECAT_IOS_API_KEY=your_ios_api_key_here
 ```
 
 ---

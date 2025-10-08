@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class RevenueCatService {
@@ -8,8 +9,10 @@ class RevenueCatService {
   factory RevenueCatService() => _instance;
   RevenueCatService._internal();
 
-  static const String _androidApiKey = 'goog_TktkVBePqOBYeYSDBaaKRVoyMmi';
-  static const String _iosApiKey = 'TU_API_KEY_DE_IOS';
+  static final String _androidApiKey =
+      dotenv.env['REVENUECAT_ANDROID_API_KEY'] ?? '';
+  static final String _iosApiKey =
+      dotenv.env['REVENUECAT_IOS_API_KEY'] ?? '';
 
   static const String monthlyPackageId = '\$rc_monthly';
   static const String annualPackageId = '\$rc_annual';

@@ -29,7 +29,10 @@ class _ScanTextSectionState extends State<ScanTextSection> {
   }
 
   void checkSharedContent() {
-    final sharedContentProvider = Provider.of<SharedContentProvider>(context, listen: true);
+    final sharedContentProvider = Provider.of<SharedContentProvider>(
+      context,
+      listen: true,
+    );
 
     if (sharedContentProvider.sharedContent != null &&
         sharedContentProvider.contentType == SharedContentType.text &&

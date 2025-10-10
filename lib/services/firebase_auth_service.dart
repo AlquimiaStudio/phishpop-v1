@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,11 +24,11 @@ class FirebaseAuthService {
         email: email,
         password: password,
       );
+
       return credential;
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
     } catch (error, stackTrace) {
-      // Report error to Crashlytics
       FirebaseCrashlytics.instance.recordError(
         error,
         stackTrace,
@@ -101,11 +102,25 @@ class FirebaseAuthService {
           AppleIDAuthorizationScopes.fullName,
         ],
         nonce: nonce,
+        webAuthenticationOptions: kIsWeb
+            ? WebAuthenticationOptions(
+                clientId: 'com.andressaumet.phishpop.signin',
+                redirectUri: Uri.parse(
+                  'https://phishpop-app.firebaseapp.com/__/auth/handler',
+                ),
+              )
+            : null,
       );
 
-      final oauthCredential = OAuthProvider(
-        "apple.com",
-      ).credential(idToken: appleCredential.identityToken, rawNonce: rawNonce);
+      if (appleCredential.identityToken == null) {
+        throw 'Apple sign-in failed: No identity token received';
+      }
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode,
+      );
 
       final userCredential = await _auth.signInWithCredential(oauthCredential);
 
@@ -117,8 +132,26 @@ class FirebaseAuthService {
       }
 
       return userCredential;
-    } catch (e) {
-      throw 'Apple sign-in failed. Please try again.';
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        return null;
+      }
+
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        StackTrace.current,
+        reason: 'Apple Sign In Authorization Error: ${e.code}',
+      );
+
+      throw 'Apple sign-in failed: ${e.message}';
+    } catch (e, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'Apple Sign In failed',
+      );
+
+      throw 'Apple sign-in failed: $e';
     }
   }
 

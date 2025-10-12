@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
-import '../../services/services.dart';
 
 class OnboardingScreen1 extends StatefulWidget {
   const OnboardingScreen1({super.key});
@@ -60,11 +59,8 @@ class _OnboardingScreen1State extends State<OnboardingScreen1>
     animationController.forward();
   }
 
-  Future<void> handleGetProtected() async {
-    await OnboardingService().completeOnboarding();
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/auth');
-    }
+  void handleGetProtected() {
+    Navigator.pushReplacementNamed(context, '/onboarding-2');
   }
 
   @override

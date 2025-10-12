@@ -26,3 +26,4 @@ export 'safe_parent/family_mode_screen.dart';
 export 'safe_parent/quick_report_screen.dart';
 
 export 'onboarding/onboarding_screen_1.dart';
+export 'onboarding/onboarding_screen_2.dart';

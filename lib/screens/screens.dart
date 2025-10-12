@@ -24,3 +24,5 @@ export 'safe_parent/scam_detail_screen.dart';
 export 'safe_parent/decision_helper_screen.dart';
 export 'safe_parent/family_mode_screen.dart';
 export 'safe_parent/quick_report_screen.dart';
+
+export 'onboarding/onboarding_screen_1.dart';

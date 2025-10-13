@@ -47,6 +47,7 @@ class AuthHeader extends StatelessWidget {
                 'Welcome to PhishPOP',
                 style: AppTextStyles.displayMedium.copyWith(
                   color: Colors.white,
+                  fontSize: 26,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -55,6 +56,7 @@ class AuthHeader extends StatelessWidget {
                 'Secure your digital world',
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: Colors.white.withValues(alpha: 0.8),
+                  fontSize: 18,
                 ),
                 textAlign: TextAlign.center,
               ),

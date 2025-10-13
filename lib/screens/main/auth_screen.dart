@@ -89,9 +89,9 @@ class _AuthScreenState extends State<AuthScreen>
                       fadeAnimation: fadeAnimation,
                       slideAnimation: slideAnimation,
                     ),
-                  const SizedBox(height: 32),
+
                   AuthCard(fadeAnimation: fadeAnimation),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // TEMPORARY: Reset onboarding button for testing
                   TextButton(

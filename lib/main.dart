@@ -162,8 +162,9 @@ class PhishingAppContentState extends State<PhishingAppContent> {
             const QrUrlSummaryScreen(urlToAnalyze: ''),
         '/qr-wifi-summary': (context) =>
             const QrWifiSummaryScreen(wifiContent: ''),
-        '/onboarding-2': (context) => const OnboardingScreen2(),
         '/onboarding-1': (context) => const OnboardingScreen1(),
+        '/onboarding-2': (context) => const OnboardingScreen2(),
+        '/onboarding-3': (context) => const OnboardingScreen3(),
       },
     );
   }

@@ -74,7 +74,12 @@ class CustomTab extends StatelessWidget {
                         : FontWeight.normal,
                     color: textColor,
                   ),
-                  child: Text(label),
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.visible,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

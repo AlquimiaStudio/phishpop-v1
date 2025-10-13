@@ -27,7 +27,7 @@ class MetadataItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 8),
       decoration: BoxDecoration(
         color: backgroundColor ?? Theme.of(context).cardColor,
         border: Border.all(

@@ -28,3 +28,4 @@ export 'safe_parent/quick_report_screen.dart';
 export 'onboarding/onboarding_screen_1.dart';
 export 'onboarding/onboarding_screen_2.dart';
 export 'onboarding/onboarding_screen_3.dart';
+export 'onboarding/personalization_screen.dart';

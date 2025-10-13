@@ -9,32 +9,68 @@ class AuthWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SplashScreen();
+        }
+
+        if (snapshot.hasData && snapshot.data != null) {
+          return const PersonalizationChecker();
+        }
+
+        return const OnboardingChecker();
+      },
+    );
+  }
+}
+
+class OnboardingChecker extends StatelessWidget {
+  const OnboardingChecker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     final onboardingService = OnboardingService();
 
     return FutureBuilder<bool>(
       future: onboardingService.hasCompletedOnboarding(),
-      builder: (context, onboardingSnapshot) {
-        if (onboardingSnapshot.connectionState == ConnectionState.waiting) {
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const SplashScreen();
         }
 
-        final hasCompletedOnboarding = onboardingSnapshot.data ?? false;
+        final hasCompletedOnboarding = snapshot.data ?? false;
         if (!hasCompletedOnboarding) {
           return const OnboardingScreen1();
         }
 
-        return StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, authSnapshot) {
-            if (authSnapshot.connectionState == ConnectionState.waiting) {
-              return const SplashScreen();
-            }
-            if (authSnapshot.hasData && authSnapshot.data != null) {
-              return const HomeScreen(initialIndex: 0);
-            }
-            return const AuthScreen();
-          },
-        );
+        return const AuthScreen();
+      },
+    );
+  }
+}
+
+class PersonalizationChecker extends StatelessWidget {
+  const PersonalizationChecker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final onboardingService = OnboardingService();
+
+    return FutureBuilder<bool>(
+      future: onboardingService.hasCompletedPersonalization(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SplashScreen();
+        }
+
+        final hasCompletedPersonalization = snapshot.data ?? false;
+        if (!hasCompletedPersonalization) {
+          return const PersonalizationScreen();
+        }
+
+        return const HomeScreen(initialIndex: 0);
       },
     );
   }

@@ -165,6 +165,7 @@ class PhishingAppContentState extends State<PhishingAppContent> {
         '/onboarding-1': (context) => const OnboardingScreen1(),
         '/onboarding-2': (context) => const OnboardingScreen2(),
         '/onboarding-3': (context) => const OnboardingScreen3(),
+        '/personalization': (context) => const PersonalizationScreen(),
       },
     );
   }

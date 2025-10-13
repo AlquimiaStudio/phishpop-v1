@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
+import '../../services/services.dart';
 
 class OnboardingScreen3 extends StatefulWidget {
   const OnboardingScreen3({super.key});
@@ -51,7 +52,6 @@ class _OnboardingScreen3State extends State<OnboardingScreen3>
 
     fadeController.forward();
 
-    // Iniciar demo automáticamente después de que aparezca el contenido
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) startDemo();
     });
@@ -63,21 +63,27 @@ class _OnboardingScreen3State extends State<OnboardingScreen3>
     });
 
     // Secuencia de animación del demo
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(const Duration(milliseconds: 400), () {
       if (mounted) setState(() => showScore = true);
     });
 
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       if (mounted) setState(() => showRedFlags = true);
     });
 
-    Future.delayed(const Duration(milliseconds: 3500), () {
+    Future.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) setState(() => showVerdict = true);
     });
   }
 
-  void handleContinue() {
-    Navigator.pushReplacementNamed(context, '/auth');
+  void handleContinue() async {
+    // Mark onboarding as complete
+    await OnboardingService().completeOnboarding();
+
+    if (mounted) {
+      // Navigate back to root to trigger AuthWrapper
+      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+    }
   }
 
   @override
@@ -286,7 +292,7 @@ class _OnboardingScreen3State extends State<OnboardingScreen3>
                               if (showScore)
                                 TweenAnimationBuilder<double>(
                                   tween: Tween(begin: 0.0, end: 1.0),
-                                  duration: const Duration(milliseconds: 600),
+                                  duration: const Duration(milliseconds: 400),
                                   curve: Curves.easeInOut,
                                   builder: (context, value, child) {
                                     return Opacity(
@@ -343,7 +349,7 @@ class _OnboardingScreen3State extends State<OnboardingScreen3>
                               if (showRedFlags)
                                 TweenAnimationBuilder<double>(
                                   tween: Tween(begin: 0.0, end: 1.0),
-                                  duration: const Duration(milliseconds: 600),
+                                  duration: const Duration(milliseconds: 400),
                                   curve: Curves.easeInOut,
                                   builder: (context, value, child) {
                                     return Opacity(
@@ -404,7 +410,7 @@ class _OnboardingScreen3State extends State<OnboardingScreen3>
                               if (showVerdict)
                                 TweenAnimationBuilder<double>(
                                   tween: Tween(begin: 0.0, end: 1.0),
-                                  duration: const Duration(milliseconds: 600),
+                                  duration: const Duration(milliseconds: 400),
                                   curve: Curves.easeInOut,
                                   builder: (context, value, child) {
                                     return Opacity(

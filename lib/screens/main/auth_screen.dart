@@ -96,12 +96,14 @@ class _AuthScreenState extends State<AuthScreen>
                   // TEMPORARY: Reset onboarding button for testing
                   TextButton(
                     onPressed: () async {
-                      await OnboardingService().resetOnboarding();
+                      final service = OnboardingService();
+                      await service.resetOnboarding();
+                      await service.resetPersonalization();
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Onboarding reset! Restart app to see it.',
+                              'Onboarding & Personalization reset! Restart app.',
                             ),
                             duration: Duration(seconds: 2),
                           ),

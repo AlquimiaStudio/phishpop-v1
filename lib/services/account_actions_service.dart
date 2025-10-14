@@ -109,10 +109,16 @@ class AccountActionsService {
           onConfirm: () async {
             Navigator.of(dialogContext).pop();
 
+            final userId = authProvider.currentUser?.id;
+
             await authProvider.deleteAccount();
 
             await ScanDatabaseService().clearAllScans();
             await PersistentStatsDatabaseService().resetStats();
+
+            if (userId != null) {
+              await UsageLimitsDatabaseService().deleteUserData(userId);
+            }
 
             navigator.pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => const AuthWrapper()),

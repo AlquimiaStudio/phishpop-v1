@@ -1,23 +1,8 @@
-enum Results {
-  safe,
-  unsafe,
-  unknown,
-}
+enum Results { safe, unsafe, unknown }
 
-enum RiskLevel {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum RiskLevel { low, medium, high, critical }
 
-enum UrlClassification {
-  safe,
-  malware,
-  phishing,
-  suspicious,
-  blocked,
-}
+enum UrlClassification { safe, malware, phishing, suspicious, blocked }
 
 class QRUrlResponseModel {
   final String id;

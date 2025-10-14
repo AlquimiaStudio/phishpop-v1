@@ -19,11 +19,7 @@ class ScanDatabaseService {
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, 'scan_history.db');
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDatabase,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDatabase);
   }
 
   Future<void> _createDatabase(Database db, int version) async {
@@ -49,7 +45,7 @@ class ScanDatabaseService {
 
   Future<void> saveScan(ScanHistoryModel scan) async {
     final db = await database;
-    
+
     final scanData = {
       'id': scan.id,
       'scan_type': scan.scanType,
@@ -57,9 +53,12 @@ class ScanDatabaseService {
       'date': scan.date,
       'status': scan.status,
       'score': scan.score,
-      'timestamp': scan.timestamp?.toIso8601String() ?? DateTime.now().toIso8601String(),
+      'timestamp':
+          scan.timestamp?.toIso8601String() ?? DateTime.now().toIso8601String(),
       'details': scan.details != null ? jsonEncode(scan.details!) : null,
-      'flagged_issues': scan.flaggedIssues != null ? jsonEncode(scan.flaggedIssues!) : null,
+      'flagged_issues': scan.flaggedIssues != null
+          ? jsonEncode(scan.flaggedIssues!)
+          : null,
       'created_at': DateTime.now().millisecondsSinceEpoch,
     };
 
@@ -74,7 +73,7 @@ class ScanDatabaseService {
 
   Future<List<ScanHistoryModel>> getRecentScans({int limit = 10}) async {
     final db = await database;
-    
+
     final maps = await db.query(
       'scan_history',
       orderBy: 'created_at DESC',
@@ -86,7 +85,7 @@ class ScanDatabaseService {
 
   Future<ScanHistoryModel?> getScanById(String id) async {
     final db = await database;
-    
+
     final maps = await db.query(
       'scan_history',
       where: 'id = ?',
@@ -99,12 +98,8 @@ class ScanDatabaseService {
 
   Future<void> deleteScan(String id) async {
     final db = await database;
-    
-    await db.delete(
-      'scan_history',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+
+    await db.delete('scan_history', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> clearAllScans() async {
@@ -114,26 +109,33 @@ class ScanDatabaseService {
 
   Future<int> getScanCount() async {
     final db = await database;
-    final result = await db.rawQuery('SELECT COUNT(*) as count FROM scan_history');
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM scan_history',
+    );
     return result.first['count'] as int;
   }
 
   Future<void> _enforceLimit({int maxRecords = 50}) async {
     final db = await database;
-    
-    final countResult = await db.rawQuery('SELECT COUNT(*) as count FROM scan_history');
+
+    final countResult = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM scan_history',
+    );
     final count = countResult.first['count'] as int;
-    
+
     if (count > maxRecords) {
       final excessRecords = count - maxRecords;
-      await db.rawDelete('''
+      await db.rawDelete(
+        '''
         DELETE FROM scan_history 
         WHERE id IN (
           SELECT id FROM scan_history 
           ORDER BY created_at ASC 
           LIMIT ?
         )
-      ''', [excessRecords]);
+      ''',
+        [excessRecords],
+      );
     }
   }
 
@@ -145,13 +147,13 @@ class ScanDatabaseService {
       date: map['date'] as String,
       status: map['status'] as String,
       score: map['score'] as double,
-      timestamp: map['timestamp'] != null 
+      timestamp: map['timestamp'] != null
           ? DateTime.parse(map['timestamp'] as String)
           : null,
-      details: map['details'] != null 
+      details: map['details'] != null
           ? jsonDecode(map['details'] as String) as Map<String, dynamic>
           : null,
-      flaggedIssues: map['flagged_issues'] != null 
+      flaggedIssues: map['flagged_issues'] != null
           ? List<String>.from(jsonDecode(map['flagged_issues'] as String))
           : null,
     );

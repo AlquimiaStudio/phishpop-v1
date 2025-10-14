@@ -12,6 +12,7 @@ export 'main/stats_screen.dart';
 export 'settings/fair_use_policy_screen.dart';
 export 'settings/privacy_security_screen.dart';
 export 'settings/settings_screen.dart';
+export 'settings/usage_stats_screen.dart';
 
 export 'summary/qr_url_summary_screen.dart';
 export 'summary/qr_wifi_summary_screen.dart';

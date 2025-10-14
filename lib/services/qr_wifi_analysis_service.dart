@@ -1,40 +1,45 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+
 import '../models/models.dart';
 import '../helpers/helpers.dart';
 import '../providers/providers.dart';
 import 'wifi_risk_analyzer.dart';
 import 'analytics_service.dart';
+import 'usage_limits_service.dart';
 
 class QrWifiAnalysisService {
-  final IRiskAnalyzer _riskAnalyzer;
-  final AnalyticsService _analytics = AnalyticsService();
+  final IRiskAnalyzer riskAnalyzer;
+  final AnalyticsService analytics = AnalyticsService();
+  final UsageLimitsService usageLimits = UsageLimitsService();
 
   QrWifiAnalysisService({IRiskAnalyzer? riskAnalyzer})
-    : _riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
+    : riskAnalyzer = riskAnalyzer ?? WifiRiskAnalyzer();
 
-  QrWifiResponse? getQrWifiAnalysis(
+  Future<QrWifiResponse?> getQrWifiAnalysis(
     String wifiContent,
     HistoryProvider historyProvider,
-  ) {
+  ) async {
+    await usageLimits.canScan('qr_wifi');
+
     if (!isValidWifiQR(wifiContent)) {
       return null;
     }
 
     final result = analyzeWifiNetwork(wifiContent);
 
+    await usageLimits.recordScan('qr_wifi');
+
     final historyEntry = createWifiHistoryEntry(result);
     historyProvider.addScan(historyEntry);
 
-    // Log analytics event
-    _analytics.logQrScan(
+    analytics.logQrScan(
       scanType: 'wifi',
       riskLevel: result.riskLevel.toString(),
     );
 
-    // Log threat if detected
     if (result.classification == WifiClassification.unsafe) {
-      _analytics.logThreatDetected(
+      analytics.logThreatDetected(
         threatType: 'Unsafe WiFi Network',
         scanType: 'qr_wifi',
         confidenceScore: result.confidenceScore * 100,
@@ -55,11 +60,9 @@ class QrWifiAnalysisService {
     final riskLevel = determineRiskLevel(ssid, password, securityType);
     final isSecure = analyzeNetworkSecurity(ssid, password, securityType);
 
-    final riskPercentage = _riskAnalyzer.calculateRiskPercentage(
-      classification,
-    );
-    final confidenceScore = _riskAnalyzer.generateConfidenceScore();
-    final flaggedIssues = _riskAnalyzer.generateFlaggedIssues(
+    final riskPercentage = riskAnalyzer.calculateRiskPercentage(classification);
+    final confidenceScore = riskAnalyzer.generateConfidenceScore();
+    final flaggedIssues = riskAnalyzer.generateFlaggedIssues(
       ssid,
       password,
       securityType,

@@ -127,20 +127,10 @@ class SubscriptionStatusCard extends StatelessWidget {
             'Link & email analysis',
             'QR link analysis scans',
             'Priority support',
-            'Family Mode: Quick report to authorities',
-            'Family Mode: Scam library with official guides',
-            'Family Mode: Emergency family contacts (3)',
-            'Family Mode: One-tap SOS alert',
+            'Family Mode',
             'QR WiFi analysis scan',
           ]
-        : [
-            'Family Mode: Quick report to authorities',
-            'Family Mode: Scam library with official guides',
-            'Family Mode: Emergency family contacts (3)',
-            'Family Mode: One-tap SOS alert',
-            'QR WiFi analysis scan',
-            'Community support',
-          ];
+        : ['Family Mode', 'QR WiFi analysis scan', 'Community support'];
 
     return Column(
       children: features.map((feature) => _buildFeatureItem(feature)).toList(),

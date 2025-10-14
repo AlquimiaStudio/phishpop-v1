@@ -9,3 +9,4 @@ export 'settings/settings.dart';
 export 'stats/stats.dart';
 export 'summary/summary.dart';
 export 'ui/ui.dart';
+export 'usage_stats/usage_stats.dart';

@@ -13,4 +13,6 @@ export 'shared_content_detector_service.dart';
 export 'stats_service.dart';
 export 'text__analysis_service.dart';
 export 'url_analysis_service.dart';
+export 'usage_limits_database_service.dart';
+export 'usage_limits_service.dart';
 export 'wifi_risk_analyzer.dart';

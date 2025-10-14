@@ -7,9 +7,9 @@ class HttpClient {
   static final Dio _dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: Duration(seconds: 30),
-      receiveTimeout: Duration(seconds: 45),
-      sendTimeout: Duration(seconds: 30),
+      connectTimeout: Duration(seconds: 60), // Aumentado para Railway connection
+      receiveTimeout: Duration(seconds: 90), // Aumentado para OpenAI processing
+      sendTimeout: Duration(seconds: 60), // Aumentado para textos largos
       headers: {'Content-Type': 'application/json'},
     ),
   );

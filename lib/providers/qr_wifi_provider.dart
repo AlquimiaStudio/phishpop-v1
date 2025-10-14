@@ -36,7 +36,7 @@ class QrWifiProvider extends ChangeNotifier {
     }
 
     try {
-      qrWifiAnalysisResult = QrWifiAnalysisService().getQrWifiAnalysis(
+      qrWifiAnalysisResult = await QrWifiAnalysisService().getQrWifiAnalysis(
         wifiContent,
         historyProvider,
       );

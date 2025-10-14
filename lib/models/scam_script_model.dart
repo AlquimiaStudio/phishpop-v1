@@ -28,7 +28,9 @@ class ScamScript {
       nextSteps: List<String>.from(json['nextSteps'] as List),
       officialNumbers: Map<String, String>.from(json['officialNumbers'] as Map),
       reportSteps: List<String>.from(json['reportSteps'] as List),
-      reportingWebsites: Map<String, String>.from(json['reportingWebsites'] as Map),
+      reportingWebsites: Map<String, String>.from(
+        json['reportingWebsites'] as Map,
+      ),
     );
   }
 

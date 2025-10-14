@@ -129,7 +129,7 @@ class _PersonalizationScreenState extends State<PersonalizationScreen>
                     child: Column(
                       children: [
                         _UserTypeCard(
-                          icon: '🙋',
+                          icon: Icons.person,
                           title: 'Just Me',
                           description: 'Personal protection for everyday use',
                           userType: 'just_me',
@@ -139,7 +139,7 @@ class _PersonalizationScreenState extends State<PersonalizationScreen>
                         ),
                         const SizedBox(height: 20),
                         _UserTypeCard(
-                          icon: '👨‍👩‍👧',
+                          icon: Icons.family_restroom,
                           title: 'My Family',
                           description:
                               'Protect your loved ones from online threats',
@@ -150,7 +150,7 @@ class _PersonalizationScreenState extends State<PersonalizationScreen>
                         ),
                         const SizedBox(height: 20),
                         _UserTypeCard(
-                          icon: '👵',
+                          icon: Icons.elderly,
                           title: 'My Elderly Parents',
                           description:
                               'Enhanced protection with Safe Parent features',
@@ -178,7 +178,7 @@ class _PersonalizationScreenState extends State<PersonalizationScreen>
 }
 
 class _UserTypeCard extends StatelessWidget {
-  final String icon;
+  final IconData icon;
   final String title;
   final String description;
   final String userType;
@@ -264,7 +264,13 @@ class _UserTypeCard extends StatelessWidget {
                           : null,
                     ),
                     child: Center(
-                      child: Text(icon, style: const TextStyle(fontSize: 36)),
+                      child: Icon(
+                        icon,
+                        size: 36,
+                        color: isSelected
+                            ? AppColors.primaryColor
+                            : Colors.white,
+                      ),
                     ),
                   ),
 

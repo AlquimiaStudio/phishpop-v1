@@ -72,5 +72,7 @@
 	<string>PhishPop needs access to your camera to scan QR codes and analyze them for potential phishing threats, malicious links, and security risks to protect you from scams.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>PhishPop needs access to your photo library to analyze QR codes from saved images and detect potential phishing attempts, fraudulent links, and security threats.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

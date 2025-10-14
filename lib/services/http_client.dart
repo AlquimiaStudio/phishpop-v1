@@ -17,12 +17,22 @@ class HttpClient {
   static Dio get instance => _dio;
 
   static Future<Response> postWithRetry(String path, dynamic data) async {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 3; i++) {
       try {
         return await _dio.post(path, data: data);
       } on DioException catch (e) {
-        if (e.type == DioExceptionType.connectionTimeout && i < 1) {
-          await Future.delayed(Duration(seconds: 2));
+        // Retry on timeout or server errors (500, 502, 503, 504)
+        final shouldRetry = i < 2 && (
+          e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          (e.response?.statusCode != null &&
+           e.response!.statusCode! >= 500 &&
+           e.response!.statusCode! < 600)
+        );
+
+        if (shouldRetry) {
+          // Exponential backoff: 2s, 4s
+          await Future.delayed(Duration(seconds: 2 * (i + 1)));
           continue;
         }
         rethrow;

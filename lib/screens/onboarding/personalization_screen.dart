@@ -208,7 +208,7 @@ class _UserTypeCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? Colors.white
-              : Colors.white.withValues(alpha: 0.12),
+              : Colors.white.withValues(alpha: 0.20),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
             color: isHighlighted && !isSelected
@@ -292,7 +292,7 @@ class _UserTypeCard extends StatelessWidget {
                         Text(
                           description,
                           style: AppTextStyles.bodyMedium.copyWith(
-                            fontSize: 13,
+                            fontSize: 14,
                             height: 1.4,
                             color: isSelected
                                 ? AppColors.mediumText

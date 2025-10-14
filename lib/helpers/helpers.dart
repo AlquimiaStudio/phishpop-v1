@@ -1,5 +1,6 @@
 export 'connectivity_helper.dart';
 export 'design.dart';
+export 'fair_use_policy.dart';
 export 'firebase_helpers.dart';
 export 'generals.dart';
 export 'history.dart';

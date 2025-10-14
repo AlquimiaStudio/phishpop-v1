@@ -540,18 +540,13 @@ void showExplanationModal(
 Map<String, String> getPricingInfo(bool isAnnual) {
   if (isAnnual) {
     return {
-      'price': '24',
+      'price': '79',
       'cents': '.99',
       'period': 'per year',
-      'savings': 'Normally \$35.88/year • Save \$10.89',
+      'savings': 'Normally \$119.88/year • Save \$40',
     };
   } else {
-    return {
-      'price': '2',
-      'cents': '.99',
-      'period': 'per month',
-      'savings': '',
-    };
+    return {'price': '9', 'cents': '.99', 'period': 'per month', 'savings': ''};
   }
 }
 
@@ -559,8 +554,8 @@ List<Map<String, dynamic>> getPremiumFeatures() {
   return [
     {
       'icon': Icons.all_inclusive,
-      'title': 'Unlimited Scans',
-      'description': 'No limits on SMS, email, QR, and URL analysis',
+      'title': 'Unlimited Scans*',
+      'description': 'No limits on SMS, email, QR WiFi, QR URL and URL analysis',
     },
     {
       'icon': Icons.psychology,
@@ -582,38 +577,17 @@ List<Map<String, dynamic>> getPremiumFeatures() {
 
 List<Map<String, dynamic>> getFamilyModeFeatures() {
   return [
-    {
-      'icon': Icons.report,
-      'title': 'Quick Government Reporting',
-    },
-    {
-      'icon': Icons.library_books,
-      'title': 'Official Scam Library',
-    },
-    {
-      'icon': Icons.contacts,
-      'title': 'Emergency Family Contacts',
-    },
-    {
-      'icon': Icons.sos,
-      'title': 'One-tap SOS Messages',
-    },
+    {'icon': Icons.report, 'title': 'Quick Government Reporting'},
+    {'icon': Icons.library_books, 'title': 'Official Scam Library'},
+    {'icon': Icons.contacts, 'title': 'Emergency Family Contacts'},
+    {'icon': Icons.sos, 'title': 'One-tap SOS Messages'},
   ];
 }
 
 List<Map<String, dynamic>> getTrustBadges() {
   return [
-    {
-      'icon': Icons.security,
-      'text': '256-bit\nEncryption',
-    },
-    {
-      'icon': Icons.privacy_tip,
-      'text': 'Privacy\nFirst',
-    },
-    {
-      'icon': Icons.verified_user,
-      'text': 'Trusted by\n10K+ Users',
-    },
+    {'icon': Icons.security, 'text': '256-bit\nEncryption'},
+    {'icon': Icons.privacy_tip, 'text': 'Privacy\nFirst'},
+    {'icon': Icons.verified_user, 'text': 'Trusted by\n10K+ Users'},
   ];
 }

@@ -117,25 +117,29 @@ class SubscriptionStatusCard extends StatelessWidget {
   String _getSubscriptionDescription() {
     return isPremium
         ? 'Enjoy unlimited scans and premium features'
-        : 'Limited features with basic protection';
+        : 'Essential protection with Family Mode features';
   }
 
   Widget _buildFeaturesList() {
     final features = isPremium
         ? [
-            'Unlimited scans',
-            'Advanced threat detection',
+            'Unlimited AI scans (text)',
+            'Link & email analysis',
+            'QR link analysis scans',
             'Priority support',
             'Family Mode: Quick report to authorities',
             'Family Mode: Scam library with official guides',
             'Family Mode: Emergency family contacts (3)',
             'Family Mode: One-tap SOS alert',
+            'QR WiFi analysis scan',
           ]
         : [
-            'Basic scans (3 free trial only)',
-            'Standard protection',
+            'Family Mode: Quick report to authorities',
+            'Family Mode: Scam library with official guides',
+            'Family Mode: Emergency family contacts (3)',
+            'Family Mode: One-tap SOS alert',
+            'QR WiFi analysis scan',
             'Community support',
-            'No Family Mode access',
           ];
 
     return Column(

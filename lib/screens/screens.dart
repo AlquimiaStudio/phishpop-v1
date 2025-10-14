@@ -9,6 +9,7 @@ export 'main/scan_screen.dart';
 export 'main/splash_screen.dart';
 export 'main/stats_screen.dart';
 
+export 'settings/fair_use_policy_screen.dart';
 export 'settings/privacy_security_screen.dart';
 export 'settings/settings_screen.dart';
 

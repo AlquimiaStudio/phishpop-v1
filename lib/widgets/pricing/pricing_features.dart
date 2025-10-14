@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 import '../../helpers/helpers.dart';
+import '../../screens/screens.dart';
 
 class PricingFeatures extends StatelessWidget {
   const PricingFeatures({super.key});
@@ -27,6 +28,38 @@ class PricingFeatures extends StatelessWidget {
             icon: feature['icon'] as IconData,
             title: feature['title'] as String,
             description: feature['description'] as String,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FairUsePolicyScreen(),
+                ),
+              );
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '*Subject to fair use policy',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppColors.primaryColor,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.info_outline,
+                  size: 14,
+                  color: AppColors.primaryColor.withValues(alpha: 0.8),
+                ),
+              ],
+            ),
           ),
         ),
       ],

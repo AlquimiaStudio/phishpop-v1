@@ -8,10 +8,10 @@ class UsageLimits {
   };
 
   static const Map<String, int> freeLimits = {
-    'text': 10,
-    'email': 10,
-    'link': 10,
-    'qr_url': 10,
+    'text': 0,
+    'email': 0,
+    'link': 0,
+    'qr_url': 0,
     'qr_wifi': -1,
   };
 

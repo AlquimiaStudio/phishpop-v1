@@ -18,7 +18,6 @@ class RevenueCatService {
 
   static const String monthlyPackageId = '\$rc_monthly';
   static const String annualPackageId = '\$rc_annual';
-  static const String launchPackageId = 'launch';
 
   static const String entitlementId = 'premium';
 
@@ -71,18 +70,16 @@ class RevenueCatService {
   }
 
   Future<bool> isUserPremium() async {
-    return true;
-
-    // try {
-    //   final customerInfo = await Purchases.getCustomerInfo();
-    //   final isPremium =
-    //       customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
-    //   log('User is premium: $isPremium');
-    //   return isPremium;
-    // } catch (e) {
-    //   log('Error checking subscription: $e');
-    //   return false;
-    // }
+    try {
+      final customerInfo = await Purchases.getCustomerInfo();
+      final isPremium =
+          customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+      log('User is premium: $isPremium');
+      return isPremium;
+    } catch (e) {
+      log('Error checking subscription: $e');
+      return false;
+    }
   }
 
   Future<CustomerInfo?> getCustomerInfo() async {
@@ -209,11 +206,5 @@ class RevenueCatService {
     final offerings = await getOfferings();
     if (offerings == null) return null;
     return getPackage(offerings, annualPackageId);
-  }
-
-  Future<Package?> getLaunchPackage() async {
-    final offerings = await getOfferings();
-    if (offerings == null) return null;
-    return getPackage(offerings, launchPackageId);
   }
 }

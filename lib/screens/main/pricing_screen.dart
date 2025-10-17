@@ -19,10 +19,10 @@ class PricingScreen extends StatefulWidget {
 class _PricingScreenState extends State<PricingScreen> {
   bool isAnnualSelected = true;
   bool isLoading = true;
+  bool isPurchasing = false;
 
   Package? monthlyPackage;
   Package? annualPackage;
-  Package? launchPackage;
 
   @override
   void initState() {
@@ -44,10 +44,7 @@ class _PricingScreenState extends State<PricingScreen> {
             offerings,
             RevenueCatService.annualPackageId,
           );
-          launchPackage = RevenueCatService().getPackage(
-            offerings,
-            RevenueCatService.launchPackageId,
-          );
+
           isLoading = false;
         });
       } else {
@@ -59,10 +56,12 @@ class _PricingScreenState extends State<PricingScreen> {
   }
 
   Future<void> handlePurchase() async {
+    if (isPurchasing) return;
+
     Package? selectedPackage;
 
     if (isAnnualSelected) {
-      selectedPackage = launchPackage ?? annualPackage;
+      selectedPackage = annualPackage;
     } else {
       selectedPackage = monthlyPackage;
     }
@@ -75,10 +74,16 @@ class _PricingScreenState extends State<PricingScreen> {
       return;
     }
 
+    setState(() => isPurchasing = true);
+
     try {
       final customerInfo = await RevenueCatService().purchasePackage(
         selectedPackage,
       );
+
+      if (!mounted) return;
+
+      setState(() => isPurchasing = false);
 
       if (customerInfo != null) {
         final isPremium =
@@ -90,19 +95,106 @@ class _PricingScreenState extends State<PricingScreen> {
 
         if (isPremium) {
           if (!mounted) return;
-          GlobalSnackBar.showSuccess(
-            context,
-            'Purchase successful! Welcome to Premium!',
-          );
 
-          navigationWithoutAnimation(
-            context,
-            widget.returnScreen ?? const HomeScreen(),
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).primaryColor.withValues(alpha: 0.95),
+                      Theme.of(context).primaryColor.withValues(alpha: 0.85),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(
+                        context,
+                      ).primaryColor.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check_circle,
+                        size: 64,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Welcome to Premium!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'You now have unlimited access to all premium features',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          navigationWithoutAnimation(
+                            context,
+                            widget.returnScreen ?? const HomeScreen(),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Theme.of(context).primaryColor,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Get Started',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         }
       }
     } catch (e) {
       if (mounted) {
+        setState(() => isPurchasing = false);
         GlobalSnackBar.showError(context, 'Purchase failed. Please try again.');
       }
     }
@@ -142,7 +234,6 @@ class _PricingScreenState extends State<PricingScreen> {
                     isAnnualSelected: isAnnualSelected,
                     monthlyPackage: monthlyPackage,
                     annualPackage: annualPackage,
-                    launchPackage: launchPackage,
                   ),
                   const SizedBox(height: 32),
                   const PricingFeatures(),
@@ -151,7 +242,10 @@ class _PricingScreenState extends State<PricingScreen> {
                   const SizedBox(height: 32),
                   const TrustBadges(),
                   const SizedBox(height: 24),
-                  PricingCTAButton(onPressed: handlePurchase),
+                  PricingCTAButton(
+                    onPressed: isPurchasing ? null : handlePurchase,
+                    isLoading: isPurchasing,
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),

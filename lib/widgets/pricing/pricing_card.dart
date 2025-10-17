@@ -7,17 +7,15 @@ class PricingCard extends StatelessWidget {
   final bool isAnnualSelected;
   final Package? monthlyPackage;
   final Package? annualPackage;
-  final Package? launchPackage;
 
   const PricingCard({
     super.key,
     required this.isAnnualSelected,
     this.monthlyPackage,
     this.annualPackage,
-    this.launchPackage,
   });
 
-  Map<String, String> _getPricingFromPackage(Package package, bool isAnnual) {
+  Map<String, String> getPricingFromPackage(Package package, bool isAnnual) {
     final price = package.storeProduct.price;
 
     final priceParts = price.toStringAsFixed(2).split('.');
@@ -26,20 +24,16 @@ class PricingCard extends StatelessWidget {
       'price': priceParts[0],
       'cents': '.${priceParts[1]}',
       'period': isAnnual ? 'per year' : 'per month',
-      'savings': isAnnual && launchPackage != null
-          ? 'Launch Offer • Save 30%'
-          : (isAnnual ? 'Save compared to monthly' : ''),
+      'savings': isAnnual ? 'Normally \$119.88 Save \$39.89 (33% off)' : '',
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final selectedPackage = isAnnualSelected
-        ? (launchPackage ?? annualPackage)
-        : monthlyPackage;
+    final selectedPackage = isAnnualSelected ? annualPackage : monthlyPackage;
 
     final pricing = selectedPackage != null
-        ? _getPricingFromPackage(selectedPackage, isAnnualSelected)
+        ? getPricingFromPackage(selectedPackage, isAnnualSelected)
         : getPricingInfo(isAnnualSelected);
 
     return Container(

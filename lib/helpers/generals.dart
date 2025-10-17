@@ -543,7 +543,7 @@ Map<String, String> getPricingInfo(bool isAnnual) {
       'price': '79',
       'cents': '.99',
       'period': 'per year',
-      'savings': 'Normally \$119.88/year • Save \$40',
+      'savings': 'Save \$39.89 (33% off)',
     };
   } else {
     return {'price': '9', 'cents': '.99', 'period': 'per month', 'savings': ''};

@@ -28,21 +28,19 @@ class UsageLimitsService {
   }
 
   Future<bool> isPremium() async {
-    return true;
+    final now = DateTime.now();
 
-    // final now = DateTime.now();
+    if (cachedIsPremium != null &&
+        lastPremiumCheck != null &&
+        now.difference(lastPremiumCheck!).inMinutes < 5) {
+      return cachedIsPremium!;
+    }
 
-    // if (cachedIsPremium != null &&
-    //     lastPremiumCheck != null &&
-    //     now.difference(lastPremiumCheck!).inMinutes < 5) {
-    //   return cachedIsPremium!;
-    // }
+    final isPremium = await revenueCat.isUserPremium();
+    cachedIsPremium = isPremium;
+    lastPremiumCheck = now;
 
-    // final isPremium = await revenueCat.isUserPremium();
-    // cachedIsPremium = isPremium;
-    // lastPremiumCheck = now;
-
-    // return isPremium;
+    return isPremium;
   }
 
   Future<bool> canScan(String scanType) async {

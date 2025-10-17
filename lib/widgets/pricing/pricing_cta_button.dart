@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../../theme/theme.dart';
 
 class PricingCTAButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isLoading;
 
   const PricingCTAButton({
     super.key,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -26,20 +28,29 @@ class PricingCTAButton extends StatelessWidget {
               ),
               elevation: 3,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.lock_open, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Start Premium Protection',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+            child: isLoading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.lock_open, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Start Premium Protection',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
-                ),
-              ],
-            ),
+                    ],
+                  ),
           ),
         ),
         const SizedBox(height: 16),

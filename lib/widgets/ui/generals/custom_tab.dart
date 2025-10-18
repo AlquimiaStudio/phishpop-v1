@@ -48,7 +48,7 @@ class CustomTab extends StatelessWidget {
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: EdgeInsets.symmetric(
-              horizontal: isSelected ? 12 : 8,
+              horizontal: isSelected ? 8 : 4,
               vertical: 2,
             ),
             decoration: BoxDecoration(
@@ -77,10 +77,10 @@ class CustomTab extends StatelessWidget {
                   child: Icon(
                     icon,
                     color: iconColor,
-                    size: isSelected ? 27 : 26,
+                    size: isSelected ? 26 : 24,
                   ),
                 ),
-                const SizedBox(height: 1),
+                const SizedBox(height: 2),
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
                   style: TextStyle(
@@ -93,7 +93,7 @@ class CustomTab extends StatelessWidget {
                   child: Text(
                     label,
                     maxLines: 1,
-                    overflow: TextOverflow.visible,
+                    overflow: TextOverflow.clip,
                     textAlign: TextAlign.center,
                   ),
                 ),

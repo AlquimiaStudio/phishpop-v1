@@ -40,7 +40,7 @@ class SafeParentFeatureCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -52,6 +52,7 @@ class SafeParentFeatureCard extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium?.copyWith(
+                fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: color,
               ),

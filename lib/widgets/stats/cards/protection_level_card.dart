@@ -29,7 +29,7 @@ class ProtectionLevelCard extends StatelessWidget {
     final color = getProtectionColor(classification);
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../exceptions/exceptions.dart';
 import '../../../helpers/helpers.dart';
 import '../../../providers/providers.dart';
 import '../../../screens/screens.dart';
@@ -81,28 +82,35 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
         listen: false,
       );
 
-      final isPremium = await RevenueCatService().isUserPremium();
-
-      if (!isPremium) {
-        if (context.mounted) {
-          await PremiumUpgradeDialog.show(
-            context: context,
-            featureName: 'Unlimited URL Scanning',
-            description:
-                'Scan unlimited URLs and protect yourself from phishing attacks with Premium',
-            icon: Icons.language,
-          );
-          controller.clear();
-        }
-        return;
-      }
-
       final hasInternet = await ConnectivityHelper.hasInternetConnection();
       if (!hasInternet) {
         if (context.mounted) {
           GlobalSnackBar.showError(context, 'No internet connection available');
         }
         return;
+      }
+
+      try {
+        final usageLimitsService = UsageLimitsService();
+        final canScan = await usageLimitsService.canScan('link');
+
+        if (!canScan) {
+          return;
+        }
+      } catch (e) {
+        if (e is LimitReachedException) {
+          if (context.mounted) {
+            await PremiumUpgradeDialog.show(
+              context: context,
+              featureName: 'Scan Limit Reached',
+              description:
+                  'You\'ve reached your limit of 10 scans this month. Upgrade to Premium for unlimited scans.',
+              icon: Icons.block,
+            );
+            controller.clear();
+          }
+          return;
+        }
       }
 
       setState(() {
@@ -156,7 +164,7 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
               icon: Icons.language,
               onScanPressed: handleUrlScan,
               isLoading: isLoading,
-              isPremium: isPremium,
+              isPremium: true,
             ),
           ],
         ),

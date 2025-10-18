@@ -70,29 +70,7 @@ class PersonalizationChecker extends StatelessWidget {
           return const PersonalizationScreen();
         }
 
-        return const PremiumChecker();
-      },
-    );
-  }
-}
-
-class PremiumChecker extends StatelessWidget {
-  const PremiumChecker({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final revenueCatService = RevenueCatService();
-
-    return FutureBuilder<bool>(
-      future: revenueCatService.isUserPremium(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SplashScreen();
-        }
-
-        final isUserPremium = snapshot.data ?? false;
-
-        return HomeScreen(initialIndex: isUserPremium ? 0 : 3);
+        return const HomeScreen(initialIndex: 0);
       },
     );
   }

@@ -49,7 +49,7 @@ class UsageLimitsService {
 
       await db.checkAndResetIfNeeded(userId);
 
-      if (UsageLimits.isUnlimited(scanType)) {
+      if (scanType == 'qr_wifi') {
         return true;
       }
 
@@ -64,7 +64,8 @@ class UsageLimitsService {
         return true;
       }
 
-      final record = await db.getScanCount(userId, scanType);
+      final typeToCheck = premium ? scanType : 'total';
+      final record = await db.getScanCount(userId, typeToCheck);
       final currentCount = record?['count'] as int? ?? 0;
 
       if (currentCount >= limit) {
@@ -73,7 +74,7 @@ class UsageLimitsService {
             : null;
 
         throw LimitReachedException(
-          scanType: scanType,
+          scanType: premium ? scanType : 'total',
           currentCount: currentCount,
           limit: limit,
           resetDate: resetDate,
@@ -93,18 +94,21 @@ class UsageLimitsService {
     try {
       final userId = await getUserId();
 
-      if (UsageLimits.isUnlimited(scanType)) {
+      if (scanType == 'qr_wifi') {
         return;
       }
 
-      await db.incrementScanCount(userId, scanType);
+      final premium = await isPremium();
+      final typeToRecord = premium ? scanType : 'total';
 
-      final stats = await getUsageStats(scanType);
+      await db.incrementScanCount(userId, typeToRecord);
+
+      final stats = await getUsageStats(typeToRecord);
       if (stats != null) {
         if (stats.isExceeded) {
-          log('User exceeded limit for $scanType');
+          log('User exceeded limit for $typeToRecord');
         } else if (stats.isNearLimit) {
-          log('User approaching limit for $scanType: ${stats.percentage}%');
+          log('User approaching limit for $typeToRecord: ${stats.percentage}%');
         }
       }
     } catch (e) {
@@ -119,10 +123,30 @@ class UsageLimitsService {
 
       await db.checkAndResetIfNeeded(userId);
 
-      final counts = await db.getAllScanCounts(userId);
       final resetDate = await db.getNextResetDate(userId);
-
       final stats = <String, UsageStats>{};
+
+      // For free users, only return 'total' stats (shared limit)
+      if (!premium) {
+        final record = await db.getScanCount(userId, 'total');
+        final currentCount = record?['count'] as int? ?? 0;
+        final lastScanDate = record?['last_scan_date'] != null
+            ? DateTime.parse(record!['last_scan_date'] as String)
+            : null;
+
+        stats['total'] = UsageStats(
+          scanType: 'total',
+          currentCount: currentCount,
+          limit: UsageLimits.getLimit('total', false),
+          resetDate: resetDate,
+          lastScanDate: lastScanDate,
+        );
+
+        return stats;
+      }
+
+      // For premium users, return stats for all scan types
+      final counts = await db.getAllScanCounts(userId);
 
       for (final scanType in UsageLimits.premiumLimits.keys) {
         final limit = UsageLimits.getLimit(scanType, premium);
@@ -197,6 +221,42 @@ class UsageLimitsService {
     } catch (e) {
       log('Error getting next reset date: $e');
       return null;
+    }
+  }
+
+  Future<int> getTotalUsage() async {
+    try {
+      final userId = await getUserId();
+      final premium = await isPremium();
+
+      if (premium) {
+        final counts = await db.getAllScanCounts(userId);
+        return counts.values.fold<int>(0, (sum, count) => sum + count);
+      }
+
+      final record = await db.getScanCount(userId, 'total');
+      return record?['count'] as int? ?? 0;
+    } catch (e) {
+      log('Error getting total usage: $e');
+      return 0;
+    }
+  }
+
+  Future<int> getRemainingScans() async {
+    try {
+      final premium = await isPremium();
+
+      if (premium) {
+        return -1;
+      }
+
+      final limit = UsageLimits.getLimit('total', false);
+      final usage = await getTotalUsage();
+
+      return (limit - usage).clamp(0, limit);
+    } catch (e) {
+      log('Error getting remaining scans: $e');
+      return 0;
     }
   }
 

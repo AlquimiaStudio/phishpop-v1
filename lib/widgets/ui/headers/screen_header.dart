@@ -7,9 +7,6 @@ class ScreenHeader extends StatelessWidget {
   final String subtitle;
   final IconData icon;
   final String? message;
-  final Color? messageColor;
-  final VoidCallback? onActionPressed;
-  final String? actionLabel;
 
   const ScreenHeader({
     super.key,
@@ -17,9 +14,6 @@ class ScreenHeader extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     this.message,
-    this.messageColor,
-    this.onActionPressed,
-    this.actionLabel,
   });
 
   @override
@@ -45,12 +39,7 @@ class ScreenHeader extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         if (message != null && message!.length > 1)
-          InfoHeaderMessage(
-            message: message!,
-            color: messageColor,
-            onActionPressed: onActionPressed,
-            actionLabel: actionLabel,
-          ),
+          InfoHeaderMessage(message: message!),
       ],
     );
   }

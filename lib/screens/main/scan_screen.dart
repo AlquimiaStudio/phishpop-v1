@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phishpop/theme/app_colors.dart';
 
-import '../../helpers/helpers.dart';
 import '../../widgets/widgets.dart';
 import '../../services/services.dart';
-import '../screens.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -35,11 +32,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     final message = isPremium
         ? 'Paste suspicious content below for instant analysis'
-        : 'Upgrade to Premium for unlimited scans and advanced protection';
-
-    final messageColor = isPremium
-        ? AppColors.primaryColor
-        : AppColors.warningColor;
+        : null;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20.0),
@@ -50,14 +43,15 @@ class _ScanScreenState extends State<ScanScreen> {
             subtitle: 'Analyze messages and URLs for threats',
             icon: Icons.security,
             message: message,
-            messageColor: messageColor,
-            onActionPressed: isPremium
-                ? null
-                : () {
-                    navigationWithoutAnimation(context, const PricingScreen());
-                  },
-            actionLabel: isPremium ? null : 'Upgrade to Premium',
           ),
+          if (!isPremium) ...[
+            const PremiumBanner(
+              icon: Icons.workspace_premium,
+              title: 'Unlimited Scans',
+              subtitle: 'Upgrade to scan as much as you want',
+            ),
+            const SizedBox(height: 10),
+          ],
           const SizedBox(height: 24),
           ScanTextSection(),
           const SizedBox(height: 24),

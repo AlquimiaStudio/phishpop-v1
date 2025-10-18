@@ -4,7 +4,18 @@ import '../../screens/screens.dart';
 import '../../theme/theme.dart';
 
 class PremiumBanner extends StatelessWidget {
-  const PremiumBanner({super.key});
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final String buttonText;
+
+  const PremiumBanner({
+    super.key,
+    this.icon = Icons.auto_awesome,
+    this.title = 'Unlock Full Protection',
+    this.subtitle = 'Get unlimited scans and detailed analytics',
+    this.buttonText = 'Upgrade',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +45,7 @@ class PremiumBanner extends StatelessWidget {
               color: AppColors.warningColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              Icons.auto_awesome,
-              size: 20,
-              color: AppColors.warningColor,
-            ),
+            child: Icon(icon, size: 30, color: AppColors.warningColor),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -46,7 +53,7 @@ class PremiumBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Unlock Full Protection',
+                  title,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -55,11 +62,8 @@ class PremiumBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Get unlimited scans and detailed analytics',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  subtitle,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -77,12 +81,9 @@ class PremiumBanner extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            child: const Text(
-              'Upgrade',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+            child: Text(
+              buttonText,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
           ),
         ],

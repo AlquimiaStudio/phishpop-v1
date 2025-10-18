@@ -69,12 +69,6 @@ class StatsScreenState extends State<StatsScreen> {
     HistoryProvider historyProvider,
     VoidCallback loadStats,
   ) {
-    if (!isPremium) {
-      return const PremiumFeatureCard(
-        title: 'Security Stats',
-        description: 'View and manage your scan history.',
-      );
-    }
     if (statsProvider.isLoading || historyProvider.isLoading) {
       return const Center(
         child: Padding(
@@ -99,6 +93,18 @@ class StatsScreenState extends State<StatsScreen> {
       );
     }
 
-    return const StatsContent();
+    return Column(
+      children: [
+        if (!isPremium) ...[
+          const PremiumBanner(
+            icon: Icons.analytics,
+            title: 'Advanced Analytics',
+            subtitle: 'Unlock detailed charts and insights',
+          ),
+          const SizedBox(height: 30),
+        ],
+        StatsContent(isPremium: isPremium),
+      ],
+    );
   }
 }

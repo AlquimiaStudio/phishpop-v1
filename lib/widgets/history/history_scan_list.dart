@@ -2,18 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
+import '../../screens/screens.dart';
 import '../../theme/theme.dart';
 import '../widgets.dart';
 
 class HistoryScanList extends StatelessWidget {
   final List<ScanHistoryModel> scanHistory;
+  final bool isPremium;
+  final int? maxItems;
 
-  const HistoryScanList({super.key, required this.scanHistory});
+  const HistoryScanList({
+    super.key,
+    required this.scanHistory,
+    this.isPremium = true,
+    this.maxItems,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final displayedScans = maxItems != null && scanHistory.length > maxItems!
+        ? scanHistory.take(maxItems!).toList()
+        : scanHistory;
+    final hasMoreScans = maxItems != null && scanHistory.length > maxItems!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,7 +35,7 @@ class HistoryScanList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             HistoryScanTitle(totalScans: scanHistory.length),
-            if (scanHistory.isNotEmpty)
+            if (scanHistory.isNotEmpty && isPremium)
               Consumer<HistoryProvider>(
                 builder: (context, historyProvider, child) {
                   return Container(
@@ -86,9 +100,9 @@ class HistoryScanList extends StatelessWidget {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: scanHistory.length,
+          itemCount: displayedScans.length,
           itemBuilder: (context, index) {
-            final scan = scanHistory[index];
+            final scan = displayedScans[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 18),
               child: Dismissible(
@@ -128,7 +142,107 @@ class HistoryScanList extends StatelessWidget {
             );
           },
         ),
+        if (hasMoreScans) buildLockedOverlay(context),
       ],
+    );
+  }
+
+  Widget buildLockedOverlay(BuildContext context) {
+    final moreScans = scanHistory.length - maxItems!;
+
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.primaryColor.withValues(alpha: 0.03),
+            AppColors.warningColor.withValues(alpha: 0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.warningColor.withValues(alpha: 0.15),
+          width: 1.5,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            navigationWithoutAnimation(context, const PricingScreen());
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Stack(
+            children: [
+              Positioned(
+                top: -20,
+                right: -20,
+                child: Icon(
+                  Icons.auto_awesome,
+                  size: 120,
+                  color: AppColors.warningColor.withValues(alpha: 0.05),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24,
+                  horizontal: 20,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.warningColor.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.lock_outline,
+                        size: 28,
+                        color: AppColors.warningColor,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '+$moreScans ${moreScans == 1 ? 'scan' : 'scans'} locked',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[800],
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            'Unlock your complete scan history',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: AppColors.warningColor.withValues(alpha: 0.6),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

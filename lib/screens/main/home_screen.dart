@@ -99,7 +99,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         label: 'Scan',
                         index: 0,
                         tabController: tabController,
-                        isPremiumFeature: true,
+                        isPremiumFeature: false,
                         isUserPremium: isUserPremium,
                       ),
                       CustomTab(
@@ -107,7 +107,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         label: 'History',
                         index: 1,
                         tabController: tabController,
-                        isPremiumFeature: true,
+                        isPremiumFeature: false,
                         isUserPremium: isUserPremium,
                       ),
                       CustomTab(
@@ -115,7 +115,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         label: 'Stats',
                         index: 2,
                         tabController: tabController,
-                        isPremiumFeature: true,
+                        isPremiumFeature: false,
                         isUserPremium: isUserPremium,
                       ),
                       CustomTab(

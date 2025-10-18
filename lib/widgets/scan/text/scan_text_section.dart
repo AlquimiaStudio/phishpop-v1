@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../exceptions/exceptions.dart';
 import '../../../helpers/helpers.dart';
 import '../../../providers/providers.dart';
 import '../../../screens/screens.dart';
@@ -80,28 +81,35 @@ class _ScanTextSectionState extends State<ScanTextSection> {
         listen: false,
       );
 
-      final isPremium = await RevenueCatService().isUserPremium();
-
-      if (!isPremium) {
-        if (context.mounted) {
-          await PremiumUpgradeDialog.show(
-            context: context,
-            featureName: 'Unlimited Text Scanning',
-            description:
-                'Scan unlimited messages and texts to detect phishing attempts with Premium',
-            icon: Icons.message,
-          );
-          controller.clear();
-        }
-        return;
-      }
-
       final hasInternet = await ConnectivityHelper.hasInternetConnection();
       if (!hasInternet) {
         if (context.mounted) {
           GlobalSnackBar.showError(context, 'No internet connection available');
         }
         return;
+      }
+
+      try {
+        final usageLimitsService = UsageLimitsService();
+        final canScan = await usageLimitsService.canScan('text');
+
+        if (!canScan) {
+          return;
+        }
+      } catch (e) {
+        if (e is LimitReachedException) {
+          if (context.mounted) {
+            await PremiumUpgradeDialog.show(
+              context: context,
+              featureName: 'Scan Limit Reached',
+              description:
+                  'You\'ve reached your limit of 10 scans this month. Upgrade to Premium for unlimited scans.',
+              icon: Icons.block,
+            );
+            controller.clear();
+          }
+          return;
+        }
       }
 
       setState(() {
@@ -155,7 +163,7 @@ class _ScanTextSectionState extends State<ScanTextSection> {
               icon: Icons.text_fields,
               onScanPressed: handleTextScan,
               isLoading: isLoading,
-              isPremium: isPremium,
+              isPremium: true,
             ),
           ],
         ),

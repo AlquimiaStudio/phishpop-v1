@@ -66,13 +66,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget buildBody(HistoryProvider historyProvider) {
-    if (!isPremium) {
-      return const PremiumFeatureCard(
-        title: 'Scan History',
-        description: 'Track all your scans and access them anytime',
-      );
-    }
-
     if (historyProvider.isLoading && !historyProvider.hasInitialized) {
       return const Center(
         child: Padding(
@@ -99,6 +92,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
       );
     }
 
-    return HistoryScanList(scanHistory: historyProvider.scanHistory);
+    return Column(
+      children: [
+        if (!isPremium) ...[
+          const PremiumBanner(
+            icon: Icons.workspace_premium,
+            title: 'Unlock Full History',
+            subtitle: 'View all your past scans and activity',
+          ),
+          const SizedBox(height: 30),
+        ],
+        HistoryScanList(
+          scanHistory: historyProvider.scanHistory,
+          isPremium: isPremium,
+          maxItems: isPremium ? null : 3,
+        ),
+      ],
+    );
   }
 }

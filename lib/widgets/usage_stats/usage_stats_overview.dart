@@ -18,11 +18,21 @@ class UsageStatsOverview extends StatelessWidget {
   });
 
   int get totalScansThisMonth {
+    // For free users, we track a single 'total' counter
+    if (!isPremium && allStats.containsKey('total')) {
+      return allStats['total']!.currentCount;
+    }
+    // For premium users, sum all scan types
     return allStats.values.fold(0, (sum, stats) => sum + stats.currentCount);
   }
 
   int get totalRemaining {
     if (isPremium) return -1;
+
+    if (allStats.containsKey('total')) {
+      return allStats['total']!.remaining;
+    }
+
     return allStats.values
         .where((stats) => !stats.isUnlimited)
         .fold(0, (sum, stats) => sum + stats.remaining);
@@ -109,10 +119,7 @@ class UsageStatsOverview extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _getStatusMessage(),
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                   ],
                 ),
@@ -252,22 +259,13 @@ class UsageStatsOverview extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   subValue,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ],
           ),
           const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
       ),
     );
@@ -299,10 +297,7 @@ class UsageStatsOverview extends StatelessWidget {
                 ),
                 Text(
                   _getTimeUntilReset(),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -356,7 +351,9 @@ class UsageStatsOverview extends StatelessWidget {
                   ? 'You\'ve reached your limit for some scan types'
                   : 'You\'re approaching your monthly limits',
               style: TextStyle(
-                color: hasAnyLimitReached ? AppColors.dangerColor : Colors.orange[800],
+                color: hasAnyLimitReached
+                    ? AppColors.dangerColor
+                    : Colors.orange[800],
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
+import '../exceptions/exceptions.dart';
 import '../helpers/helpers.dart';
 import '../screens/screens.dart';
 import '../services/services.dart';
-import '../widgets/ui/generals/generals.dart';
+import '../widgets/widgets.dart';
 import 'providers.dart';
 
 enum QrScanState { idle, scanning, success, error, unsupported }
@@ -99,6 +100,30 @@ class QrProvider extends ChangeNotifier {
           return;
         }
 
+        try {
+          final usageLimitsService = UsageLimitsService();
+          final canScan = await usageLimitsService.canScan('qr_url');
+
+          if (!canScan) {
+            setState(QrScanState.idle);
+            return;
+          }
+        } catch (e) {
+          if (e is LimitReachedException) {
+            setState(QrScanState.idle);
+            if (context.mounted) {
+              await PremiumUpgradeDialog.show(
+                context: context,
+                featureName: 'Scan Limit Reached',
+                description:
+                    'You\'ve reached your limit of 10 scans this month. Upgrade to Premium for unlimited scans.',
+                icon: Icons.block,
+              );
+            }
+            return;
+          }
+        }
+
         setState(QrScanState.success);
 
         navigator.pushReplacement(
@@ -178,6 +203,34 @@ class QrProvider extends ChangeNotifier {
           }
           setState(QrScanState.idle);
           return;
+        }
+
+        try {
+          final usageLimitsService = UsageLimitsService();
+          final canScan = await usageLimitsService.canScan('qr_url');
+
+          if (!canScan) {
+            setState(QrScanState.idle);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
+            return;
+          }
+        } catch (e) {
+          if (e is LimitReachedException) {
+            setState(QrScanState.idle);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+              await PremiumUpgradeDialog.show(
+                context: context,
+                featureName: 'Scan Limit Reached',
+                description:
+                    'You\'ve reached your limit of 10 scans this month. Upgrade to Premium for unlimited scans.',
+                icon: Icons.block,
+              );
+            }
+            return;
+          }
         }
 
         setState(QrScanState.success);

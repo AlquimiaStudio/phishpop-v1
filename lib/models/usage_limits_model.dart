@@ -8,15 +8,21 @@ class UsageLimits {
   };
 
   static const Map<String, int> freeLimits = {
-    'text': 0,
-    'email': 0,
-    'link': 0,
-    'qr_url': 0,
-    'qr_wifi': -1,
+    'total': 10, // Total scans shared across all types
+    'qr_wifi': -1, // WiFi QR remains unlimited
   };
 
   static int getLimit(String scanType, bool isPremium) {
     final limits = isPremium ? premiumLimits : freeLimits;
+
+    if (scanType == 'qr_wifi') {
+      return limits[scanType] ?? -1;
+    }
+
+    if (!isPremium) {
+      return limits['total'] ?? 0;
+    }
+
     return limits[scanType] ?? 0;
   }
 
@@ -28,6 +34,10 @@ class UsageLimits {
     final monthlyLimit = getLimit(scanType, isPremium);
     if (monthlyLimit == -1) return -1;
     return (monthlyLimit / 30).ceil();
+  }
+
+  static bool countsTowardTotal(String scanType) {
+    return scanType != 'qr_wifi';
   }
 }
 

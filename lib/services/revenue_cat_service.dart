@@ -70,16 +70,17 @@ class RevenueCatService {
   }
 
   Future<bool> isUserPremium() async {
-    try {
-      final customerInfo = await Purchases.getCustomerInfo();
-      final isPremium =
-          customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
-      log('User is premium: $isPremium');
-      return isPremium;
-    } catch (e) {
-      log('Error checking subscription: $e');
-      return false;
-    }
+    // try {
+    //   final customerInfo = await Purchases.getCustomerInfo();
+    //   final isPremium =
+    //       customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+    //   log('User is premium: $isPremium');
+    //   return isPremium;
+    // } catch (e) {
+    //   log('Error checking subscription: $e');
+    //   return false;
+    // }
+    return false;
   }
 
   Future<CustomerInfo?> getCustomerInfo() async {

@@ -5,7 +5,6 @@ export 'cards/threats_detected_card.dart';
 export 'cards/total_scans_card.dart';
 export 'cards/stats_action_buttons.dart';
 export 'cards/stats_error_card.dart';
-export 'cards/stats_empty_state.dart';
 export 'cards/stats_content.dart';
 
 export 'components/scan_types_chart.dart';

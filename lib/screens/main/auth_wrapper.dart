@@ -70,7 +70,7 @@ class PersonalizationChecker extends StatelessWidget {
           return const PersonalizationScreen();
         }
 
-        return const HomeScreen(initialIndex: 0);
+        return const HomeScreen(initialIndex: 3);
       },
     );
   }

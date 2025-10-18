@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../services/services.dart';
 import '../../utils/utils.dart';
 import '../../widgets/ui/ui.dart';
 import '/screens/screens.dart';
@@ -16,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late TabController tabController;
+  bool isUserPremium = false;
+  final revenueCatService = RevenueCatService();
 
   @override
   void initState() {
@@ -25,6 +28,16 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       vsync: this,
       initialIndex: widget.initialIndex,
     );
+    checkPremiumStatus();
+  }
+
+  Future<void> checkPremiumStatus() async {
+    final isPremium = await revenueCatService.isUserPremium();
+    if (mounted) {
+      setState(() {
+        isUserPremium = isPremium;
+      });
+    }
   }
 
   @override
@@ -86,24 +99,32 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         label: 'Scan',
                         index: 0,
                         tabController: tabController,
+                        isPremiumFeature: true,
+                        isUserPremium: isUserPremium,
                       ),
                       CustomTab(
                         icon: Icons.history,
                         label: 'History',
                         index: 1,
                         tabController: tabController,
+                        isPremiumFeature: true,
+                        isUserPremium: isUserPremium,
                       ),
                       CustomTab(
                         icon: Icons.bar_chart,
                         label: 'Stats',
                         index: 2,
                         tabController: tabController,
+                        isPremiumFeature: true,
+                        isUserPremium: isUserPremium,
                       ),
                       CustomTab(
                         icon: Icons.family_restroom,
                         label: 'Safe',
                         index: 3,
                         tabController: tabController,
+                        isPremiumFeature: false,
+                        isUserPremium: isUserPremium,
                       ),
                     ],
                   ),

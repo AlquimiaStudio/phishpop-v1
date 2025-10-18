@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../theme/theme.dart';
 import '../../../helpers/generals.dart';
-import '../../../providers/stats_provider.dart';
+import 'package:phishpop/providers/providers.dart';
 
 class StatsActionButtons extends StatelessWidget {
   const StatsActionButtons({super.key});
@@ -11,6 +11,7 @@ class StatsActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statsProvider = context.read<StatsProvider>();
+    final historyProvider = context.read<HistoryProvider>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -45,7 +46,7 @@ class StatsActionButtons extends StatelessWidget {
               builder: (context) => AlertDialog(
                 title: const Text('Reset Statistics'),
                 content: const Text(
-                  'This will reset all accumulated statistics. Are you sure?',
+                  'This will reset all accumulated statistics and delete your scan history. Are you sure?',
                 ),
                 actions: [
                   TextButton(
@@ -64,6 +65,7 @@ class StatsActionButtons extends StatelessWidget {
             );
 
             if (confirmed ?? false) {
+              await historyProvider.clearAllHistory();
               await statsProvider.resetPersistentStats();
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(

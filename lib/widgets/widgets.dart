@@ -1,4 +1,5 @@
 export 'auth/auth.dart';
+export 'dialogs/premium_upgrade_dialog.dart';
 export 'history/history.dart';
 export 'pricing/pricing.dart';
 export 'privacy_security/security.dart';
@@ -9,4 +10,5 @@ export 'settings/settings.dart';
 export 'stats/stats.dart';
 export 'summary/summary.dart';
 export 'ui/ui.dart';
+export 'upgrade/premium_feature_card.dart';
 export 'usage_stats/usage_stats.dart';

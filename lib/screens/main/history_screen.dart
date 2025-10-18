@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../services/services.dart';
 import '../../widgets/widgets.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -12,12 +13,24 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  bool isPremium = true;
+
   @override
   void initState() {
     super.initState();
+    checkPremiumStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HistoryProvider>().initialize();
     });
+  }
+
+  Future<void> checkPremiumStatus() async {
+    final premium = await RevenueCatService().isUserPremium();
+    if (mounted) {
+      setState(() {
+        isPremium = premium;
+      });
+    }
   }
 
   Future<void> onRefresh() async {
@@ -38,12 +51,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ScreenHeader(
                   title: 'Scan History',
                   subtitle: historyProvider.hasInitialized
-                      ? 'Review your previous threat analysis'
+                      ? 'Review your previous threat'
                       : 'Loading your scan history...',
                   icon: Icons.history,
                 ),
                 const SizedBox(height: 10),
-                _buildBody(historyProvider),
+                buildBody(historyProvider),
               ],
             ),
           ),
@@ -52,7 +65,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget _buildBody(HistoryProvider historyProvider) {
+  Widget buildBody(HistoryProvider historyProvider) {
+    if (!isPremium) {
+      return const PremiumFeatureCard(
+        title: 'Scan History',
+        description: 'Track all your scans and access them anytime',
+      );
+    }
+
     if (historyProvider.isLoading && !historyProvider.hasInitialized) {
       return const Center(
         child: Padding(

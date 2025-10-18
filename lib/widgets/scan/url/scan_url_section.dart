@@ -20,6 +20,13 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
   final ScrollController scrollController = ScrollController();
   bool isLoading = false;
   bool hasConsumedSharedContent = false;
+  bool isPremium = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkPremiumStatus();
+  }
 
   @override
   void didChangeDependencies() {
@@ -29,8 +36,20 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
     }
   }
 
+  Future<void> checkPremiumStatus() async {
+    final premium = await RevenueCatService().isUserPremium();
+    if (mounted) {
+      setState(() {
+        isPremium = premium;
+      });
+    }
+  }
+
   void checkSharedContent() {
-    final sharedContentProvider = Provider.of<SharedContentProvider>(context, listen: true);
+    final sharedContentProvider = Provider.of<SharedContentProvider>(
+      context,
+      listen: true,
+    );
 
     if (sharedContentProvider.sharedContent != null &&
         sharedContentProvider.contentType == SharedContentType.url &&
@@ -61,6 +80,22 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
         context,
         listen: false,
       );
+
+      final isPremium = await RevenueCatService().isUserPremium();
+
+      if (!isPremium) {
+        if (context.mounted) {
+          await PremiumUpgradeDialog.show(
+            context: context,
+            featureName: 'Unlimited URL Scanning',
+            description:
+                'Scan unlimited URLs and protect yourself from phishing attacks with Premium',
+            icon: Icons.language,
+          );
+          controller.clear();
+        }
+        return;
+      }
 
       final hasInternet = await ConnectivityHelper.hasInternetConnection();
       if (!hasInternet) {
@@ -121,6 +156,7 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
               icon: Icons.language,
               onScanPressed: handleUrlScan,
               isLoading: isLoading,
+              isPremium: isPremium,
             ),
           ],
         ),

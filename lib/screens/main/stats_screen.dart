@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../services/services.dart';
 import '../../widgets/widgets.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -12,12 +13,24 @@ class StatsScreen extends StatefulWidget {
 }
 
 class StatsScreenState extends State<StatsScreen> {
+  bool isPremium = true;
+
   @override
   void initState() {
     super.initState();
+    checkPremiumStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadStats();
     });
+  }
+
+  Future<void> checkPremiumStatus() async {
+    final premium = await RevenueCatService().isUserPremium();
+    if (mounted) {
+      setState(() {
+        isPremium = premium;
+      });
+    }
   }
 
   Future<void> loadStats() async {
@@ -32,23 +45,60 @@ class StatsScreenState extends State<StatsScreen> {
   Widget build(BuildContext context) {
     return Consumer2<StatsProvider, HistoryProvider>(
       builder: (context, statsProvider, historyProvider, child) {
-        if (statsProvider.isLoading || historyProvider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (statsProvider.error != null) {
-          return StatsErrorCard(
-            errorMessage: statsProvider.error!,
-            onRetry: loadStats,
-          );
-        }
-
-        if (statsProvider.totalScans == 0) {
-          return const StatsEmptyState();
-        }
-
-        return const StatsContent();
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              ScreenHeader(
+                title: 'Security Stats',
+                subtitle: 'Monitor your protection metrics',
+                icon: Icons.analytics,
+              ),
+              const SizedBox(height: 10),
+              builBody(statsProvider, historyProvider, loadStats),
+            ],
+          ),
+        );
       },
     );
+  }
+
+  Widget builBody(
+    StatsProvider statsProvider,
+    HistoryProvider historyProvider,
+    VoidCallback loadStats,
+  ) {
+    if (!isPremium) {
+      return const PremiumFeatureCard(
+        title: 'Security Stats',
+        description: 'View and manage your scan history.',
+      );
+    }
+    if (statsProvider.isLoading || historyProvider.isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (statsProvider.error != null) {
+      return StatsErrorCard(
+        errorMessage: statsProvider.error!,
+        onRetry: loadStats,
+      );
+    }
+
+    if (statsProvider.totalScans == 0) {
+      return NoResultsMessage(
+        icon: Icons.analytics,
+        title: 'No statistics available',
+        subtitle: 'Start scanning to generate analytics',
+      );
+    }
+
+    return const StatsContent();
   }
 }

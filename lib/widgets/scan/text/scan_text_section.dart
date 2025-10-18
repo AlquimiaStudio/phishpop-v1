@@ -19,12 +19,28 @@ class _ScanTextSectionState extends State<ScanTextSection> {
   final TextEditingController controller = TextEditingController();
   bool isLoading = false;
   bool hasConsumedSharedContent = false;
+  bool isPremium = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkPremiumStatus();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!hasConsumedSharedContent) {
       checkSharedContent();
+    }
+  }
+
+  Future<void> checkPremiumStatus() async {
+    final premium = await RevenueCatService().isUserPremium();
+    if (mounted) {
+      setState(() {
+        isPremium = premium;
+      });
     }
   }
 
@@ -63,6 +79,22 @@ class _ScanTextSectionState extends State<ScanTextSection> {
         context,
         listen: false,
       );
+
+      final isPremium = await RevenueCatService().isUserPremium();
+
+      if (!isPremium) {
+        if (context.mounted) {
+          await PremiumUpgradeDialog.show(
+            context: context,
+            featureName: 'Unlimited Text Scanning',
+            description:
+                'Scan unlimited messages and texts to detect phishing attempts with Premium',
+            icon: Icons.message,
+          );
+          controller.clear();
+        }
+        return;
+      }
 
       final hasInternet = await ConnectivityHelper.hasInternetConnection();
       if (!hasInternet) {
@@ -123,6 +155,7 @@ class _ScanTextSectionState extends State<ScanTextSection> {
               icon: Icons.text_fields,
               onScanPressed: handleTextScan,
               isLoading: isLoading,
+              isPremium: isPremium,
             ),
           ],
         ),

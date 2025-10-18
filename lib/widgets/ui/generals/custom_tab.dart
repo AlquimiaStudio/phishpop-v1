@@ -8,6 +8,8 @@ class CustomTab extends StatelessWidget {
   final String label;
   final int index;
   final TabController tabController;
+  final bool isPremiumFeature;
+  final bool isUserPremium;
 
   const CustomTab({
     super.key,
@@ -15,10 +17,15 @@ class CustomTab extends StatelessWidget {
     required this.label,
     required this.index,
     required this.tabController,
+    this.isPremiumFeature = false,
+    this.isUserPremium = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determinar si debe mostrarse deshabilitado visualmente
+    final bool showDisabled = isPremiumFeature && !isUserPremium;
+
     return Tab(
       height: 80,
       child: AnimatedBuilder(
@@ -26,12 +33,17 @@ class CustomTab extends StatelessWidget {
         builder: (context, child) {
           bool isSelected = tabController.index == index;
 
-          final iconColor = isSelected
-              ? AppColors.primaryColor
-              : Colors.grey[600];
-          final textColor = isSelected
-              ? AppColors.primaryColor
-              : Colors.grey[600];
+          // Si es una feature premium y el usuario no es premium, usar gris claro
+          final iconColor = showDisabled
+              ? Colors.grey[300]
+              : (isSelected
+                  ? AppColors.primaryColor
+                  : Colors.grey[600]);
+          final textColor = showDisabled
+              ? Colors.grey[300]
+              : (isSelected
+                  ? AppColors.primaryColor
+                  : Colors.grey[600]);
 
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
@@ -40,9 +52,11 @@ class CustomTab extends StatelessWidget {
               vertical: 2,
             ),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.primaryColor.withValues(alpha: 0.1)
-                  : Colors.transparent,
+              color: showDisabled
+                  ? Colors.transparent
+                  : (isSelected
+                      ? AppColors.primaryColor.withValues(alpha: 0.1)
+                      : Colors.transparent),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -53,9 +67,11 @@ class CustomTab extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   padding: EdgeInsets.all(isSelected ? 4 : 3),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.primaryColor.withValues(alpha: 0.1)
-                        : Colors.transparent,
+                    color: showDisabled
+                        ? Colors.transparent
+                        : (isSelected
+                            ? AppColors.primaryColor.withValues(alpha: 0.1)
+                            : Colors.transparent),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Icon(

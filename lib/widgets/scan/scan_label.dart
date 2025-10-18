@@ -5,6 +5,7 @@ class ScanLabel extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onScanPressed;
   final bool isLoading;
+  final bool isPremium;
 
   const ScanLabel({
     super.key,
@@ -12,11 +13,19 @@ class ScanLabel extends StatelessWidget {
     this.onScanPressed,
     required this.icon,
     this.isLoading = false,
+    this.isPremium = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final displayText = isLoading ? 'Processing...' : label;
+    String displayText;
+    if (isLoading) {
+      displayText = 'Processing...';
+    } else if (!isPremium) {
+      displayText = 'Premium';
+    } else {
+      displayText = label;
+    }
 
     return SizedBox(
       height: 36,
@@ -33,23 +42,19 @@ class ScanLabel extends StatelessWidget {
                   ),
                 ),
               )
-            : Icon(icon, size: 16),
+            : Icon(isPremium ? icon : Icons.lock, size: 16),
         label: Text(
           displayText,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         style: ElevatedButton.styleFrom(
+          backgroundColor: isPremium ? null : Colors.grey[400],
+          foregroundColor: isPremium ? null : Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          elevation: 4,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 8,
-          ),
+          elevation: isPremium ? 4 : 1,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         ),
       ),
     );

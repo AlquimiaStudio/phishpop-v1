@@ -1,11 +1,35 @@
 import 'package:flutter/material.dart';
 
 import '../../helpers/helpers.dart';
+import '../../services/services.dart';
 import '../../theme/theme.dart';
 import '../../widgets/widgets.dart';
 
-class SafeParentScreen extends StatelessWidget {
+class SafeParentScreen extends StatefulWidget {
   const SafeParentScreen({super.key});
+
+  @override
+  State<SafeParentScreen> createState() => _SafeParentScreenState();
+}
+
+class _SafeParentScreenState extends State<SafeParentScreen> {
+  bool isUserPremium = false;
+  final revenueCatService = RevenueCatService();
+
+  @override
+  void initState() {
+    super.initState();
+    checkPremiumStatus();
+  }
+
+  Future<void> checkPremiumStatus() async {
+    final isPremium = await revenueCatService.isUserPremium();
+    if (mounted) {
+      setState(() {
+        isUserPremium = isPremium;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +63,7 @@ class SafeParentScreen extends StatelessWidget {
             ),
           ),
           SafeParentGrid(),
+          if (!isUserPremium) const PremiumBanner(),
         ],
       ),
     );

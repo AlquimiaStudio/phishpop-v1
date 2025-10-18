@@ -112,6 +112,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const AccountActionsSection(),
                   const SizedBox(height: 20),
                   const SettingsMenuSection(),
+                  if (isPremium) ...[
+                    const SizedBox(height: 20),
+                    const SubscriptionManagementSection(),
+                  ],
                   const SizedBox(height: 20),
                 ],
               ),

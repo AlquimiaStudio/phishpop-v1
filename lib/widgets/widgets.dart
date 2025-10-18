@@ -11,4 +11,5 @@ export 'stats/stats.dart';
 export 'summary/summary.dart';
 export 'ui/ui.dart';
 export 'upgrade/premium_feature_card.dart';
+export 'upgrade/premium_banner.dart';
 export 'usage_stats/usage_stats.dart';

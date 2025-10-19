@@ -109,21 +109,37 @@ class AccountActionsService {
           onConfirm: () async {
             Navigator.of(dialogContext).pop();
 
-            final userId = authProvider.currentUser?.id;
+            try {
+              try {
+                final persistentStatsService = PersistentStatsDatabaseService();
+                await persistentStatsService.close();
 
-            await authProvider.deleteAccount();
+                final scanDatabaseService = ScanDatabaseService();
+                await scanDatabaseService.close();
 
-            await ScanDatabaseService().clearAllScans();
-            await PersistentStatsDatabaseService().resetStats();
+                final usageLimitsService = UsageLimitsDatabaseService();
+                await usageLimitsService.close();
+              } catch (e) {
+                // Continue even if closing fails
+              }
 
-            if (userId != null) {
-              await UsageLimitsDatabaseService().deleteUserData(userId);
+              await authProvider.deleteAccount();
+
+              if (navigator.mounted) {
+                navigator.pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const AccountDeletedScreen(),
+                  ),
+                  (route) => false,
+                );
+              }
+            } catch (e) {
+              if (dialogContext.mounted) {
+                ScaffoldMessenger.of(dialogContext).showSnackBar(
+                  SnackBar(content: Text('Error deleting account: $e')),
+                );
+              }
             }
-
-            navigator.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const AuthWrapper()),
-              (route) => false,
-            );
           },
         );
       },

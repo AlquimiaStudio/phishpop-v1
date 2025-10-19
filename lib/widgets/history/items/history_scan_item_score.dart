@@ -5,11 +5,13 @@ import '../../../helpers/helpers.dart';
 class HistoryScanItemScore extends StatelessWidget {
   final double score;
   final String status;
+  final String? riskLevel;
 
   const HistoryScanItemScore({
     super.key,
     required this.score,
     required this.status,
+    this.riskLevel,
   });
 
   @override
@@ -19,7 +21,7 @@ class HistoryScanItemScore extends StatelessWidget {
       style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.bold,
-        color: getCardColor(status),
+        color: getRiskLevelColor(riskLevel, status),
       ),
     );
   }

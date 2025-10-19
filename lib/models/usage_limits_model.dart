@@ -8,7 +8,7 @@ class UsageLimits {
   };
 
   static const Map<String, int> freeLimits = {
-    'total': 10, // Total scans shared across all types
+    'total': 7, // Total scans shared across all types
     'qr_wifi': -1, // WiFi QR remains unlimited
   };
 

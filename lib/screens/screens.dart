@@ -1,3 +1,4 @@
+export 'main/account_deleted_screen.dart';
 export 'main/auth_screen.dart';
 export 'main/auth_wrapper.dart';
 export 'main/history_screen.dart';

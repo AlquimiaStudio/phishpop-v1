@@ -47,6 +47,45 @@ Color getStatusColor(String scanStatus) {
   }
 }
 
+Color getRiskLevelColor(String? riskLevel, String fallbackStatus) {
+  // If riskLevel is available, use it (more accurate)
+  if (riskLevel != null && riskLevel.isNotEmpty) {
+    switch (riskLevel.toLowerCase()) {
+      case 'low':
+        return AppColors.successColor;
+      case 'medium':
+        return AppColors.warningColor;
+      case 'high':
+      case 'critical':
+        return AppColors.dangerColor;
+      default:
+        return getStatusColor(fallbackStatus);
+    }
+  }
+  // Otherwise fall back to status
+  return getStatusColor(fallbackStatus);
+}
+
+String getDisplayStatus(String? riskLevel, String fallbackStatus) {
+  // If riskLevel is available, use it as the display label
+  if (riskLevel != null && riskLevel.isNotEmpty) {
+    switch (riskLevel.toLowerCase()) {
+      case 'low':
+        return 'safe';
+      case 'medium':
+        return 'warning';
+      case 'high':
+        return 'threat';
+      case 'critical':
+        return 'threat';
+      default:
+        return fallbackStatus;
+    }
+  }
+  // Otherwise use the status as-is
+  return fallbackStatus;
+}
+
 String formatTimestamp(String timestamp) {
   try {
     final dateTime = DateTime.parse(timestamp);
@@ -555,7 +594,8 @@ List<Map<String, dynamic>> getPremiumFeatures() {
     {
       'icon': Icons.all_inclusive,
       'title': 'Unlimited Scans*',
-      'description': 'No limits on SMS, email, QR WiFi, QR URL and URL analysis',
+      'description':
+          'No limits on SMS, email, QR WiFi, QR URL and URL analysis',
     },
     {
       'icon': Icons.psychology,

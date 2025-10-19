@@ -23,6 +23,7 @@ class HistoryScanItem extends StatelessWidget {
               HistoryScanItemIcon(
                 scanType: scanData.scanType,
                 scanStatus: scanData.status,
+                riskLevel: scanData.riskLevel,
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -35,6 +36,7 @@ class HistoryScanItem extends StatelessWidget {
                     HistoryScanItemInfo(
                       date: scanData.date,
                       status: scanData.status,
+                      riskLevel: scanData.riskLevel,
                     ),
                   ],
                 ),
@@ -45,6 +47,7 @@ class HistoryScanItem extends StatelessWidget {
                   HistoryScanItemScore(
                     score: scanData.score,
                     status: scanData.status,
+                    riskLevel: scanData.riskLevel,
                   ),
                   const SizedBox(height: 4),
                   Icon(Icons.chevron_right, color: Colors.grey[500], size: 24),

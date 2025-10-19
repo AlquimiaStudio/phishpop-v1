@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +10,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../helpers/helpers.dart';
-import 'scan_database_service.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -191,23 +192,36 @@ class FirebaseAuthService {
 
   Future<void> deleteAccount() async {
     try {
-      // Save user reference before any operations
       final user = _auth.currentUser;
+
+      if (user == null) {
+        throw 'No user is currently signed in.';
+      }
+
+      final providerData = user.providerData;
+      if (providerData.isNotEmpty) {
+        final providerId = providerData.first.providerId;
+
+        try {
+          if (providerId == 'google.com') {
+            await signInWithGoogle();
+          } else if (providerId == 'apple.com') {
+            await signInWithApple();
+          } else if (providerId == 'github.com') {
+            await signInWithGitHub();
+          }
+        } catch (e) {
+          // If re-authentication fails, continue anyway
+        }
+      }
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
 
-      final scanDatabaseService = ScanDatabaseService();
-      await scanDatabaseService.clearAllScans();
-
-      await deleteSQLiteDatabase();
-
-      if (user != null) {
-        await user.delete();
-        await signOut();
-      } else {
-        await signOut();
-      }
+      await deleteAllDatabases();
+      await user.delete();
+      await signOut();
+      developer.log('Account deletion completed successfully');
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
     } catch (e) {
@@ -215,13 +229,36 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> deleteSQLiteDatabase() async {
+  Future<void> deleteAllDatabases() async {
     try {
       final databasesPath = await getDatabasesPath();
-      final path = join(databasesPath, 'app_database.db');
-      await deleteDatabase(path);
+
+      // Delete all database files
+      final databaseFiles = [
+        'scan_history.db',
+        'persistent_stats.db',
+        'usage_limits.db',
+        'app_database.db', // In case it exists
+      ];
+
+      for (final dbFile in databaseFiles) {
+        try {
+          final path = join(databasesPath, dbFile);
+          await deleteDatabase(path);
+          developer.log('Deleted database: $dbFile');
+        } catch (e) {
+          // Database might not exist, continue with others
+          developer.log('Could not delete $dbFile: $e');
+        }
+      }
     } catch (e) {
-      // Database might not exist, ignore error
+      developer.log('Error deleting databases: $e');
+      // Don't throw, we want account deletion to proceed
     }
+  }
+
+  @Deprecated('Use deleteAllDatabases() instead')
+  Future<void> deleteSQLiteDatabase() async {
+    await deleteAllDatabases();
   }
 }

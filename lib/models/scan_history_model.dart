@@ -8,6 +8,7 @@ class ScanHistoryModel {
   final DateTime? timestamp;
   final Map<String, dynamic>? details;
   final List<String>? flaggedIssues;
+  final String? riskLevel;
 
   const ScanHistoryModel({
     required this.id,
@@ -19,6 +20,7 @@ class ScanHistoryModel {
     this.timestamp,
     this.details,
     this.flaggedIssues,
+    this.riskLevel,
   });
 
   factory ScanHistoryModel.fromJson(Map<String, dynamic> json) {
@@ -29,13 +31,14 @@ class ScanHistoryModel {
       date: json['date'] as String,
       status: json['status'] as String,
       score: (json['score'] as num).toDouble(),
-      timestamp: json['timestamp'] != null 
+      timestamp: json['timestamp'] != null
           ? DateTime.parse(json['timestamp'] as String)
           : null,
       details: json['details'] as Map<String, dynamic>?,
       flaggedIssues: json['flaggedIssues'] != null
           ? List<String>.from(json['flaggedIssues'])
           : null,
+      riskLevel: json['riskLevel'] as String?,
     );
   }
 
@@ -50,6 +53,7 @@ class ScanHistoryModel {
       'timestamp': timestamp?.toIso8601String(),
       'details': details,
       'flaggedIssues': flaggedIssues,
+      'riskLevel': riskLevel,
     };
   }
 }

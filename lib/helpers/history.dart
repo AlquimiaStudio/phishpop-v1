@@ -57,6 +57,7 @@ ScanHistoryModel createTextHistoryEntry(ITextResponse textResponse) {
     timestamp: now,
     details: textResponse.toJson(),
     flaggedIssues: textResponse.flaggedIssues,
+    riskLevel: textResponse.riskLevel,
   );
 }
 
@@ -72,6 +73,7 @@ ScanHistoryModel createUrlHistoryEntry(IUrlResponse urlResponse) {
     timestamp: now,
     details: urlResponse.toJson(),
     flaggedIssues: urlResponse.flaggedIssues,
+    riskLevel: urlResponse.riskLevel,
   );
 }
 

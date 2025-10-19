@@ -104,7 +104,7 @@ class _ScanUrlSectionState extends State<ScanUrlSection> {
               context: context,
               featureName: 'Scan Limit Reached',
               description:
-                  'You\'ve reached your limit of 10 scans this month. Upgrade to Premium for unlimited scans.',
+                  'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
               icon: Icons.block,
             );
             controller.clear();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +20,8 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late TabController tabController;
   bool isUserPremium = false;
+
+  static const platform = MethodChannel('com.andressaumet.phishpop/background');
   final revenueCatService = RevenueCatService();
 
   @override
@@ -58,7 +62,14 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           return;
         }
 
-        SystemNavigator.pop();
+        if (Platform.isAndroid) {
+          try {
+            await platform.invokeMethod('moveToBackground');
+          } catch (e) {
+            SystemNavigator.pop();
+          }
+        }
+        // On iOS: do nothing (user must use home gesture to minimize)
       },
       child: Container(
         decoration: getAppBackground(context),

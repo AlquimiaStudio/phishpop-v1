@@ -246,6 +246,8 @@ class _PricingScreenState extends State<PricingScreen> {
                     onPressed: isPurchasing ? null : handlePurchase,
                     isLoading: isPurchasing,
                   ),
+                  const SizedBox(height: 16),
+                  const LegalLinks(),
                   const SizedBox(height: 24),
                 ],
               ),

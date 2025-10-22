@@ -123,12 +123,12 @@ class SubscriptionStatusCard extends StatelessWidget {
   Widget _buildFeaturesList() {
     final features = isPremium
         ? [
-            'Unlimited AI scans (text)',
-            'Link & email analysis',
-            'QR link analysis scans',
+            'Enhanced AI scans (text & email)',
+            'Enhanced URL link analysis',
+            'Enhanced QR URL analysis',
             'Priority support',
             'Family Mode',
-            'QR WiFi analysis scan',
+            'Unlimited QR WiFi scans',
           ]
         : ['Family Mode', 'QR WiFi analysis scan', 'Community support'];
 

@@ -1,16 +1,12 @@
 class UsageLimits {
   static const Map<String, int> premiumLimits = {
     'text': 360,
-    'email': 360,
     'link': 360,
     'qr_url': 300,
     'qr_wifi': -1,
   };
 
-  static const Map<String, int> freeLimits = {
-    'total': 7, // Total scans shared across all types
-    'qr_wifi': -1, // WiFi QR remains unlimited
-  };
+  static const Map<String, int> freeLimits = {'total': 7, 'qr_wifi': -1};
 
   static int getLimit(String scanType, bool isPremium) {
     final limits = isPremium ? premiumLimits : freeLimits;

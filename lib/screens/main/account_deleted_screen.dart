@@ -1,3 +1,4 @@
+import 'dart:io' show Platform, exit;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -166,7 +167,13 @@ class _AccountDeletedScreenState extends State<AccountDeletedScreen>
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () {
-                        SystemNavigator.pop();
+                        if (Platform.isIOS) {
+                          // iOS: Use exit(0) to close the app
+                          exit(0);
+                        } else {
+                          // Android: Use SystemNavigator.pop()
+                          SystemNavigator.pop();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

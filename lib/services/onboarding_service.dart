@@ -26,12 +26,6 @@ class OnboardingService {
     await prefs.setInt(onboardingVersionKey, currentOnboardingVersion);
   }
 
-  Future<void> resetOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(hasCompletedOnboardingKey);
-    await prefs.remove(onboardingVersionKey);
-  }
-
   // Personalization methods
   Future<bool> hasCompletedPersonalization() async {
     final prefs = await SharedPreferences.getInstance();
@@ -47,11 +41,5 @@ class OnboardingService {
   Future<String?> getUserType() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(userTypeKey);
-  }
-
-  Future<void> resetPersonalization() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(hasCompletedPersonalizationKey);
-    await prefs.remove(userTypeKey);
   }
 }

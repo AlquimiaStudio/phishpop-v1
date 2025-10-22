@@ -5,3 +5,4 @@ export 'pricing_features.dart';
 export 'family_mode_highlight.dart';
 export 'trust_badges.dart';
 export 'pricing_cta_button.dart';
+export 'legal_links.dart';

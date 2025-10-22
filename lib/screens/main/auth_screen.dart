@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../theme/theme.dart';
 import '../../widgets/auth/auth.dart';
-import '../../services/services.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -92,32 +91,6 @@ class _AuthScreenState extends State<AuthScreen>
 
                   AuthCard(fadeAnimation: fadeAnimation),
                   const SizedBox(height: 20),
-
-                  // TEMPORARY: Reset onboarding button for testing
-                  TextButton(
-                    onPressed: () async {
-                      final service = OnboardingService();
-                      await service.resetOnboarding();
-                      await service.resetPersonalization();
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Onboarding & Personalization reset! Restart app.',
-                            ),
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(
-                      'Reset Onboarding (DEV)',
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white.withValues(alpha: 0.7),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

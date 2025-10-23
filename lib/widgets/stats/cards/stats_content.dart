@@ -18,7 +18,8 @@ class StatsContent extends StatelessWidget {
       builder: (context, statsProvider, child) {
         return Column(
           children: [
-            if (statsProvider.totalScans != 0) const StatsActionButtons(),
+            if (statsProvider.totalScans != 0)
+              StatsActionButtons(isPremium: isPremium),
             GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

@@ -6,7 +6,9 @@ import '../../../helpers/generals.dart';
 import 'package:phishpop/providers/providers.dart';
 
 class StatsActionButtons extends StatelessWidget {
-  const StatsActionButtons({super.key});
+  final bool isPremium;
+
+  const StatsActionButtons({super.key, required this.isPremium});
 
   @override
   Widget build(BuildContext context) {
@@ -38,58 +40,60 @@ class StatsActionButtons extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 10),
-        OutlinedButton(
-          onPressed: () async {
-            final confirmed = await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Reset Statistics'),
-                content: const Text(
-                  'This will reset all accumulated statistics and delete your scan history. Are you sure?',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text('Cancel'),
+        if (isPremium) ...[
+          const SizedBox(width: 10),
+          OutlinedButton(
+            onPressed: () async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Reset Statistics'),
+                  content: const Text(
+                    'This will reset all accumulated statistics and delete your scan history. Are you sure?',
                   ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(
-                      'Reset',
-                      style: TextStyle(color: AppColors.dangerColor),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('Cancel'),
                     ),
-                  ),
-                ],
-              ),
-            );
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(
+                        'Reset',
+                        style: TextStyle(color: AppColors.dangerColor),
+                      ),
+                    ),
+                  ],
+                ),
+              );
 
-            if (confirmed ?? false) {
-              await historyProvider.clearAllHistory();
-              await statsProvider.resetPersistentStats();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Statistics reset successfully'),
-                  ),
-                );
+              if (confirmed ?? false) {
+                await historyProvider.clearAllHistory();
+                await statsProvider.resetPersistentStats();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Statistics reset successfully'),
+                    ),
+                  );
+                }
               }
-            }
-          },
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.red,
-            side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.red,
+              side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Reset Stats'),
+                SizedBox(width: 5),
+                Icon(Icons.refresh, size: 16),
+              ],
+            ),
           ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Reset Stats'),
-              SizedBox(width: 5),
-              Icon(Icons.refresh, size: 16),
-            ],
-          ),
-        ),
+        ],
       ],
     );
   }

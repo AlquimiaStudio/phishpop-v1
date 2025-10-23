@@ -21,6 +21,13 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
   Future<void> handleSocialLogin(String provider) async {
     final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
+    // Clear shared content IMMEDIATELY to prevent any auto-navigation
+    final sharedContentProvider = Provider.of<SharedContentProvider>(
+      context,
+      listen: false,
+    );
+    sharedContentProvider.clearSharedContent();
+
     HapticFeedback.lightImpact();
     setState(() {
       isLoading = true;
@@ -38,7 +45,11 @@ class _AuthSocialButtonsState extends State<AuthSocialButtons> {
           break;
       }
 
-      if (success) {}
+      if (success && mounted) {
+        // Navigate to home and remove all other routes
+        // This forces AuthWrapper to rebuild and show the correct screen
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      }
     } catch (e) {
       // Los errores ya son manejados por el AuthProvider
     } finally {

@@ -53,6 +53,7 @@ class _AuthScreenState extends State<AuthScreen>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final keyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    final canPop = Navigator.of(context).canPop();
 
     return Scaffold(
       body: Container(
@@ -70,30 +71,54 @@ class _AuthScreenState extends State<AuthScreen>
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight:
-                    screenHeight -
-                    MediaQuery.of(context).padding.top -
-                    MediaQuery.of(context).padding.bottom,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight:
+                        screenHeight -
+                        MediaQuery.of(context).padding.top -
+                        MediaQuery.of(context).padding.bottom,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (!keyboardVisible)
+                        AuthHeader(
+                          fadeAnimation: fadeAnimation,
+                          slideAnimation: slideAnimation,
+                        ),
+                      AuthCard(fadeAnimation: fadeAnimation),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (!keyboardVisible)
-                    AuthHeader(
-                      fadeAnimation: fadeAnimation,
-                      slideAnimation: slideAnimation,
+              // Close button (only show if user can go back - i.e., came from guest mode)
+              if (canPop)
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: Material(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).pop(),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
                     ),
-
-                  AuthCard(fadeAnimation: fadeAnimation),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),

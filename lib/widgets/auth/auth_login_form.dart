@@ -45,6 +45,13 @@ class _AuthLoginFormState extends State<AuthLoginForm> {
     HapticFeedback.lightImpact();
 
     if (formKey.currentState?.validate() ?? false) {
+      // Clear shared content IMMEDIATELY to prevent any auto-navigation
+      final sharedContentProvider = Provider.of<SharedContentProvider>(
+        context,
+        listen: false,
+      );
+      sharedContentProvider.clearSharedContent();
+
       final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
       final success = await authProvider.login(
@@ -55,6 +62,10 @@ class _AuthLoginFormState extends State<AuthLoginForm> {
       if (success && mounted) {
         emailController.clear();
         passwordController.clear();
+
+        // Navigate to home and remove all other routes
+        // This forces AuthWrapper to rebuild and show the correct screen
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
       }
     }
   }

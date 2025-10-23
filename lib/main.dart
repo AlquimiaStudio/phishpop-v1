@@ -149,8 +149,9 @@ class PhishingAppContentState extends State<PhishingAppContent> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.system,
-      home: const AuthWrapper(),
+      initialRoute: '/',
       routes: {
+        '/': (context) => const AuthWrapper(),
         '/history': (context) => const HistoryScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/stats': (context) => const StatsScreen(),

@@ -39,6 +39,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AppAuthProvider>();
+    final isGuest = authProvider.isGuest;
+
     return Consumer<HistoryProvider>(
       builder: (context, historyProvider, child) {
         return RefreshIndicator(
@@ -56,7 +59,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   icon: Icons.history,
                 ),
                 const SizedBox(height: 10),
-                buildBody(historyProvider),
+                buildBody(historyProvider, isGuest),
               ],
             ),
           ),
@@ -65,7 +68,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget buildBody(HistoryProvider historyProvider) {
+  Widget buildBody(HistoryProvider historyProvider, bool isGuest) {
     if (historyProvider.isLoading && !historyProvider.hasInitialized) {
       return const Center(
         child: Padding(
@@ -94,7 +97,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     return Column(
       children: [
-        if (!isPremium) ...[
+        // Guest History Banner (only for guests)
+        if (isGuest) ...[const GuestHistoryBanner()],
+        // Premium Banner (only for non-premium registered users)
+        if (!isPremium && !isGuest) ...[
           const PremiumBanner(
             icon: Icons.workspace_premium,
             title: 'Unlock Full History',

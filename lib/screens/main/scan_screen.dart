@@ -54,14 +54,16 @@ class _ScanScreenState extends State<ScanScreen> {
           if (isGuest) ...[
             const SizedBox(height: 16),
             const GuestModeBanner(),
+            const SizedBox(height: 12),
+            const GuestUpgradeBanner(),
           ],
 
           // Premium Banner (only for non-premium registered users)
           if (!isPremium && !isGuest) ...[
             const PremiumBanner(
               icon: Icons.workspace_premium,
-              title: 'Unlimited Scans',
-              subtitle: 'Upgrade to scan as much as you want',
+              title: 'Premium AI Scans',
+              subtitle: 'Upgrade to enable AI-powered real-time scans',
             ),
             const SizedBox(height: 10),
           ],

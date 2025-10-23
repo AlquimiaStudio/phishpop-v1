@@ -67,6 +67,13 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
     }
 
     if (formKey.currentState?.validate() ?? false) {
+      // Clear shared content IMMEDIATELY to prevent any auto-navigation
+      final sharedContentProvider = Provider.of<SharedContentProvider>(
+        context,
+        listen: false,
+      );
+      sharedContentProvider.clearSharedContent();
+
       final authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
       final success = await authProvider.register(
@@ -83,6 +90,10 @@ class _AuthRegisterFormState extends State<AuthRegisterForm> {
         setState(() {
           acceptedTerms = false;
         });
+
+        // Navigate to home and remove all other routes
+        // This forces AuthWrapper to rebuild and show the correct screen
+        Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
       }
     }
   }

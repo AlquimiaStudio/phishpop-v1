@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../widgets/widgets.dart';
 import '../../services/services.dart';
+import '../../providers/providers.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -30,6 +32,9 @@ class _ScanScreenState extends State<ScanScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AppAuthProvider>();
+    final isGuest = authProvider.isGuest;
+
     final message = isPremium
         ? 'Paste suspicious content below for instant analysis'
         : null;
@@ -44,7 +49,15 @@ class _ScanScreenState extends State<ScanScreen> {
             icon: Icons.security,
             message: message,
           ),
-          if (!isPremium) ...[
+
+          // Guest Mode Banner (only for guests)
+          if (isGuest) ...[
+            const SizedBox(height: 16),
+            const GuestModeBanner(),
+          ],
+
+          // Premium Banner (only for non-premium registered users)
+          if (!isPremium && !isGuest) ...[
             const PremiumBanner(
               icon: Icons.workspace_premium,
               title: 'Unlimited Scans',
@@ -52,6 +65,7 @@ class _ScanScreenState extends State<ScanScreen> {
             ),
             const SizedBox(height: 10),
           ],
+
           const SizedBox(height: 24),
           ScanTextSection(),
           const SizedBox(height: 24),

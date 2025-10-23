@@ -8,7 +8,18 @@ class UsageLimits {
 
   static const Map<String, int> freeLimits = {'total': 7, 'qr_wifi': -1};
 
-  static int getLimit(String scanType, bool isPremium) {
+  static const Map<String, int> guestLimits = {'total': 3, 'qr_wifi': -1};
+
+  static int getLimit(String scanType, bool isPremium, {bool isGuest = false}) {
+    // Guest users have the most restrictive limits
+    if (isGuest) {
+      if (scanType == 'qr_wifi') {
+        return guestLimits[scanType] ?? -1;
+      }
+      return guestLimits['total'] ?? 0;
+    }
+
+    // Premium and free users
     final limits = isPremium ? premiumLimits : freeLimits;
 
     if (scanType == 'qr_wifi') {
@@ -26,8 +37,8 @@ class UsageLimits {
     return premiumLimits[scanType] == -1;
   }
 
-  static int getDailyLimit(String scanType, bool isPremium) {
-    final monthlyLimit = getLimit(scanType, isPremium);
+  static int getDailyLimit(String scanType, bool isPremium, {bool isGuest = false}) {
+    final monthlyLimit = getLimit(scanType, isPremium, isGuest: isGuest);
     if (monthlyLimit == -1) return -1;
     return (monthlyLimit / 30).ceil();
   }

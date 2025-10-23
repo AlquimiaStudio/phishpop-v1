@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import '../exceptions/exceptions.dart';
@@ -108,17 +109,40 @@ class QrProvider extends ChangeNotifier {
             setState(QrScanState.idle);
             return;
           }
+
+          // Show warning dialog when guest has 1 scan remaining (2/3 used)
+          final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+          if (isGuest) {
+            final stats = await usageLimitsService.getUsageStats('total');
+            if (stats != null && stats.currentCount == 2) {
+              if (context.mounted) {
+                await GuestWarningDialog.show(
+                  context: context,
+                  scansRemaining: 1,
+                );
+              }
+            }
+          }
         } catch (e) {
           if (e is LimitReachedException) {
             setState(QrScanState.idle);
             if (context.mounted) {
-              await PremiumUpgradeDialog.show(
-                context: context,
-                featureName: 'Scan Limit Reached',
-                description:
-                    'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
-                icon: Icons.block,
-              );
+              // Check if user is a guest
+              final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
+              if (isGuest) {
+                // Show guest-specific limit reached dialog
+                await GuestLimitReachedDialog.show(context: context);
+              } else {
+                // Show premium upgrade dialog for registered users
+                await PremiumUpgradeDialog.show(
+                  context: context,
+                  featureName: 'Scan Limit Reached',
+                  description:
+                      'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
+                  icon: Icons.block,
+                );
+              }
             }
             return;
           }
@@ -216,18 +240,42 @@ class QrProvider extends ChangeNotifier {
             }
             return;
           }
+
+          // Show warning dialog when guest has 1 scan remaining (2/3 used)
+          final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+          if (isGuest) {
+            final stats = await usageLimitsService.getUsageStats('total');
+            if (stats != null && stats.currentCount == 2) {
+              if (context.mounted) {
+                await GuestWarningDialog.show(
+                  context: context,
+                  scansRemaining: 1,
+                );
+              }
+            }
+          }
         } catch (e) {
           if (e is LimitReachedException) {
             setState(QrScanState.idle);
             if (context.mounted) {
               Navigator.of(context).pop();
-              await PremiumUpgradeDialog.show(
-                context: context,
-                featureName: 'Scan Limit Reached',
-                description:
-                    'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
-                icon: Icons.block,
-              );
+
+              // Check if user is a guest
+              final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+
+              if (isGuest) {
+                // Show guest-specific limit reached dialog
+                await GuestLimitReachedDialog.show(context: context);
+              } else {
+                // Show premium upgrade dialog for registered users
+                await PremiumUpgradeDialog.show(
+                  context: context,
+                  featureName: 'Scan Limit Reached',
+                  description:
+                      'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
+                  icon: Icons.block,
+                );
+              }
             }
             return;
           }

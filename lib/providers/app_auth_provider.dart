@@ -48,6 +48,13 @@ class AppAuthProvider extends ChangeNotifier {
     return user.providerData.any((info) => info.providerId == 'password');
   }
 
+  /// Check if the current user is a guest (anonymous)
+  bool get isGuest {
+    final user = authService.currentUser;
+    if (user == null) return false;
+    return user.isAnonymous;
+  }
+
   void setError(String error) {
     errorTimer?.cancel();
     errorMessage = error;
@@ -133,10 +140,20 @@ class AppAuthProvider extends ChangeNotifier {
     }
 
     try {
-      final userCredential = await authService.registerWithEmail(
-        email,
-        password,
-      );
+      firebase_auth.UserCredential? userCredential;
+
+      // Check if current user is a guest (anonymous)
+      if (isGuest) {
+        // Convert anonymous account to permanent account
+        userCredential = await authService.linkAnonymousWithEmail(
+          email,
+          password,
+        );
+      } else {
+        // Create new account for non-guest users
+        userCredential = await authService.registerWithEmail(email, password);
+      }
+
       await authService.updateUserProfile(displayName: name);
 
       if (userCredential?.user != null) {
@@ -149,6 +166,9 @@ class AppAuthProvider extends ChangeNotifier {
         );
         token = firebaseUser.uid;
         isAuthenticated = true;
+
+        // Clear guest cache after successful conversion
+        UsageLimitsService().clearCache();
       }
 
       isLoading = false;
@@ -181,7 +201,22 @@ class AppAuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final credential = await authService.signInWithGoogle();
+      firebase_auth.UserCredential? credential;
+
+      // Check if current user is a guest (anonymous)
+      if (isGuest) {
+        // Convert anonymous account to Google account
+        credential = await authService.linkAnonymousWithGoogle();
+      } else {
+        // Regular Google sign-in for non-guest users
+        credential = await authService.signInWithGoogle();
+      }
+
+      if (credential != null) {
+        // Clear guest cache after successful conversion
+        UsageLimitsService().clearCache();
+      }
+
       isLoading = false;
       notifyListeners();
       return credential != null;
@@ -198,7 +233,22 @@ class AppAuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final credential = await authService.signInWithApple();
+      firebase_auth.UserCredential? credential;
+
+      // Check if current user is a guest (anonymous)
+      if (isGuest) {
+        // Convert anonymous account to Apple account
+        credential = await authService.linkAnonymousWithApple();
+      } else {
+        // Regular Apple sign-in for non-guest users
+        credential = await authService.signInWithApple();
+      }
+
+      if (credential != null) {
+        // Clear guest cache after successful conversion
+        UsageLimitsService().clearCache();
+      }
+
       isLoading = false;
       notifyListeners();
       return credential != null;
@@ -219,6 +269,135 @@ class AppAuthProvider extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
       return credential != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  /// Continue as guest (anonymous user)
+  /// Allows users to use the app without creating an account
+  Future<bool> continueAsGuest() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final credential = await authService.signInAnonymously();
+
+      if (credential.user != null) {
+        final firebaseUser = credential.user!;
+        currentUser = User(
+          id: firebaseUser.uid,
+          email: '',
+          name: 'Guest',
+          createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+        );
+        token = firebaseUser.uid;
+        isAuthenticated = true;
+      }
+
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  /// Convert guest account to permanent account with email/password
+  /// Preserves the user's data (same UID)
+  Future<bool> convertGuestToEmailAccount(
+    String name,
+    String email,
+    String password,
+  ) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    final nameValidation = Validators.validateName(name);
+    if (nameValidation != null) {
+      isLoading = false;
+      setError(nameValidation);
+      return false;
+    }
+
+    final emailValidation = Validators.validateEmail(email);
+    if (emailValidation != null) {
+      isLoading = false;
+      setError(emailValidation);
+      return false;
+    }
+
+    final passwordValidation = Validators.validatePassword(password);
+    if (passwordValidation != null) {
+      isLoading = false;
+      setError(passwordValidation);
+      return false;
+    }
+
+    try {
+      final linkedCredential = await authService.linkAnonymousWithEmail(
+        email,
+        password,
+      );
+      await authService.updateUserProfile(displayName: name);
+
+      if (linkedCredential.user != null) {
+        final firebaseUser = linkedCredential.user!;
+        currentUser = User(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          name: name,
+          createdAt: firebaseUser.metadata.creationTime ?? DateTime.now(),
+        );
+        token = firebaseUser.uid;
+        isAuthenticated = true;
+      }
+
+      isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  /// Convert guest account to permanent Google account
+  Future<bool> convertGuestToGoogleAccount() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final linkedCredential = await authService.linkAnonymousWithGoogle();
+      isLoading = false;
+      notifyListeners();
+      return linkedCredential.user != null;
+    } catch (e) {
+      isLoading = false;
+      setError(e.toString());
+      return false;
+    }
+  }
+
+  /// Convert guest account to permanent Apple account
+  Future<bool> convertGuestToAppleAccount() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final linkedCredential = await authService.linkAnonymousWithApple();
+      isLoading = false;
+      notifyListeners();
+      return linkedCredential.user != null;
     } catch (e) {
       isLoading = false;
       setError(e.toString());

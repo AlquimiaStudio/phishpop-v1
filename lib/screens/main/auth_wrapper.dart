@@ -57,6 +57,12 @@ class PersonalizationChecker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final onboardingService = OnboardingService();
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    // Guest users skip personalization and go directly to HomeScreen
+    if (currentUser?.isAnonymous == true) {
+      return const HomeScreen(initialIndex: 0);
+    }
 
     return FutureBuilder<bool>(
       future: onboardingService.hasCompletedPersonalization(),

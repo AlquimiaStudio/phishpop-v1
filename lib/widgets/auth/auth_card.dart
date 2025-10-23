@@ -60,6 +60,8 @@ class _AuthCardState extends State<AuthCard> {
 
                 const SizedBox(height: 32),
                 AuthSocialButtons(),
+                const SizedBox(height: 24),
+                const GuestModeButton(),
               ],
             ),
           ),

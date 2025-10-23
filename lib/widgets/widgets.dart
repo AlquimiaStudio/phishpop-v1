@@ -1,5 +1,7 @@
 export 'auth/auth.dart';
+export 'dialogs/guest_limit_dialogs.dart';
 export 'dialogs/premium_upgrade_dialog.dart';
+export 'guest/guest.dart';
 export 'history/history.dart';
 export 'pricing/pricing.dart';
 export 'privacy_security/security.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../helpers/helpers.dart';
 import '../../../models/models.dart';
@@ -9,6 +10,11 @@ class ScanTextResultCard extends StatelessWidget {
   final ITextResponse result;
 
   const ScanTextResultCard({super.key, required this.result});
+
+  bool get isGuest {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    return currentUser?.isAnonymous ?? false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,43 +42,62 @@ class ScanTextResultCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ScanTextContent(text: result.text),
-          const SizedBox(height: 16),
-          ScanTextMetrics(result: result),
-          const SizedBox(height: 16),
-          ScanCardMetadata(
-            timestamp: result.timestamp,
-            processingTime: result.processingTime,
-            scanType: result.scanType,
-            normalizedScore: result.normalizedScore,
-            classification: result.classification,
-          ),
-          if (result.flaggedIssues.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            IssuesList(issues: result.flaggedIssues, result: result.result),
+
+          // Guest users see limited results
+          if (isGuest) ...[
+            const SizedBox(height: 24),
+            GuestUpgradePrompt(
+              message: 'Sign up to see full technical analysis',
+              benefits: [
+                'Detailed threat metrics',
+                'Complete analysis breakdown',
+                '7 scans per month',
+                'Saved scan history',
+              ],
+            ),
           ],
-          if (shouldShowEmergencyContacts(
-            result.result,
-            result.classification,
-            result.flaggedIssues,
-          )) ...[
+
+          // Registered users see full results
+          if (!isGuest) ...[
             const SizedBox(height: 16),
-            const EmergencyContactsSection(),
-          ],
-          const SizedBox(height: 16),
-          Center(
-            child: OutlinedButton.icon(
-              onPressed: () => showExplanationModal(context, getTextAnalysisExplanations),
-              icon: Icon(Icons.help_outline, size: 18),
-              label: Text('What does this mean?'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primaryColor,
-                side: BorderSide(
-                  color: AppColors.primaryColor.withValues(alpha: 0.3),
+            ScanTextMetrics(result: result),
+            const SizedBox(height: 16),
+            ScanCardMetadata(
+              timestamp: result.timestamp,
+              processingTime: result.processingTime,
+              scanType: result.scanType,
+              normalizedScore: result.normalizedScore,
+              classification: result.classification,
+            ),
+            if (result.flaggedIssues.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              IssuesList(issues: result.flaggedIssues, result: result.result),
+            ],
+            if (shouldShowEmergencyContacts(
+              result.result,
+              result.classification,
+              result.flaggedIssues,
+            )) ...[
+              const SizedBox(height: 16),
+              const EmergencyContactsSection(),
+            ],
+            const SizedBox(height: 16),
+            Center(
+              child: OutlinedButton.icon(
+                onPressed: () => showExplanationModal(context, getTextAnalysisExplanations),
+                icon: Icon(Icons.help_outline, size: 18),
+                label: Text('What does this mean?'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primaryColor,
+                  side: BorderSide(
+                    color: AppColors.primaryColor.withValues(alpha: 0.3),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
             ),
-          ),
+          ],
+
           const SizedBox(height: 5),
         ],
       ),

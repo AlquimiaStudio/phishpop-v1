@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/models.dart';
 import '../services/services.dart';
 
@@ -59,16 +60,24 @@ class HistoryProvider extends ChangeNotifier {
 
   Future<void> addScan(ScanHistoryModel scan) async {
     try {
-      await databaseService.saveScan(scan);
+      final currentUser = FirebaseAuth.instance.currentUser;
+      final isGuest = currentUser?.isAnonymous ?? false;
 
-      await persistentStatsService.recordScan(
-        scanType: scan.scanType,
-        status: scan.status,
-        confidence: scan.score,
-        flaggedIssues: scan.flaggedIssues,
-        scanDate: scan.timestamp,
-      );
+      // Guest users: Only save to memory (not to database)
+      // Registered users: Save to database for persistence
+      if (!isGuest) {
+        await databaseService.saveScan(scan);
 
+        await persistentStatsService.recordScan(
+          scanType: scan.scanType,
+          status: scan.status,
+          confidence: scan.score,
+          flaggedIssues: scan.flaggedIssues,
+          scanDate: scan.timestamp,
+        );
+      }
+
+      // Add to in-memory list for both guest and registered users
       scanHistory.insert(0, scan);
 
       if (scanHistory.length > 10) {

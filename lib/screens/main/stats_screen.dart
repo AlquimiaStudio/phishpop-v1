@@ -14,20 +14,26 @@ class StatsScreen extends StatefulWidget {
 
 class StatsScreenState extends State<StatsScreen> {
   bool isPremium = true;
+  bool isGuest = false;
 
   @override
   void initState() {
     super.initState();
-    checkPremiumStatus();
+    checkUserStatus();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadStats();
+      if (!isGuest) {
+        loadStats();
+      }
     });
   }
 
-  Future<void> checkPremiumStatus() async {
+  Future<void> checkUserStatus() async {
+    final authProvider = context.read<AppAuthProvider>();
     final premium = await RevenueCatService().isUserPremium();
+
     if (mounted) {
       setState(() {
+        isGuest = authProvider.isGuest;
         isPremium = premium;
       });
     }
@@ -43,6 +49,25 @@ class StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Guest users see a signup prompt instead of stats
+    if (isGuest) {
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            ScreenHeader(
+              title: 'Security Stats',
+              subtitle: 'Monitor your protection metrics',
+              icon: Icons.analytics,
+            ),
+            const SizedBox(height: 40),
+            GuestStatsPrompt(),
+          ],
+        ),
+      );
+    }
+
     return Consumer2<StatsProvider, HistoryProvider>(
       builder: (context, statsProvider, historyProvider, child) {
         return SingleChildScrollView(

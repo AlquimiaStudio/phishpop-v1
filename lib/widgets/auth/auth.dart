@@ -8,3 +8,4 @@ export 'auth_social_buttons.dart';
 export 'auth_terms_checkbox.dart';
 export 'auth_toggle_button.dart';
 export 'auth_toggle.dart';
+export 'guest_mode_button.dart';

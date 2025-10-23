@@ -171,6 +171,188 @@ class FirebaseAuthService {
     }
   }
 
+  /// Sign in anonymously (Guest Mode)
+  /// Allows users to use the app without creating an account
+  /// Returns UserCredential with an anonymous user
+  Future<UserCredential> signInAnonymously() async {
+    try {
+      final credential = await _auth.signInAnonymously();
+      developer.log('Anonymous sign-in successful. UID: ${credential.user?.uid}');
+      return credential;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseHelpers.handleFirebaseError(e);
+    } catch (error, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        reason: 'Anonymous sign-in failed',
+      );
+      throw 'An unexpected error occurred. Please try again.';
+    }
+  }
+
+  /// Link anonymous account with email/password credentials
+  /// This converts a guest account to a permanent account
+  /// while preserving the user's data (same UID)
+  Future<UserCredential> linkAnonymousWithEmail(
+    String email,
+    String password,
+  ) async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user == null) {
+        throw 'No user is currently signed in.';
+      }
+
+      if (!user.isAnonymous) {
+        throw 'Current user is not anonymous.';
+      }
+
+      final credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+
+      final linkedCredential = await user.linkWithCredential(credential);
+      developer.log('Anonymous account linked with email successfully');
+
+      return linkedCredential;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseHelpers.handleFirebaseError(e);
+    } catch (error, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        reason: 'Linking anonymous account with email failed',
+      );
+      throw 'Failed to link account. Please try again.';
+    }
+  }
+
+  /// Link anonymous account with Google credentials
+  /// This converts a guest account to a permanent Google account
+  Future<UserCredential> linkAnonymousWithGoogle() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user == null) {
+        throw 'No user is currently signed in.';
+      }
+
+      if (!user.isAnonymous) {
+        throw 'Current user is not anonymous.';
+      }
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      if (googleUser == null) {
+        throw 'Google sign-in was cancelled.';
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final linkedCredential = await user.linkWithCredential(credential);
+      developer.log('Anonymous account linked with Google successfully');
+
+      return linkedCredential;
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseHelpers.handleFirebaseError(e);
+    } catch (error, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        reason: 'Linking anonymous account with Google failed',
+      );
+      throw 'Failed to link account with Google. Please try again.';
+    }
+  }
+
+  /// Link anonymous account with Apple credentials
+  /// This converts a guest account to a permanent Apple account
+  Future<UserCredential> linkAnonymousWithApple() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user == null) {
+        throw 'No user is currently signed in.';
+      }
+
+      if (!user.isAnonymous) {
+        throw 'Current user is not anonymous.';
+      }
+
+      final rawNonce = FirebaseHelpers.generateNonce();
+      final nonce = FirebaseHelpers.sha256ofString(rawNonce);
+
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: nonce,
+        webAuthenticationOptions: kIsWeb
+            ? WebAuthenticationOptions(
+                clientId: 'com.andressaumet.phishpop.signin',
+                redirectUri: Uri.parse(
+                  'https://phishpop-app.firebaseapp.com/__/auth/handler',
+                ),
+              )
+            : null,
+      );
+
+      if (appleCredential.identityToken == null) {
+        throw 'Apple sign-in failed: No identity token received';
+      }
+
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      final linkedCredential = await user.linkWithCredential(oauthCredential);
+
+      if (appleCredential.givenName != null &&
+          appleCredential.familyName != null) {
+        final displayName =
+            '${appleCredential.givenName} ${appleCredential.familyName}';
+        await linkedCredential.user?.updateDisplayName(displayName);
+      }
+
+      developer.log('Anonymous account linked with Apple successfully');
+
+      return linkedCredential;
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        throw 'Apple sign-in was cancelled.';
+      }
+
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        StackTrace.current,
+        reason: 'Linking anonymous account with Apple failed: ${e.code}',
+      );
+
+      throw 'Apple sign-in failed: ${e.message}';
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseHelpers.handleFirebaseError(e);
+    } catch (error, stackTrace) {
+      FirebaseCrashlytics.instance.recordError(
+        error,
+        stackTrace,
+        reason: 'Linking anonymous account with Apple failed',
+      );
+      throw 'Failed to link account with Apple. Please try again.';
+    }
+  }
+
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();

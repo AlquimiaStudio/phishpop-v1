@@ -15,6 +15,7 @@ class UsageLimitsService {
 
   String? cachedUserId;
   bool? cachedIsPremium;
+  bool? cachedIsGuest;
   DateTime? lastPremiumCheck;
 
   Future<String> getUserId() async {
@@ -27,7 +28,21 @@ class UsageLimitsService {
     return cachedUserId!;
   }
 
+  Future<bool> isGuest() async {
+    if (cachedIsGuest != null) return cachedIsGuest!;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return false;
+
+    cachedIsGuest = user.isAnonymous;
+    return cachedIsGuest!;
+  }
+
   Future<bool> isPremium() async {
+    // Guest users can never be premium
+    final guest = await isGuest();
+    if (guest) return false;
+
     final now = DateTime.now();
 
     if (cachedIsPremium != null &&
@@ -53,8 +68,9 @@ class UsageLimitsService {
         return true;
       }
 
+      final guest = await isGuest();
       final premium = await isPremium();
-      final limit = UsageLimits.getLimit(scanType, premium);
+      final limit = UsageLimits.getLimit(scanType, premium, isGuest: guest);
 
       if (limit == 0) {
         return false;
@@ -64,6 +80,7 @@ class UsageLimitsService {
         return true;
       }
 
+      // Both guest and free users use 'total' counter
       final typeToCheck = premium ? scanType : 'total';
       final record = await db.getScanCount(userId, typeToCheck);
       final currentCount = record?['count'] as int? ?? 0;
@@ -119,6 +136,7 @@ class UsageLimitsService {
   Future<Map<String, UsageStats>> getAllUsageStats() async {
     try {
       final userId = await getUserId();
+      final guest = await isGuest();
       final premium = await isPremium();
 
       await db.checkAndResetIfNeeded(userId);
@@ -126,7 +144,7 @@ class UsageLimitsService {
       final resetDate = await db.getNextResetDate(userId);
       final stats = <String, UsageStats>{};
 
-      // For free users, only return 'total' stats (shared limit)
+      // For guest and free users, only return 'total' stats (shared limit)
       if (!premium) {
         final record = await db.getScanCount(userId, 'total');
         final currentCount = record?['count'] as int? ?? 0;
@@ -137,7 +155,7 @@ class UsageLimitsService {
         stats['total'] = UsageStats(
           scanType: 'total',
           currentCount: currentCount,
-          limit: UsageLimits.getLimit('total', false),
+          limit: UsageLimits.getLimit('total', false, isGuest: guest),
           resetDate: resetDate,
           lastScanDate: lastScanDate,
         );
@@ -176,11 +194,12 @@ class UsageLimitsService {
   Future<UsageStats?> getUsageStats(String scanType) async {
     try {
       final userId = await getUserId();
+      final guest = await isGuest();
       final premium = await isPremium();
 
       await db.checkAndResetIfNeeded(userId);
 
-      final limit = UsageLimits.getLimit(scanType, premium);
+      final limit = UsageLimits.getLimit(scanType, premium, isGuest: guest);
       final record = await db.getScanCount(userId, scanType);
 
       final currentCount = record?['count'] as int? ?? 0;
@@ -244,13 +263,14 @@ class UsageLimitsService {
 
   Future<int> getRemainingScans() async {
     try {
+      final guest = await isGuest();
       final premium = await isPremium();
 
       if (premium) {
         return -1;
       }
 
-      final limit = UsageLimits.getLimit('total', false);
+      final limit = UsageLimits.getLimit('total', false, isGuest: guest);
       final usage = await getTotalUsage();
 
       return (limit - usage).clamp(0, limit);
@@ -263,6 +283,7 @@ class UsageLimitsService {
   void clearCache() {
     cachedUserId = null;
     cachedIsPremium = null;
+    cachedIsGuest = null;
     lastPremiumCheck = null;
   }
 }

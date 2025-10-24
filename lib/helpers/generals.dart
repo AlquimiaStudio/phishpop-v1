@@ -608,9 +608,9 @@ List<Map<String, dynamic>> getPremiumFeatures() {
       'description': '24/7 premium customer support',
     },
     {
-      'icon': Icons.family_restroom,
-      'title': 'Family Mode',
-      'description': 'Exclusive elderly protection features',
+      'icon': Icons.dashboard,
+      'title': 'Full Metrics Dashboard',
+      'description': 'Complete access to all charts and analytics data',
     },
   ];
 }
@@ -628,6 +628,5 @@ List<Map<String, dynamic>> getTrustBadges() {
   return [
     {'icon': Icons.security, 'text': '256-bit\nEncryption'},
     {'icon': Icons.privacy_tip, 'text': 'Privacy\nFirst'},
-    {'icon': Icons.verified_user, 'text': 'Trusted by\n10K+ Users'},
   ];
 }

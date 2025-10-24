@@ -150,7 +150,7 @@ class _PricingScreenState extends State<PricingScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'You now have unlimited access to all premium features',
+                      'You now have access to all premium features',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withValues(alpha: 0.9),

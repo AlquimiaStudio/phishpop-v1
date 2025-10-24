@@ -53,7 +53,7 @@ class UrlResultCard extends StatelessWidget {
               benefits: [
                 'Detailed security metrics',
                 'Complete threat breakdown',
-                '7 scans per month',
+                '3 scans per month',
                 'Saved scan history',
               ],
             ),

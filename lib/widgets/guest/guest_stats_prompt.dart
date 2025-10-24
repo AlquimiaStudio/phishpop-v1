@@ -59,7 +59,7 @@ class GuestStatsPrompt extends StatelessWidget {
               const SizedBox(height: 16),
               _buildBenefit(
                 icon: Icons.flash_on,
-                text: 'Get 7 scans per month (vs 3 for guests)',
+                text: 'Get 3 scans per month (vs 1 for guests)',
               ),
               const SizedBox(height: 32),
               SizedBox(

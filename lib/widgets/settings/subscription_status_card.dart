@@ -130,7 +130,11 @@ class SubscriptionStatusCard extends StatelessWidget {
             'Family Mode',
             'Unlimited QR WiFi scans',
           ]
-        : ['Family Mode', 'QR WiFi analysis scan', 'Community support'];
+        : [
+            '3 scans per month (1 for guests)',
+            'Family Mode',
+            'QR WiFi analysis scan',
+          ];
 
     return Column(
       children: features.map((feature) => _buildFeatureItem(feature)).toList(),

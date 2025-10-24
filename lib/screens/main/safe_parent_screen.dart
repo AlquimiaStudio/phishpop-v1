@@ -42,7 +42,7 @@ class _SafeParentScreenState extends State<SafeParentScreen> {
           const SizedBox(height: 16),
           InfoHeaderMessage(
             message:
-                'Protect yourself and your family from phone scams and fraudulent communications.',
+                'Protect yourself and your family from text scams and fraudulent communications.',
           ),
           const SizedBox(height: 16),
           Center(

@@ -45,7 +45,7 @@ class GuestUpgradeBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Get 7 Free Scans Monthly',
+                  'Get 3 Free Scans Monthly',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -69,16 +69,10 @@ class GuestUpgradeBanner extends StatelessWidget {
               Navigator.pushNamed(context, '/auth');
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryColor,
-                    AppColors.secondaryColor,
-                  ],
+                  colors: [AppColors.primaryColor, AppColors.secondaryColor],
                 ),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [

@@ -6,10 +6,7 @@ import '../../theme/theme.dart';
 class GuestWarningDialog extends StatelessWidget {
   final int scansRemaining;
 
-  const GuestWarningDialog({
-    super.key,
-    required this.scansRemaining,
-  });
+  const GuestWarningDialog({super.key, required this.scansRemaining});
 
   @override
   Widget build(BuildContext context) {
@@ -65,26 +62,17 @@ class GuestWarningDialog extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Create a free account to get 7 scans per month instead of 3',
-              style: TextStyle(
-                fontSize: 15,
-                color: AppColors.mediumText,
-              ),
+              'Create a free account to get 3 scans per month instead of 1',
+              style: TextStyle(fontSize: 15, color: AppColors.mediumText),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             _buildBenefit(
               icon: Icons.flash_on,
-              text: '7 scans per month (vs 3 for guests)',
+              text: '3 scans per month (vs 1 for guests)',
             ),
-            _buildBenefit(
-              icon: Icons.history,
-              text: 'Saved scan history',
-            ),
-            _buildBenefit(
-              icon: Icons.bar_chart,
-              text: 'Security statistics',
-            ),
+            _buildBenefit(icon: Icons.history, text: 'Saved scan history'),
+            _buildBenefit(icon: Icons.bar_chart, text: 'Security statistics'),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -104,10 +92,7 @@ class GuestWarningDialog extends StatelessWidget {
                 ),
                 child: const Text(
                   'Create Free Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -134,19 +119,12 @@ class GuestWarningDialog extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: AppColors.primaryColor,
-            size: 20,
-          ),
+          Icon(icon, color: AppColors.primaryColor, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.darkText,
-              ),
+              style: TextStyle(fontSize: 14, color: AppColors.darkText),
             ),
           ),
         ],
@@ -161,9 +139,7 @@ class GuestWarningDialog extends StatelessWidget {
     return showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => GuestWarningDialog(
-        scansRemaining: scansRemaining,
-      ),
+      builder: (context) => GuestWarningDialog(scansRemaining: scansRemaining),
     );
   }
 }
@@ -192,17 +168,27 @@ class GuestLimitReachedDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close),
+                  iconSize: 20,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  color: AppColors.mediumText,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.red.shade50,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.block,
-                size: 48,
-                color: Colors.red.shade600,
-              ),
+              child: Icon(Icons.block, size: 48, color: Colors.red.shade600),
             ),
             const SizedBox(height: 20),
             Text(
@@ -216,7 +202,7 @@ class GuestLimitReachedDialog extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'You\'ve used all 3 scans this month',
+              'You\'ve used all 1 scans this month',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -227,22 +213,16 @@ class GuestLimitReachedDialog extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Create a free account to continue scanning and unlock more features',
-              style: TextStyle(
-                fontSize: 15,
-                color: AppColors.mediumText,
-              ),
+              style: TextStyle(fontSize: 15, color: AppColors.mediumText),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             _buildBenefit(
               icon: Icons.flash_on,
-              text: '7 scans per month',
+              text: '3 scans per month',
               highlighted: true,
             ),
-            _buildBenefit(
-              icon: Icons.history,
-              text: 'Complete scan history',
-            ),
+            _buildBenefit(icon: Icons.history, text: 'Complete scan history'),
             _buildBenefit(
               icon: Icons.bar_chart,
               text: 'Detailed security statistics',
@@ -270,10 +250,7 @@ class GuestLimitReachedDialog extends StatelessWidget {
                 ),
                 child: const Text(
                   'Create Free Account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -304,7 +281,9 @@ class GuestLimitReachedDialog extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: highlighted ? AppColors.primaryColor : AppColors.primaryColor.withValues(alpha: 0.7),
+            color: highlighted
+                ? AppColors.primaryColor
+                : AppColors.primaryColor.withValues(alpha: 0.7),
             size: highlighted ? 22 : 20,
           ),
           const SizedBox(width: 12),
@@ -326,7 +305,7 @@ class GuestLimitReachedDialog extends StatelessWidget {
   static Future<void> show({required BuildContext context}) {
     return showDialog(
       context: context,
-      barrierDismissible: false, // User must acknowledge
+      barrierDismissible: true,
       builder: (context) => const GuestLimitReachedDialog(),
     );
   }

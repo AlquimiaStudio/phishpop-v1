@@ -13,7 +13,7 @@ class PremiumBanner extends StatelessWidget {
     super.key,
     this.icon = Icons.auto_awesome,
     this.title = 'Unlock Full Protection',
-    this.subtitle = 'Get unlimited scans and detailed analytics',
+    this.subtitle = 'Get power-AI scans and detailed analytics',
     this.buttonText = 'Upgrade',
   });
 

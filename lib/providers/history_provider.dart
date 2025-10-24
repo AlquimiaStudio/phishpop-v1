@@ -80,8 +80,10 @@ class HistoryProvider extends ChangeNotifier {
       // Add to in-memory list for both guest and registered users
       scanHistory.insert(0, scan);
 
-      if (scanHistory.length > 10) {
-        scanHistory = scanHistory.take(10).toList();
+      // Limit history based on user type
+      final maxHistory = isGuest ? 1 : 10;
+      if (scanHistory.length > maxHistory) {
+        scanHistory = scanHistory.take(maxHistory).toList();
       }
 
       error = null;
@@ -163,6 +165,15 @@ class HistoryProvider extends ChangeNotifier {
   }
 
   Future<void> loadHistoryFromDatabase() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    final isGuest = currentUser?.isAnonymous ?? false;
+
+    // Guest users: Keep their in-memory history, don't load from database
+    if (isGuest) {
+      return;
+    }
+
+    // Registered users: Load from database
     final scans = await databaseService.getRecentScans(limit: 10);
     scanHistory = scans;
   }

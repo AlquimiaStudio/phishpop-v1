@@ -12,7 +12,7 @@ class GuestModeBanner extends StatefulWidget {
 
 class _GuestModeBannerState extends State<GuestModeBanner> {
   int scansUsed = 0;
-  int scanLimit = 3;
+  int scanLimit = 1;
   bool isLoading = true;
 
   @override
@@ -29,7 +29,7 @@ class _GuestModeBannerState extends State<GuestModeBanner> {
       if (mounted) {
         setState(() {
           scansUsed = stats?.currentCount ?? 0;
-          scanLimit = stats?.limit ?? 3;
+          scanLimit = stats?.limit ?? 1;
           isLoading = false;
         });
       }
@@ -129,8 +129,8 @@ class _GuestModeBannerState extends State<GuestModeBanner> {
           const SizedBox(height: 6),
           Text(
             scansUsed >= scanLimit
-                ? 'Limit reached. Create account for 7 scans/month'
-                : '${scanLimit - scansUsed} scans remaining this month',
+                ? 'Limit reached. Create account for 3 scans/month'
+                : '${scanLimit - scansUsed} scan remaining this month',
             style: TextStyle(
               fontSize: 11,
               color: AppColors.darkText.withValues(alpha: 0.7),

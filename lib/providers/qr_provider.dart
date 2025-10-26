@@ -111,7 +111,8 @@ class QrProvider extends ChangeNotifier {
           }
 
           // Show warning dialog when guest has 1 scan remaining (2/3 used)
-          final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+          final isGuest =
+              FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
           if (isGuest) {
             final stats = await usageLimitsService.getUsageStats('total');
             if (stats != null && stats.currentCount == 2) {
@@ -128,7 +129,8 @@ class QrProvider extends ChangeNotifier {
             setState(QrScanState.idle);
             if (context.mounted) {
               // Check if user is a guest
-              final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+              final isGuest =
+                  FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
               if (isGuest) {
                 // Show guest-specific limit reached dialog
@@ -139,7 +141,7 @@ class QrProvider extends ChangeNotifier {
                   context: context,
                   featureName: 'Scan Limit Reached',
                   description:
-                      'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
+                      'You\'ve reached your limit of 3 scans this month. Upgrade to Premium for unlimited scans.',
                   icon: Icons.block,
                 );
               }
@@ -242,7 +244,8 @@ class QrProvider extends ChangeNotifier {
           }
 
           // Show warning dialog when guest has 1 scan remaining (2/3 used)
-          final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+          final isGuest =
+              FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
           if (isGuest) {
             final stats = await usageLimitsService.getUsageStats('total');
             if (stats != null && stats.currentCount == 2) {
@@ -261,7 +264,8 @@ class QrProvider extends ChangeNotifier {
               Navigator.of(context).pop();
 
               // Check if user is a guest
-              final isGuest = FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
+              final isGuest =
+                  FirebaseAuth.instance.currentUser?.isAnonymous ?? false;
 
               if (isGuest) {
                 // Show guest-specific limit reached dialog
@@ -272,7 +276,7 @@ class QrProvider extends ChangeNotifier {
                   context: context,
                   featureName: 'Scan Limit Reached',
                   description:
-                      'You\'ve reached your limit of 7 scans this month. Upgrade to Premium for unlimited scans.',
+                      'You\'ve reached your limit of 3 scans this month. Upgrade to Premium for unlimited scans.',
                   icon: Icons.block,
                 );
               }

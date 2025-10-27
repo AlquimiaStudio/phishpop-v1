@@ -29,18 +29,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> loadData() async {
     try {
-      final premium = await revenueCat.isUserPremium();
+      final premium = await usageLimits.isPremium();
+
+      if (mounted) {
+        setState(() {
+          isPremium = premium;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isPremium = false;
+        });
+      }
+    }
+
+    try {
       final stats = await usageLimits.getAllUsageStats();
 
-      setState(() {
-        isPremium = premium;
-        allStats = stats;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          allStats = stats;
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

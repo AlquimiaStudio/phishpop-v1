@@ -17,6 +17,7 @@ class UsageLimitsService {
   bool? cachedIsPremium;
   bool? cachedIsGuest;
   DateTime? lastPremiumCheck;
+  Future<bool>? pendingPremiumCheck;
 
   Future<String> getUserId() async {
     if (cachedUserId != null) return cachedUserId!;
@@ -39,23 +40,46 @@ class UsageLimitsService {
   }
 
   Future<bool> isPremium() async {
-    // Guest users can never be premium
     final guest = await isGuest();
     if (guest) return false;
 
     final now = DateTime.now();
-
     if (cachedIsPremium != null &&
         lastPremiumCheck != null &&
         now.difference(lastPremiumCheck!).inMinutes < 5) {
       return cachedIsPremium!;
     }
 
-    final isPremium = await revenueCat.isUserPremium();
-    cachedIsPremium = isPremium;
-    lastPremiumCheck = now;
+    if (pendingPremiumCheck != null) {
+      log('Premium check already in progress, reusing existing call');
+      return pendingPremiumCheck!;
+    }
 
-    return isPremium;
+    pendingPremiumCheck = fetchPremiumStatus();
+
+    try {
+      final result = await pendingPremiumCheck!;
+      return result;
+    } finally {
+      pendingPremiumCheck = null;
+    }
+  }
+
+  Future<bool> fetchPremiumStatus() async {
+    try {
+      log('Fetching premium status from RevenueCat...');
+      final isPremium = await revenueCat.isUserPremium();
+      cachedIsPremium = isPremium;
+      lastPremiumCheck = DateTime.now();
+      log('Premium status fetched: $isPremium');
+      return isPremium;
+    } catch (e) {
+      log('Error fetching premium status: $e');
+
+      cachedIsPremium = false;
+      lastPremiumCheck = DateTime.now();
+      return false;
+    }
   }
 
   Future<bool> canScan(String scanType) async {
@@ -144,7 +168,6 @@ class UsageLimitsService {
       final resetDate = await db.getNextResetDate(userId);
       final stats = <String, UsageStats>{};
 
-      // For guest and free users, only return 'total' stats (shared limit)
       if (!premium) {
         final record = await db.getScanCount(userId, 'total');
         final currentCount = record?['count'] as int? ?? 0;
@@ -163,7 +186,6 @@ class UsageLimitsService {
         return stats;
       }
 
-      // For premium users, return stats for all scan types
       final counts = await db.getAllScanCounts(userId);
 
       for (final scanType in UsageLimits.premiumLimits.keys) {
@@ -285,5 +307,6 @@ class UsageLimitsService {
     cachedIsPremium = null;
     cachedIsGuest = null;
     lastPremiumCheck = null;
+    pendingPremiumCheck = null;
   }
 }

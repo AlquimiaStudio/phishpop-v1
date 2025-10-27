@@ -25,21 +25,22 @@ class GuestWarningDialog extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                shape: BoxShape.circle,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.warning_amber_rounded,
+                  size: 48,
+                  color: Colors.orange.shade600,
+                ),
               ),
-              child: Icon(
-                Icons.warning_amber_rounded,
-                size: 48,
-                color: Colors.orange.shade600,
-              ),
-            ),
             const SizedBox(height: 20),
             Text(
               'Running Low on Scans',
@@ -108,7 +109,8 @@ class GuestWarningDialog extends StatelessWidget {
                 ),
               ),
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -165,22 +167,23 @@ class GuestLimitReachedDialog extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close),
-                  iconSize: 20,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  color: AppColors.mediumText,
-                ),
-              ],
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    color: AppColors.mediumText,
+                  ),
+                ],
+              ),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(16),
@@ -264,7 +267,8 @@ class GuestLimitReachedDialog extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-          ],
+            ],
+          ),
         ),
       ),
     );

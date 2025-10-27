@@ -22,11 +22,19 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future<void> checkPremiumStatus() async {
-    final premium = await RevenueCatService().isUserPremium();
-    if (mounted) {
-      setState(() {
-        isPremium = premium;
-      });
+    try {
+      final premium = await UsageLimitsService().isPremium();
+      if (mounted) {
+        setState(() {
+          isPremium = premium;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isPremium = false;
+        });
+      }
     }
   }
 

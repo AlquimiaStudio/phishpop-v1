@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/providers.dart';
+import '../../services/usage_limits_service.dart';
 import '../../theme/theme.dart';
 
 class GuestModeButton extends StatefulWidget {
@@ -41,8 +42,74 @@ class _GuestModeButtonState extends State<GuestModeButton> {
             backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-      // If success, AuthWrapper will automatically navigate to HomeScreen
+
+      // Success: Wait explicitly for Firebase auth state stream to update
+      // This ensures the AuthWrapper's StreamBuilder receives the new user
+      try {
+        // Wait for the authStateChanges stream to emit the authenticated user
+        // with a 10 second timeout
+        await authProvider.authService.authStateChanges
+            .firstWhere(
+              (user) => user != null && user.isAnonymous,
+              orElse: () => throw Exception('Auth state stream timeout'),
+            )
+            .timeout(
+              const Duration(seconds: 10),
+              onTimeout: () => throw Exception('Auth state stream timeout'),
+            );
+
+        // Pre-load premium status cache before navigation
+        try {
+          await UsageLimitsService().isPremium();
+        } catch (e) {
+          // Continue anyway - screens will handle it
+        }
+
+        // Give the StreamBuilder a moment to rebuild
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        // The loading state will be cleared when this widget is disposed
+        // (when navigation occurs) or by the timeout below
+      } catch (e) {
+        if (!mounted) return;
+
+        setState(() {
+          isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Authentication succeeded but navigation failed. Please restart the app.',
+            ),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 5),
+          ),
+        );
+        return;
+      }
+
+      // Safety timeout: if still mounted and loading after navigation should have occurred
+      await Future.delayed(const Duration(seconds: 3));
+      if (mounted && isLoading) {
+        setState(() {
+          isLoading = false;
+        });
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Signed in successfully. Please restart the app if you don\'t see the home screen.',
+              ),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
+      }
     } catch (e) {
       if (!mounted) return;
 

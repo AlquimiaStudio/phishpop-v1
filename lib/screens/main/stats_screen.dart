@@ -29,13 +29,23 @@ class StatsScreenState extends State<StatsScreen> {
 
   Future<void> checkUserStatus() async {
     final authProvider = context.read<AppAuthProvider>();
-    final premium = await RevenueCatService().isUserPremium();
 
-    if (mounted) {
-      setState(() {
-        isGuest = authProvider.isGuest;
-        isPremium = premium;
-      });
+    try {
+      final premium = await UsageLimitsService().isPremium();
+
+      if (mounted) {
+        setState(() {
+          isGuest = authProvider.isGuest;
+          isPremium = premium;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isGuest = authProvider.isGuest;
+          isPremium = false;
+        });
+      }
     }
   }
 

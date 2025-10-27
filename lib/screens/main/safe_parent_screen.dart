@@ -23,11 +23,19 @@ class _SafeParentScreenState extends State<SafeParentScreen> {
   }
 
   Future<void> checkPremiumStatus() async {
-    final isPremium = await revenueCatService.isUserPremium();
-    if (mounted) {
-      setState(() {
-        isUserPremium = isPremium;
-      });
+    try {
+      final isPremium = await UsageLimitsService().isPremium();
+      if (mounted) {
+        setState(() {
+          isUserPremium = isPremium;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isUserPremium = false;
+        });
+      }
     }
   }
 

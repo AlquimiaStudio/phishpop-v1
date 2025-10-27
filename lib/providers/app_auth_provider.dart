@@ -31,6 +31,8 @@ class AppAuthProvider extends ChangeNotifier {
         );
         token = firebaseUser.uid;
         isAuthenticated = true;
+
+        preloadPremiumStatus();
       } else {
         currentUser = null;
         token = null;
@@ -39,6 +41,14 @@ class AppAuthProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  Future<void> preloadPremiumStatus() async {
+    try {
+      await UsageLimitsService().isPremium();
+    } catch (e) {
+      // Non-blocking - screens will handle it if needed
+    }
   }
 
   bool get isEmailPasswordUser {
@@ -276,8 +286,6 @@ class AppAuthProvider extends ChangeNotifier {
     }
   }
 
-  /// Continue as guest (anonymous user)
-  /// Allows users to use the app without creating an account
   Future<bool> continueAsGuest() async {
     isLoading = true;
     errorMessage = null;
@@ -288,6 +296,7 @@ class AppAuthProvider extends ChangeNotifier {
 
       if (credential.user != null) {
         final firebaseUser = credential.user!;
+
         currentUser = User(
           id: firebaseUser.uid,
           email: '',

@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -177,7 +175,6 @@ class FirebaseAuthService {
   Future<UserCredential> signInAnonymously() async {
     try {
       final credential = await _auth.signInAnonymously();
-      developer.log('Anonymous sign-in successful. UID: ${credential.user?.uid}');
       return credential;
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
@@ -187,6 +184,7 @@ class FirebaseAuthService {
         stackTrace,
         reason: 'Anonymous sign-in failed',
       );
+
       throw 'An unexpected error occurred. Please try again.';
     }
   }
@@ -215,7 +213,9 @@ class FirebaseAuthService {
       );
 
       final linkedCredential = await user.linkWithCredential(credential);
-      developer.log('Anonymous account linked with email successfully');
+
+      // Reload user to update isAnonymous status (especially important for iOS)
+      await linkedCredential.user?.reload();
 
       return linkedCredential;
     } on FirebaseAuthException catch (e) {
@@ -259,7 +259,9 @@ class FirebaseAuthService {
       );
 
       final linkedCredential = await user.linkWithCredential(credential);
-      developer.log('Anonymous account linked with Google successfully');
+
+      // Reload user to update isAnonymous status (especially important for iOS)
+      await linkedCredential.user?.reload();
 
       return linkedCredential;
     } on FirebaseAuthException catch (e) {
@@ -326,7 +328,8 @@ class FirebaseAuthService {
         await linkedCredential.user?.updateDisplayName(displayName);
       }
 
-      developer.log('Anonymous account linked with Apple successfully');
+      // Reload user to update isAnonymous status (especially important for iOS)
+      await linkedCredential.user?.reload();
 
       return linkedCredential;
     } on SignInWithAppleAuthorizationException catch (e) {
@@ -403,7 +406,6 @@ class FirebaseAuthService {
       await deleteAllDatabases();
       await user.delete();
       await signOut();
-      developer.log('Account deletion completed successfully');
     } on FirebaseAuthException catch (e) {
       throw FirebaseHelpers.handleFirebaseError(e);
     } catch (e) {
@@ -427,14 +429,11 @@ class FirebaseAuthService {
         try {
           final path = join(databasesPath, dbFile);
           await deleteDatabase(path);
-          developer.log('Deleted database: $dbFile');
         } catch (e) {
           // Database might not exist, continue with others
-          developer.log('Could not delete $dbFile: $e');
         }
       }
     } catch (e) {
-      developer.log('Error deleting databases: $e');
       // Don't throw, we want account deletion to proceed
     }
   }

@@ -1,7 +1,7 @@
 name: phishpop
 description: "A comprehensive mobile security app that detects and analyzes phishing threats, malicious URLs, suspicious messages, and unsafe QR codes. Family-focused protection with educational scam library and emergency contacts."
 publish_to: 'none'
-version: 1.0.2+6
+version: 1.0.3+1
 
 environment:
   sdk: ^3.9.0
